@@ -19,7 +19,7 @@
 
 ① Click **Flow Information** tab of the generated flow.
 ② Click **(NHN Cloud) Log&Crash Search** node.
-③ Enter **Appkey** and **Secretkey* of (NHN Cloud) Log&Crash Search to be designated as the data source.
+③ Enter **Appkey** and **Secretkey** of (NHN Cloud) Log&Crash Search to be designated as the data source.
 
 ### filter success response Node Definition
 
@@ -31,7 +31,7 @@
 
 ### Cipher Node Definition
 
-![chapter3.png](http://static.toastoven.net/prod_dataflow/en/tutorial/chapter3_2025_08.png)
+![chapter3.png](http://static.toastoven.net/prod_dataflow/ko/tutorial/chapter3_2025_08.png)
 
 ① Click **Cipher** node.
 ② Enter the information below to use SKM:
@@ -58,14 +58,14 @@
 
 ### Execute Flow
 
-![chapter5.png](http://static.toastoven.net/prod_dataflow/en/tutorial/chapter5_2025_08.png)
+![chapter5.png](http://static.toastoven.net/prod_dataflow/ko/tutorial/chapter5_2025_08.png)
 
 ① Select the flow to execute.
 ② Execute the flow by clicking the View More icon > **Start Flow** button.
 
 ### Job After Execution
 
-![chapter6.png](http://static.toastoven.net/prod_dataflow/en/tutorial/chapter6_2025_08.png)
+![chapter6.png](http://static.toastoven.net/prod_dataflow/ko/tutorial/chapter6_2025_08.png)
 
 ① Once you start the flow, the execution status will change to green after 1-2 minutes.
 ② You can click the **View Log** button to check detailed logs for flow execution.
