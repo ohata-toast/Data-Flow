@@ -18,7 +18,7 @@ DataFlowは、次の順序で使用できます。
 フローメタデータ情報を照会、管理するページです。
 **Data & Analytics > DataFlow > 管理**をクリックします。
 
-![management_main.png](http://static.toastoven.net/prod_dataflow/ko/console_user_guide/management_main_2025_08.png)
+![management_main.png](http://static.toastoven.net/prod_dataflow/ko/console_user_guide/management_main_2025_06.png)
 
 ### 検索
 
