@@ -5,10 +5,10 @@
 * 노드 설정 시 민감 정보를 별표 처리하도록 수정했습니다.
   * (NHN Cloud) Object Storage > 비밀 키
   * (NHN Cloud) CloudTrail > Appkey
-  * (NHN Cloud) Log&Crash Search > SecretKey 
+  * (NHN Cloud) Log & Crash Search > SecretKey
   * JDBC > 비밀번호
   * (Amazon) S3 > 비밀 키
-* (NHN Cloud) Log&Crash Search 노드에 **검색 쿼리** 속성이 추가되었습니다.
+* (NHN Cloud) Log & Crash Search 노드에 **검색 쿼리** 속성이 추가되었습니다.
 
 #### 버그 수정
 * 모니터링 탭에서 실행한 적 없는 플로우를 선택하면 차트가 노출되지 않는 문제를 수정했습니다.
