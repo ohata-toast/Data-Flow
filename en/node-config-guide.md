@@ -156,6 +156,7 @@
 | Query Start time  | -   | string | Enter the start time of log query. Must be entered in ISO 8601 format with offset or [DSL](#domain-specific-languagedsl) format. <br/>Example: 2025-07-23T11:23:00+09:00, {{ executionTime }} |    |
 | Query End time  | -   | string | Enter the end time of log query. Must be entered in ISO 8601 format with offset or [DSL](#domain-specific-languagedsl) format. <br/>Example: 2025-07-23T11:23:00+09:00, {{ executionTime }} |    |
 | Number of retries    | -   | number | Enter the maximum number of times to retry when a log query fails.                                                                                                                       |    |
+| Search Query     | *   | string | Enter the search query to use when requesting a Log & Crash Search query. For detailed query writing instructions, please refer to the "Lucene Query Guide" of the Log & Crash Search service.                             |    |
 
 * Set the number of retries
     * If the number of retries fails, no more log queries are attempted, and the flow ends.

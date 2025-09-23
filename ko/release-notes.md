@@ -1,5 +1,18 @@
 ## Data & Analytics > DataFlow > 릴리스 노트
 
+### 2025. 09. 23.
+#### 기능 개선/변경
+* 노드 설정 시 민감 정보를 별표 처리하도록 수정했습니다.
+  * (NHN Cloud) Object Storage > 비밀 키
+  * (NHN Cloud) CloudTrail > Appkey
+  * (NHN Cloud) Log & Crash Search > SecretKey
+  * JDBC > 비밀번호
+  * (Amazon) S3 > 비밀 키
+* (NHN Cloud) Log & Crash Search 노드에 **검색 쿼리** 속성이 추가되었습니다.
+
+#### 버그 수정
+* 모니터링 탭에서 실행한 적 없는 플로우를 선택하면 차트가 노출되지 않는 문제를 수정했습니다.
+
 ### 2025. 08. 26.
 #### 기능 개선/변경
 * 상세 정보 화면에서 예약 일정을 확인할 수 있는 **일정 목록** 탭을 새로 추가했습니다.
