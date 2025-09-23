@@ -1,5 +1,18 @@
 ## Data & Analytics > DataFlow > Release Notes
 
+### September 23, 2025
+#### Feature Updates
+* Made modification so that sensitive information is marked with asterisks when setting up nodes.
+  * (NHN Cloud) Object Storage > Secret Key
+  * (NHN Cloud) CloudTrail > Appkey
+  * (NHN Cloud) Log & Crash Search > SecretKey
+  * JDBC > Password
+  * (Amazon) S3 > Secret Key
+* (NHN Cloud) Added **Search Query** attribute to the Log & Crash Search node.
+
+#### Bug Fixes
+* Fixed an issue where charts would not be displayed when selecting a flow that had never been run in the Monitoring tab.
+
 ### August 26, 2025
 #### Feature Updates
 * Added a new **Schedule List** tab on the Details screen where you can check the reservation schedule.

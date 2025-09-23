@@ -156,7 +156,7 @@
 | 조회 시작 시간  | -   | string | 로그 조회의 시작 시간을 입력합니다. 오프셋이 포함된 ISO 8601 형식 또는 [DSL](#domain-specific-languagedsl) 형식으로 입력해야 합니다. <br/>예: 2025-07-23T11:23:00+09:00, {{ executionTime }} |    |
 | 조회 종료 시간  | -   | string | 로그 조회의 종료 시간을 입력합니다. 오프셋이 포함된 ISO 8601 형식 또는 [DSL](#domain-specific-languagedsl) 형식으로 입력해야 합니다. <br/>예: 2025-07-23T11:23:00+09:00, {{ executionTime }} |    |
 | 재시도 횟수    | -   | number | 로그 조회가 실패했을 때 재시도할 최대 횟수를 입력합니다.                                                                                                                       |    |
-| 검색 쿼리     | *   | string | Log & Crash Search 조회 요청 시 사용할 검색 쿼리를 입력합니다. 자세한 쿼리 작성 방법은 Log & Crash Search 서비스의 'Lucene 쿼리 가이드'를 참조하시기 바랍니다.                                        |    |
+| 검색 쿼리     | *   | string | Log & Crash Search 조회 요청 시 사용할 검색 쿼리를 입력합니다. 자세한 쿼리 작성 방법은 Log & Crash Search 서비스의 'Lucene 쿼리 가이드'를 참고하세요.                              |    |
 
 * 재시도 횟수 설정
     * 재시도 횟수만큼 실패하면 더 이상 로그 조회를 시도하지 않고, 플로우는 종료됩니다.
