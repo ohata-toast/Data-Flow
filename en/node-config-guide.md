@@ -1488,29 +1488,29 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 #### Type Description
 
 * integer
-  * Converts strings to integers. Supports comma-separated strings. Fractional parts are discarded.
-    * Example: "1,000.5" -> `1000`
-  * Converts floats to integers. Fractional parts are discarded.
-  * Converts boolean values to integers: `true` is converted to `1`, `false` to `0`.
+    * Converts strings to integers. Supports comma-separated strings. Fractional parts are discarded.
+        * Example: "1,000.5" -> `1000`
+    * Converts floats to integers. Fractional parts are discarded.
+    * Converts boolean values to integers: `true` is converted to `1`, `false` to `0`.
 * integer_eu
-  * Converts data to integers. Supports dot-separated strings. Fractional parts are discarded. 
-    * Example: "1.000,5" -> `1000`
-  * Float and boolean values are treated the same as integers.
+    * Converts data to integers. Supports dot-separated strings. Fractional parts are discarded. 
+        * Example: "1.000,5" -> `1000`
+    * Float and boolean values are treated the same as integers.
 * float
-  * Converts integers to floats.
-  * Converts strings to floats. Supports comma-separated strings.
-    * Example: "1,000.5" -> `1000.5`
-  * Converts boolean values to integers: `true`is converted to `1.0`, `false` to `0.0`.
+    * Converts integers to floats.
+    * Converts strings to floats. Supports comma-separated strings.
+        * Example: "1,000.5" -> `1000.5`
+    * Converts boolean values to integers: `true`is converted to `1.0`, `false` to `0.0`.
 * float_eu
-  * Converts data to floats. Supports dot-delimited strings.
-    * Example: "1.000,5" -> `1000.5`
-  * Float and boolean values are treated the same as floats.
+    * Converts data to floats. Supports dot-delimited strings.
+        * Example: "1.000,5" -> `1000.5`
+    * Float and boolean values are treated the same as floats.
 * string
-  * Converts data to strings with UTF-8 encoding.
+    * Converts data to strings with UTF-8 encoding.
 * boolean
-  * Converts integers to boolean values. A `1`is converted to `true` and a `0` to `false`.
-  * Converts floats to boolean values. A `1.0`is converted to `true`, and a `0.0` to `false`.
-  * Converts strings to boolean values: `"true"`, `"t"`, `"yes"`, `"y"`, `"1"`, `"1.0"`are converted to `true`, `"false"`, `"f"`, `"no"`, `"n"`, `“0"`, `“0.0"`are converted to `false`. The empty strings are converted to`false`.
+    * Converts integers to boolean values. A `1`is converted to `true` and a `0` to `false`.
+    * Converts floats to boolean values. A `1.0`is converted to `true`, and a `0.0` to `false`.
+    * Converts strings to boolean values: `"true"`, `"t"`, `"yes"`, `"y"`, `"1"`, `"1.0"`are converted to `true`, `"false"`, `"f"`, `"no"`, `"n"`, `“0"`, `“0.0"`are converted to `false`. The empty strings are converted to`false`.
 * Array data elements are converted as described above.
 
 ### Example of replacing string
@@ -2149,7 +2149,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 #### LINE codec output example
 
 * format is set to
-  * `%{message} %{host}`
+    * `%{message} %{host}`
 
 ```
 Hello World! data-flow-01
