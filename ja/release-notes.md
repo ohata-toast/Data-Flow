@@ -8,11 +8,11 @@
 ### 2025. 09. 23.
 #### 機能改善・変更
 * ノードを設定する際に、機密情報をアスタリスクで表示するよう修正しました。
-  * (NHN Cloud) Object Storage > シークレットキー
-  * (NHN Cloud) CloudTrail > Appkey
-  * (NHN Cloud) Log & Crash Search > SecretKey
-  * JDBC > パスワード
-  * (Amazon) S3 > シークレットキー
+    * (NHN Cloud) Object Storage > シークレットキー
+    * (NHN Cloud) CloudTrail > Appkey
+    * (NHN Cloud) Log & Crash Search > SecretKey
+    *  JDBC > パスワード
+    * (Amazon) S3 > シークレットキー
 * (NHN Cloud) Log & Crash Searchノードに**検索クエリ**プロパティが追加されました。
 
 #### 不具合の修正
