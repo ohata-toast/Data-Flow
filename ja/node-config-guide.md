@@ -1020,55 +1020,6 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 }
 ```
 
-
-## Filter > (Logstash) Grok
-
-### ノードの説明
-
-* 文字列を決められたルールに沿って解析して、各設定されたフィールドに保存するノードです。
-
-### プロパティの説明
-
-| プロパティ名 | デフォルト値 | データ型 | 説明 | 備考 |
-| --- | --- | --- | --- | --- |
-| Match | - | json | 解析する文字列の情報を入力します。 |  |
-| パターン定義 | - | json | 解析するトークンのルールのユーザー定義パターンを正規表現で入力します。 | システム定義パターンは以下のリンクをご確認ください。<br/>http://grokdebug.herokuapp.com/patterns |
-| 失敗タグ | - | array of strings | 文字列の解析に失敗する場合、定義するタグ名を入力します。 |  |
-| タイムアウト | 30000 | number | 文字列の解析が行われるまでの待機時間を入力します。 |  |
-| 上書き | - | array of strings | 解析後、指定されたフィールドに値を書き込む際、そのフィールドにすでに値が定義されている場合、上書きするフィールド名を入力します。 |  |
-| 名前が指定された値のみ保存 | - | boolean | 名前が指定されていない解析結果を保存するかどうかを選択します。 |  |
-| 空の文字列をキャプチャ | - | boolean | 空の文字列もフィールドに保存するかどうかを選択します。 |  |
-
-### Grok解析例
-
-#### 条件
-
-* Match → `{ "message": "%{IP:clientip} %{HYPHEN} %{USER} \[%{HTTPDATE:timestamp}\] \"%{WORD:verb} %{NOTSPACE:request} HTTP/%{NUMBER:httpversion}\" %{NUMBER:response} %{NUMBER:bytes}" }`
-* パターン定義 → `{ "HYPHEN": "-*" }`
-
-#### 入力メッセージ
-
-```js
-{
-    "message": "127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] \\\"GET /apache_pb.gif HTTP/1.0\\\" 200 2326"
-}
-```
-
-#### 出力メッセージ
-
-```js
-{
-    "message": "127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] \\\"GET /apache_pb.gif HTTP/1.0\\\" 200 2326",
-    "timestamp": "10/Oct/2000:13:55:36 -0700",
-    "clientip": "127.0.0.1",
-    "verb": "GET",
-    "httpversion": "1.0",
-    "response": "200",
-    "bytes": "2326",
-    "request": "/apache_pb.gif"
-}
-```
-
 ## Filter > Date
 
 ### ノードの説明

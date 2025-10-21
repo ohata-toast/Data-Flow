@@ -1022,54 +1022,6 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 }
 ```
 
-## Filter > (Logstash) Grok
-
-### Node Description
-
-* This is a node that parses a string according to defined rules and stores it in each set field.
-
-### Property Description
-
-| Property name | Default value | Data type | Description | Others |
-| --- | --- | --- | --- | --- |
-| Match | - | json | Enter the information of the string to be parsed. |  |
-| Pattern definition | - | json | Enter a custom pattern as a regular expression for the rule of tokens to be parsed. | Check the link below for system defined patterns.<br/>http://grokdebug.herokuapp.com/patterns |
-| Failure tag | - | array of strings | Enter the tag name to define if string parsing fails. |  |
-| Timeout | 30000 | number | Enter the amount of time to wait for string parsing. |  |
-| Overwrite | - | array of strings | When writing a value to a designated field after parsing, if a value is already defined in the field, enter the field names to be overwritten. |  |
-| Store only values with specified names | - | boolean | Select whether to store unnamed parsing results. |  |
-| Capture empty string | - | boolean | Select whether to store empty strings in fields. |  |
-
-### Grok Parsing Examples
-
-#### Condition
-
-* Match → `{ "message": "%{IP:clientip} %{HYPHEN} %{USER} [%{HTTPDATE:timestamp}] "%{WORD:verb} %{NOTSPACE:request} HTTP/%{NUMBER:httpversion}" %{NUMBER:response} %{NUMBER:bytes}" }`
-* Pattern definition → `{ "HYPHEN": "-*" }`
-
-#### Input message
-
-```js
-{
-    "message": "127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] \\\"GET /apache_pb.gif HTTP/1.0\\\" 200 2326"
-}
-```
-
-#### Output message
-
-```js
-{
-    "message": "127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] \\\"GET /apache_pb.gif HTTP/1.0\\\" 200 2326",
-    "timestamp": "10/Oct/2000:13:55:36 -0700",
-    "clientip": "127.0.0.1",
-    "verb": "GET",
-    "httpversion": "1.0",
-    "response": "200",
-    "bytes": "2326",
-    "request": "/apache_pb.gif"
-}
-```
-
 ## Filter > Date
 
 ### Node Description
