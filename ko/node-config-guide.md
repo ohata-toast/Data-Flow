@@ -1022,54 +1022,6 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 }
 ```
 
-## Filter > (Logstash) Grok
-
-### 노드 설명
-
-* 문자열을 정해진 규칙에 맞게 파싱하여 각 설정된 필드에 저장하는 노드입니다.
-
-### 속성 설명
-
-| 속성명 | 기본값 | 자료형 | 설명 | 비고 |
-| --- | --- | --- | --- | --- |
-| Match | - | json | 파싱할 문자열의 정보를 입력합니다. |  |
-| 패턴 정의 | - | json | 파싱할 토큰의 규칙의 사용자 정의 패턴을 정규표현식으로 입력합니다. | 시스템 정의 패턴은 아래 링크를 확인하세요.<br/>http://grokdebug.herokuapp.com/patterns |
-| 실패 태그 | - | array of strings | 문자열 파싱에 실패할 경우 정의할 태그명을 입력합니다. |  |
-| 타임아웃 | 30000 | number | 문자열 파싱이 될 때까지 기다리는 시간을 입력합니다. |  |
-| 덮어쓰기 | - | array of strings | 파싱 후 지정된 필드에 값을 쓸 때 해당 필드에 이미 값이 정의되어 있을 경우 덮어쓸 필드명들을 입력합니다. |  |
-| 이름이 지정된 값만 저장 | - | boolean | 이름이 지정되지 않은 파싱 결과를 저장할지 여부를 선택합니다. |  |
-| 빈 문자열 캡처 | - | boolean | 빈 문자열도 필드에 저장할지 여부를 선택합니다. |  |
-
-### Grok 파싱 예제
-
-#### 조건
-
-* Match → `{ "message": "%{IP:clientip} %{HYPHEN} %{USER} \[%{HTTPDATE:timestamp}\] \"%{WORD:verb} %{NOTSPACE:request} HTTP/%{NUMBER:httpversion}\" %{NUMBER:response} %{NUMBER:bytes}" }`
-* 패턴 정의 → `{ "HYPHEN": "-*" }`
-
-#### 입력 메시지
-
-```js
-{
-    "message": "127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] \\\"GET /apache_pb.gif HTTP/1.0\\\" 200 2326"
-}
-```
-
-#### 출력 메시지
-
-```js
-{
-    "message": "127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] \\\"GET /apache_pb.gif HTTP/1.0\\\" 200 2326",
-    "timestamp": "10/Oct/2000:13:55:36 -0700",
-    "clientip": "127.0.0.1",
-    "verb": "GET",
-    "httpversion": "1.0",
-    "response": "200",
-    "bytes": "2326",
-    "request": "/apache_pb.gif"
-}
-```
-
 ## Filter > Date
 
 ### 노드 설명
