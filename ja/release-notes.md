@@ -1,13 +1,18 @@
 ## Data & Analytics > DataFlow > リリースノート
 
+### 2025. 10. 28.
+#### バグ修正
+* モニタリングタブでCPU、Memory、Networkの指標が、直近に実行したフローに対してのみ表示される問題を修正しました。
+* 機密情報が含まれるテンプレートを利用して構成したフローまたはテンプレートを保存する場合に、保存に失敗する問題を修正しました。
+
 ### 2025. 09. 23.
 #### 機能改善・変更
 * ノードを設定する際に、機密情報をアスタリスクで表示するよう修正しました。
-  * (NHN Cloud) Object Storage > シークレットキー
-  * (NHN Cloud) CloudTrail > Appkey
-  * (NHN Cloud) Log & Crash Search > SecretKey
-  * JDBC > パスワード
-  * (Amazon) S3 > シークレットキー
+    * (NHN Cloud) Object Storage > シークレットキー
+    * (NHN Cloud) CloudTrail > Appkey
+    * (NHN Cloud) Log & Crash Search > SecretKey
+    *  JDBC > パスワード
+    * (Amazon) S3 > シークレットキー
 * (NHN Cloud) Log & Crash Searchノードに**検索クエリ**プロパティが追加されました。
 
 #### 不具合の修正
