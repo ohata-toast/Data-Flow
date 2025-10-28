@@ -1,13 +1,18 @@
 ## Data & Analytics > DataFlow > Release Notes
 
+### October 28, 2025
+#### Bug Fixes
+* Fixed an issue where CPU, Memory, and Network metrics in the Monitoring tab were only displayed for the most recently executed flow.
+* Fixed an issue where saving a flow or template configured using a template containing sensitive information would fail. 
+
 ### September 23, 2025
 #### Feature Updates
 * Made modification so that sensitive information is marked with asterisks when setting up nodes.
-  * (NHN Cloud) Object Storage > Secret Key
-  * (NHN Cloud) CloudTrail > Appkey
-  * (NHN Cloud) Log & Crash Search > SecretKey
-  * JDBC > Password
-  * (Amazon) S3 > Secret Key
+    * (NHN Cloud) Object Storage > Secret Key
+    * (NHN Cloud) CloudTrail > Appkey
+    * (NHN Cloud) Log & Crash Search > SecretKey
+    * JDBC > Password
+    * (Amazon) S3 > Secret Key
 * (NHN Cloud) Added **Search Query** attribute to the Log & Crash Search node.
 
 #### Bug Fixes

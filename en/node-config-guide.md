@@ -762,8 +762,8 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 * Node for decrypting message field values.
 * For the encryption key, refer to symmetric keys in Secure Key Manager.
-  * Secure Key Manager symmetric keys can be created through the Secure Key Manager web console or Add Key API in Secure Key Manager.
-  * Even if a flow contains multiple Cipher nodes, all Cipher nodes can only refer to one Secure Key Manager's key reference.
+    * Secure Key Manager symmetric keys can be created through the Secure Key Manager web console or Add Key API in Secure Key Manager.
+    * Even if a flow contains multiple Cipher nodes, all Cipher nodes can only refer to one Secure Key Manager's key reference.
 
 ### Property Description 
 
@@ -1019,54 +1019,6 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
         "example": "string"
     },
     "message": "uuid test message"
-}
-```
-
-## Filter > (Logstash) Grok
-
-### Node Description
-
-* This is a node that parses a string according to defined rules and stores it in each set field.
-
-### Property Description
-
-| Property name | Default value | Data type | Description | Others |
-| --- | --- | --- | --- | --- |
-| Match | - | json | Enter the information of the string to be parsed. |  |
-| Pattern definition | - | json | Enter a custom pattern as a regular expression for the rule of tokens to be parsed. | Check the link below for system defined patterns.<br/>http://grokdebug.herokuapp.com/patterns |
-| Failure tag | - | array of strings | Enter the tag name to define if string parsing fails. |  |
-| Timeout | 30000 | number | Enter the amount of time to wait for string parsing. |  |
-| Overwrite | - | array of strings | When writing a value to a designated field after parsing, if a value is already defined in the field, enter the field names to be overwritten. |  |
-| Store only values with specified names | - | boolean | Select whether to store unnamed parsing results. |  |
-| Capture empty string | - | boolean | Select whether to store empty strings in fields. |  |
-
-### Grok Parsing Examples
-
-#### Condition
-
-* Match → `{ "message": "%{IP:clientip} %{HYPHEN} %{USER} [%{HTTPDATE:timestamp}] "%{WORD:verb} %{NOTSPACE:request} HTTP/%{NUMBER:httpversion}" %{NUMBER:response} %{NUMBER:bytes}" }`
-* Pattern definition → `{ "HYPHEN": "-*" }`
-
-#### Input message
-
-```js
-{
-    "message": "127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] \\\"GET /apache_pb.gif HTTP/1.0\\\" 200 2326"
-}
-```
-
-#### Output message
-
-```js
-{
-    "message": "127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] \\\"GET /apache_pb.gif HTTP/1.0\\\" 200 2326",
-    "timestamp": "10/Oct/2000:13:55:36 -0700",
-    "clientip": "127.0.0.1",
-    "verb": "GET",
-    "httpversion": "1.0",
-    "response": "200",
-    "bytes": "2326",
-    "request": "/apache_pb.gif"
 }
 ```
 
@@ -1488,29 +1440,29 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 #### Type Description
 
 * integer
-  * Converts strings to integers. Supports comma-separated strings. Fractional parts are discarded.
-    * Example: "1,000.5" -> `1000`
-  * Converts floats to integers. Fractional parts are discarded.
-  * Converts boolean values to integers: `true` is converted to `1`, `false` to `0`.
+    * Converts strings to integers. Supports comma-separated strings. Fractional parts are discarded.
+        * Example: "1,000.5" -> `1000`
+    * Converts floats to integers. Fractional parts are discarded.
+    * Converts boolean values to integers: `true` is converted to `1`, `false` to `0`.
 * integer_eu
-  * Converts data to integers. Supports dot-separated strings. Fractional parts are discarded. 
-    * Example: "1.000,5" -> `1000`
-  * Float and boolean values are treated the same as integers.
+    * Converts data to integers. Supports dot-separated strings. Fractional parts are discarded. 
+        * Example: "1.000,5" -> `1000`
+    * Float and boolean values are treated the same as integers.
 * float
-  * Converts integers to floats.
-  * Converts strings to floats. Supports comma-separated strings.
-    * Example: "1,000.5" -> `1000.5`
-  * Converts boolean values to integers: `true`is converted to `1.0`, `false` to `0.0`.
+    * Converts integers to floats.
+    * Converts strings to floats. Supports comma-separated strings.
+        * Example: "1,000.5" -> `1000.5`
+    * Converts boolean values to integers: `true`is converted to `1.0`, `false` to `0.0`.
 * float_eu
-  * Converts data to floats. Supports dot-delimited strings.
-    * Example: "1.000,5" -> `1000.5`
-  * Float and boolean values are treated the same as floats.
+    * Converts data to floats. Supports dot-delimited strings.
+        * Example: "1.000,5" -> `1000.5`
+    * Float and boolean values are treated the same as floats.
 * string
-  * Converts data to strings with UTF-8 encoding.
+    * Converts data to strings with UTF-8 encoding.
 * boolean
-  * Converts integers to boolean values. A `1`is converted to `true` and a `0` to `false`.
-  * Converts floats to boolean values. A `1.0`is converted to `true`, and a `0.0` to `false`.
-  * Converts strings to boolean values: `"true"`, `"t"`, `"yes"`, `"y"`, `"1"`, `"1.0"`are converted to `true`, `"false"`, `"f"`, `"no"`, `"n"`, `“0"`, `“0.0"`are converted to `false`. The empty strings are converted to`false`.
+    * Converts integers to boolean values. A `1`is converted to `true` and a `0` to `false`.
+    * Converts floats to boolean values. A `1.0`is converted to `true`, and a `0.0` to `false`.
+    * Converts strings to boolean values: `"true"`, `"t"`, `"yes"`, `"y"`, `"1"`, `"1.0"`are converted to `true`, `"false"`, `"f"`, `"no"`, `"n"`, `“0"`, `“0.0"`are converted to `false`. The empty strings are converted to`false`.
 * Array data elements are converted as described above.
 
 ### Example of replacing string
@@ -2149,7 +2101,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 #### LINE codec output example
 
 * format is set to
-  * `%{message} %{host}`
+    * `%{message} %{host}`
 
 ```
 Hello World! data-flow-01
