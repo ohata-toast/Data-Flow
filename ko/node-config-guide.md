@@ -7,6 +7,27 @@
     * DataFlow IP 고정 기능을 사용하려면 고객 센터로 문의하세요.
 * 각 노드 유형은 엔진 타입에 따라 지원 여부, 속성, 동작이 다를 수 있습니다. 자세한 건 각 노드 별 설명을 참고하세요.
 
+## 엔진 타입 요약
+
+| 노드 카테고리 | V1 | V2 | 비고 |
+| --- | --- | --- | --- |
+| Source | O · Kafka, JDBC 등 검증된 커넥터 전체 제공 | O · NHN Cloud/오브젝트 스토리지 커넥터 우선, Kafka·JDBC는 추후 제공 예정 | 각 노드 섹션의 `지원 엔진 타입` 표로 최종 지원 여부를 확인하세요. |
+| Filter | O · Alter, Grok, Mutate 등 기존 플러그인 전부 제공 | O · JSON/Date 공통 노드 + Coerce/Copy/Rename/Strip 등 V2 전용 노드 포함 | 동일 노드라도 파라미터/기본값이 다를 수 있으니 “엔진 타입별 파라미터” 표를 확인하세요. |
+| Branch | O | O | 조건 문법은 동일하지만, 엔진별 평가 방식 차이는 각 노드의 주석을 참고하세요. |
+| Sink | O · Object Storage, S3, Kafka 등 전체 제공 | O · 대부분 공통 제공. Parquet 고급 옵션 등은 현재 V1 우선 | 속성 표의 `지원 엔진 타입` 열에서 세부 제한을 확인하세요. |
+
+**V1 전용 또는 우선 제공 노드/기능**
+- `Source > (Apache) Kafka`, `Source > JDBC`는 현재 V1에서만 실행되며 V2 지원은 “추후 지원 예정”으로 표시되어 있습니다.
+- `Filter > (Logstash) Grok`, `Filter > Mutate` 등 일부 필터는 V1에서만 동작합니다.
+- `Sink > (NHN Cloud) Object Storage`, `(Amazon) S3`의 Parquet 압축/포맷 고급 옵션은 V1 설정만 허용되며, V2는 추후 지원을 명시하고 있습니다.
+
+**V2 전용 노드/추가 기능**
+- `Filter > Coerce`, `Filter > Copy`, `Filter > Rename`, `Filter > Strip`는 V2에서 제공되는 관리용 노드입니다.
+- `Filter > JSON`의 `덮어쓰기`, `원본 필드 삭제`와 같이 “지원 엔진 타입: V2”로 표시된 속성은 V2에서만 설정할 수 있습니다.
+- 모니터링, 템플릿 섹션에 “V2는 추후 제공”으로 표기된 차트/옵션은 출시 후 자동으로 업데이트되며, 현재는 V1 실행 정보만 노출됩니다.
+
+엔진 타입에 따라 호환 여부가 갈리는 노드는 항상 `### 지원 엔진 타입` 표와 `비고`/`주의` 블록에 최신 상태가 기재됩니다. 새 플로우를 설계할 때는 위 요약으로 대략적인 범위를 파악한 뒤, 실제 사용할 노드 섹션에서 세부 지원 현황과 제한 사항을 다시 확인하세요.
+
 ## Domain Specific Language(DSL) 정의
 
 * 플로우 실행에 필요한 DSL 정의입니다.
@@ -144,8 +165,11 @@
     * 토큰이 부족할 경우 Log & Crash Search로 문의하세요.
 
 ### 지원 엔진 타입
-* V1
-* V2
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
 
 ### 실행 모드
 * STREAMING: `조회 시작 시간` 이후의 데이터를 계속해서 처리합니다.
@@ -195,8 +219,11 @@
 * 노드에 종료 시간을 입력하지 않으면 스트리밍 형식으로 데이터를 읽어 옵니다. 종료 시간을 입력하면 종료 시간까지의 데이터를 읽어 오고 플로우는 종료됩니다.
 
 ### 지원 엔진 타입
-* V1
-* V2
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
 
 ### 실행 모드
 * STREAMING: `조회 시작 시간` 이후의 데이터를 계속해서 처리합니다.
@@ -244,8 +271,11 @@
 * 오브젝트 생성 시간을 기준으로 가장 빨리 생성된 오브젝트부터 데이터를 읽습니다.
 
 ### 지원 엔진 타입
-* V1
-* V2
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
 
 ### 실행 모드
 * STREAMING: `리스트 갱신 주기`마다 오브젝트 리스트를 갱신하며, 새롭게 추가된 오브젝트들을 읽어 데이터를 처리합니다.
@@ -349,8 +379,11 @@
 * 오브젝트 생성 시간을 기준으로 가장 빨리 생성된 오브젝트부터 데이터를 읽습니다.
 
 ### 지원 엔진 타입
-* V1
-* V2
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
 
 ### 실행 모드
 * STREAMING: `리스트 갱신 주기`마다 오브젝트 리스트를 갱신하며, 새롭게 추가된 오브젝트들을 읽어 데이터를 처리합니다.
@@ -460,8 +493,11 @@
 * Kafka에서 데이터를 수신하는 노드입니다.
 
 ### 지원 엔진 타입
-* V1
-* V2는 추후 지원 예정
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | - | 추후 지원 예정 |
 
 ### 실행 모드
 * STREAMING: 토픽에 새로운 메시지가 도착할 때마다 데이터를 처리합니다.
@@ -614,8 +650,11 @@
 * BATCH: 플로우 시작 시점에 쿼리를 한번 실행하여 데이터를 처리한 후 플로우를 종료합니다.
 
 ### 지원 엔진 타입
-* V1
-* V2는 추후 지원 예정
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | - | 추후 지원 예정 |
 
 ### 속성 설명
 
@@ -681,7 +720,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * 최상위 필드만 변경할 수 있습니다.
 
 ### 지원 엔진 타입
-* V1
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | X |  |
 
 ### 속성 설명
 
@@ -797,8 +840,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
     * 한 플로우에 여러 Cipher 노드가 포함되더라도 모든 Cipher 노드는 반드시 하나의 Secure Key Manager 키 레퍼런스만 참조할 수 있습니다.
 
 ### 지원 엔진 타입
-* V1
-* V2 추후 지원 예정
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | - | 추후 지원 예정 |
 
 ### 속성 설명
 
@@ -879,8 +925,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 
 ### 지원 엔진 타입
-* V1
-* V2 추후 지원 예정
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | - | 추후 지원 예정 |
 
 
 ### 속성 설명
@@ -933,8 +982,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * CSV 형식의 메시지를 파싱해 필드에 저장하는 노드입니다.
 
 ### 지원 엔진 타입
-* V1
-* V2
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
 
 ### 속성 설명
 
@@ -1034,8 +1086,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * JSON 문자열을 파싱하여 지정된 필드에 저장하는 노드입니다.
 
 ### 지원 엔진 타입
-* V1
-* V2
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
 
 ### 속성 설명
 
@@ -1080,8 +1135,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * Date 문자열을 파싱하여 timestamp 형태로 저장하는 노드입니다.
 
 ### 지원 엔진 타입
-* V1
-* V2
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
 
 ### 속성 설명
 
@@ -1126,8 +1184,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * UUID를 생성하여 필드에 저장하는 노드입니다.
 
 ### 지원 엔진 타입
-* V1
-* V2
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
 
 ### 속성 설명
 
@@ -1167,7 +1228,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * 설정에 따라 파싱한 결과를 바탕으로 메시지를 분할합니다.
 
 ### 지원 엔진 타입
-* V1
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | X |  |
 
 ### 속성 설명
 
@@ -1281,7 +1346,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * byte 길이를 초과하는 문자열은 제거하는 노드입니다.
 
 ### 지원 엔진 타입
-* V1
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | X |  |
 
 ### 속성 설명
 
@@ -1320,7 +1389,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * 필드의 값을 변형하는 노드입니다.
 
 ### 지원 엔진 타입
-* V1
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | X |  |
 
 ### 속성 설명
 
@@ -1780,7 +1853,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * null 값을 기본값으로 대체하는 노드입니다.
 
 ### 지원 엔진 타입
-* V2
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | X |  |
+| V2 | O |  |
 
 ### 속성 설명
 
@@ -1818,7 +1895,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * 기존 필드를 다른 필드로 복사하는 노드입니다.
 
 ### 지원 엔진 타입
-* V2
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | X |  |
+| V2 | O |  |
 
 ### 속성 설명
 
@@ -1859,7 +1940,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * 필드 이름을 변경하는 노드입니다.
 
 ### 지원 엔진 타입
-* V2
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | X |  |
+| V2 | O |  |
 
 ### 속성 설명
 
@@ -1898,7 +1983,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * 필드의 문자열 앞뒤 공백을 제거하는 노드입니다.
 
 ### 지원 엔진 타입
-* V2
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | X |  |
+| V2 | O |  |
 
 ### 속성 설명
 
@@ -1951,8 +2040,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
     * `/{container_name}/year={yyyy}/month={MM}/day={dd}/hour={HH}/ls.s3.{uuid}.{yyyy}-{MM}-{dd}T{HH}.{mm}.part{seq_id}.txt`
 
 ### 지원 엔진 타입
-* V1
-* V2
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
 
 ### 속성 설명
 
@@ -2152,8 +2244,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * Amazon S3에 데이터를 업로드하는 노드입니다.
 
 ### 지원 엔진 타입
-* V1
-* V2
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
 
 ### 속성 설명
 | 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
@@ -2226,8 +2321,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * Kafka에 데이터를 전송하는 노드입니다.
 
 ### 지원 엔진 타입
-* V1
-* V2는 추후 지원 예정
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | - | 추후 지원 예정 |
 
 ### 속성 설명
 
@@ -2314,8 +2412,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * Source, Filter 노드에서 처리된 데이터를 확인할 때 유용하게 사용할 수 있습니다.
 
 ### 지원 엔진 타입
-* V1
-* V2
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
   * debug는 지원하지 않음
 
 ### 코덱별 출력 예제
@@ -2372,8 +2473,11 @@ Hello World! data-flow-01
 * 조건문을 통해 메시지를 필터링하는 노드입니다.
 
 ### 지원 엔진 타입
-* V1
-* V2
+
+| 엔진 타입 | 지원 여부 | 비고 |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
 
 ### 속성 설명
 
