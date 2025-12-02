@@ -1140,7 +1140,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
 | --- | --- | --- | --- | --- | --- |
 | 소스 필드 | - | string | V1, V2 | 문자열을 가져오기 위한 필드명을 입력합니다. |  |
-| 형식 | - | array of strings | V1, V2 | 문자열을 가져오기 위한 형식을 입력합니다. | 사전 정의된 형식은 다음과 같습니다.<br/>ISO8601, UNIX, UNIX_MS, TAI64N |
+| 형식 | - | array of strings | V1, V2 | 문자열을 가져오기 위한 형식을 입력합니다. | 사전 정의된 형식은 다음과 같습니다.<br/>ISO8601, UNIX, UNIX_MS, TAI64N(V2 미지원) |
 | Locale | - | string | V1, V2 | Date 문자열 분석을 위해 사용할 Locale을 입력합니다. | ex) en, en-US, ko-kr |
 | 저장할 필드 | - | string | V1, V2 | Date 문자열 파싱 결과를 저장할 필드명을 입력합니다. |  |
 | 실패 태그 | - | array of strings | V1 | Date 문자열 파싱에 실패했을 경우 정의할 태그명을 입력합니다. |  |
