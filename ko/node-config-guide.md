@@ -13,7 +13,7 @@
 | --- | --- | --- | --- |
 | Source | O · Kafka, JDBC 등 검증된 커넥터 전체 제공 | O · NHN Cloud/오브젝트 스토리지 커넥터 우선, Kafka·JDBC는 추후 제공 예정 | 각 노드 섹션의 `지원 엔진 타입` 표로 최종 지원 여부를 확인하세요. |
 | Filter | O · Alter, Grok, Mutate 등 기존 플러그인 전부 제공 | O · JSON/Date 공통 노드 + Coerce/Copy/Rename/Strip 등 V2 전용 노드 포함 | 동일 노드라도 파라미터/기본값이 다를 수 있으니 “엔진 타입별 파라미터” 표를 확인하세요. |
-| Branch | O | O | 조건 문법은 동일하지만, 엔진별 평가 방식 차이는 각 노드의 주석을 참고하세요. |
+| Branch | O | O |  |
 | Sink | O · Object Storage, S3, Kafka 등 전체 제공 | O · 대부분 공통 제공. Parquet 고급 옵션 등은 현재 V1 우선 | 속성 표의 `지원 엔진 타입` 열에서 세부 제한을 확인하세요. |
 
 **V1 전용 또는 우선 제공 노드/기능**
@@ -2481,21 +2481,23 @@ Hello World! data-flow-01
 
 ### 속성 설명
 
-| 속성명 | 기본값 | 자료형 | 자료형 | 설명 | 비고 |
+| 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
 | --- | --- | --- | --- | --- | --- |
-| 조건문 | - | string | V1, V2 | 메시지를 필터링할 조건을 입력합니다. |  |
+| 조건문 | - | string | V1, V2 | 메시지를 필터링할 조건을 입력합니다. | 엔진 타입에 따라 조건 문법이 다를 수 있습니다. |
 
 ### 필터링 예제 - first depth field reference
 
 #### 조건
-
-* 조건문 → `[logLevel] == "ERROR"`
+* 엔진 타입이 V1인 경우
+  * 조건문 → `[logLevel] == "ERROR"`
+* 엔진 타입이 V2인 경우
+  * 조건문 → `logLevel == "ERROR"`
 
 #### 통과 메시지
 
 ``` json
 {
-       "logLevel": "ERROR"
+    "logLevel": "ERROR"
 }
 ```
 
@@ -2503,7 +2505,7 @@ Hello World! data-flow-01
 
 ``` json
 {
-   "logLevel": "INFO"
+    "logLevel": "INFO"
 }
 ```
 
@@ -2511,7 +2513,10 @@ Hello World! data-flow-01
 
 #### 조건
 
-* 조건문 → `[response][status] == 200`
+* 엔진 타입이 V1인 경우
+  * 조건문 → `[response][status] == 200`
+* 엔진 타입이 V2인 경우
+  * 조건문 → `response.status == 200` 또는 `response["status"] == 200`
 
 #### 통과 메시지
 
