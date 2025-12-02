@@ -999,14 +999,29 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 컬럼 | - | array of strings | V1 | 컬럼 이름을 입력합니다. |  |
 | 구분자 | , | string | V1, V2 | 컬럼을 구분할 문자열을 입력합니다. |  |
 | 소스 필드 | message | string | V1, V2 | CSV 파싱할 필드명을 입력합니다. |  |
-| 스키마 | - | hash | V1, V2 | 각 컬럼의 이름과 자료형을 dictionary 형태로 입력합니다. | 컬럼에 정의된 필드와 별개로 등록합니다.<br/>자료형은 기본적으로 string이며, 다른 자료형으로 변환이 필요할 경우 스키마 설정을 활용합니다.<br/>가능한 자료형은 다음과 같습니다.<br/>integer, float, date, date_time, boolean |
+| 스키마 | - | hash | V1, V2 | 각 컬럼의 이름과 자료형을 dictionary 형태로 입력합니다. | `엔진 타입에 따른 스키마 입력 방법` 참고 |
+
+#### 엔진 타입에 따른 스키마 입력 방법
+* 엔진 타입이 V1인 경우
+  * 컬럼에 정의된 필드와 별개로 등록합니다.
+  * 자료형은 기본적으로 string이며, 다른 자료형으로 변환이 필요할 경우 스키마 설정을 활용합니다.
+  * 가능한 자료형은 다음과 같습니다.
+    * integer, float, date, date_time, boolean
+* 엔진 타입이 V2인 경우
+  * V2는 컬럼 타입을 지원하지 않고 전체 컬럼 및 자료형을 스키마로 입력 받습니다.
+  * 가능한 자료형은 다음과 같습니다.
+    * string, integer, long, float, double, boolean
+
 
 ### 자료형 없는 CSV 파싱 예제
 
 #### 조건
 
 * 소스 필드 → `message`
-* 컬럼 → `["one", "two", "t hree"]`
+* 엔진 타입이 V1인 경우
+  * 컬럼 → `["one", "two", "t hree"]`
+* 엔진 타입이 V2인 경우
+  * 스키마 → `{"one": "string", "two": "string", "t hree": "string"}`
 
 #### 입력 메시지
 
@@ -1027,39 +1042,17 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 }
 ```
 
-### 자료형 없는 CSV 파싱 예제
-
-#### 조건
-
-* 소스 필드 → `message`
-* 컬럼 → `["one", "two", "t hree"]`
-
-#### 입력 메시지
-
-```js
-{
-    "message": "hey,foo,\\\"bar baz\\\""
-}
-```
-
-#### 출력 메시지
-
-```js
-{
-    "message": "hey,foo,\"bar baz\"",
-    "one": "hey",
-    "t hree": "bar baz",
-    "two": "foo"
-}
-```
 
 ### 자료형 변환이 필요한 CSV 파싱 예제
 
 #### 조건
 
 * 소스 필드 → `message`
-* 컬럼 → `["one", "two", "t hree"]`
-* 스키마 → `{"two": "integer", "t hree": "boolean"}`
+* 엔진 타입이 V1인 경우
+  * 컬럼 → `["one", "two", "t hree"]`
+  * 스키마 → `{"two": "integer", "t hree": "boolean"}`
+* 엔진 타입이 V2인 경우
+  * 스키마 → `{"one": "string", "two": "integer", "t hree": "boolean"}`
 
 #### 입력 메시지
 
