@@ -17,9 +17,9 @@
 | Sink | O · Object Storage, S3, Kafka 등 전체 제공 | O · 대부분 공통 제공. Parquet 고급 옵션 등은 현재 V1 우선 | 속성 표의 `지원 엔진 타입` 열에서 세부 제한을 확인하세요. |
 
 **V1 전용 또는 우선 제공 노드/기능**
-- `Source > (Apache) Kafka`, `Source > JDBC`는 현재 V1에서만 실행되며 V2 지원은 “추후 지원 예정”으로 표시되어 있습니다.
+- `Source > (Apache) Kafka`, `Source > JDBC`는 현재 V1에서만 실행되며 V2는 추후 지원 예정입니다.
 - `Filter > (Logstash) Grok`, `Filter > Mutate` 등 일부 필터는 V1에서만 동작합니다.
-- `Sink > (NHN Cloud) Object Storage`, `(Amazon) S3`의 Parquet 압축/포맷 고급 옵션은 V1 설정만 허용되며, V2는 추후 지원을 명시하고 있습니다.
+- `Sink > (NHN Cloud) Object Storage`, `(Amazon) S3`의 Parquet 압축/포맷 고급 옵션은 V1 설정만 허용되며, V2는 추후 지원 예정입니다.
 
 **V2 전용 노드/추가 기능**
 - `Filter > Coerce`, `Filter > Copy`, `Filter > Rename`, `Filter > Strip`는 V2에서 제공되는 관리용 노드입니다.
