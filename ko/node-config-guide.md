@@ -2054,7 +2054,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Prefix 시간대 | UTC | string | V1, V2 | Prefix에 적용할 시간 필드의 타임 존을 입력합니다. |  |
 | Prefix 시간 적용 fallback  | _prefix_datetime_parse_failure | string | V1, V2 | Prefix 시간 적용에 실패한 경우 대체할 Prefix를 입력합니다. |  |
 | 인코딩 | none | enum | V1 | 인코딩 여부를 입력합니다. gzip 인코딩을 사용할 수 있습니다. |  |
-| 오브젝트 로테이션 정책 | size\_and\_time | enum | 오브젝트의 생성 규칙을 결정합니다. | size\_and\_time: 오브젝트의 크기와 시간을 이용하여 결정<br/>size: 오브젝트의 크기를 이용하여 결정<br/>time: 시간을 이용하여 결정 |
+| 오브젝트 로테이션 정책 | size\_and\_time | enum | V1, V2 | 오브젝트의 생성 규칙을 결정합니다. | size\_and\_time: 오브젝트의 크기와 시간을 이용하여 결정<br/>size: 오브젝트의 크기를 이용하여 결정<br/>time: 시간을 이용하여 결정 |
 | 기준 시각 | 15 | number | V1, V2 | 오브젝트를 분할할 기준이 될 시간을 설정합니다. | 오브젝트 로테이션 정책이 size\_and\_time 또는 time인 경우 설정 |
 | 기준 오브젝트 크기 | 5242880 | number | V1, V2 | 오브젝트를 분할할 기준이 될 크기(단위: byte)를 설정합니다. | 오브젝트 로테이션 정책이 size\_and\_time 또는 size인 경우 설정 |
 
