@@ -2155,7 +2155,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 ### Parquet 코덱 속성 설명
 
 | 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
-| --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- | --- |
 | parquet 압축 코덱 | SNAPPY | enum | V1 | parquet 파일 변환 시 사용할 압축 코덱을 입력합니다. | * [참조](https://parquet.apache.org/docs/file-format/data-pages/compression/) </br>* 엔진 타입 V2는 추후 지원 예정 |
 
 ### Prefix 예시 - 필드
