@@ -1003,14 +1003,14 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 #### 엔진 타입에 따른 스키마 입력 방법
 * 엔진 타입이 V1인 경우
-  * 컬럼에 정의된 필드와 별개로 등록합니다.
-  * 자료형은 기본적으로 string이며, 다른 자료형으로 변환이 필요할 경우 스키마 설정을 활용합니다.
-  * 가능한 자료형은 다음과 같습니다.
-    * integer, float, date, date_time, boolean
+    * 컬럼에 정의된 필드와 별개로 등록합니다.
+    * 자료형은 기본적으로 string이며, 다른 자료형으로 변환이 필요할 경우 스키마 설정을 활용합니다.
+    * 가능한 자료형은 다음과 같습니다.
+        * integer, float, date, date_time, boolean
 * 엔진 타입이 V2인 경우
-  * V2는 컬럼 타입을 지원하지 않고 전체 컬럼 및 자료형을 스키마로 입력 받습니다.
-  * 가능한 자료형은 다음과 같습니다.
-    * string, integer, long, float, double, boolean
+    * V2는 컬럼 타입을 지원하지 않고 전체 컬럼 및 자료형을 스키마로 입력 받습니다.
+    * 가능한 자료형은 다음과 같습니다.
+        * string, integer, long, float, double, boolean
 
 
 ### 자료형 없는 CSV 파싱 예제
@@ -1019,9 +1019,9 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 * 소스 필드 → `message`
 * 엔진 타입이 V1인 경우
-  * 컬럼 → `["one", "two", "t hree"]`
+    * 컬럼 → `["one", "two", "t hree"]`
 * 엔진 타입이 V2인 경우
-  * 스키마 → `{"one": "string", "two": "string", "t hree": "string"}`
+    * 스키마 → `{"one": "string", "two": "string", "t hree": "string"}`
 
 #### 입력 메시지
 
@@ -1049,10 +1049,10 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 * 소스 필드 → `message`
 * 엔진 타입이 V1인 경우
-  * 컬럼 → `["one", "two", "t hree"]`
-  * 스키마 → `{"two": "integer", "t hree": "boolean"}`
+    * 컬럼 → `["one", "two", "t hree"]`
+    * 스키마 → `{"two": "integer", "t hree": "boolean"}`
 * 엔진 타입이 V2인 경우
-  * 스키마 → `{"one": "string", "two": "integer", "t hree": "boolean"}`
+    * 스키마 → `{"one": "string", "two": "integer", "t hree": "boolean"}`
 
 #### 입력 메시지
 
@@ -2484,9 +2484,9 @@ Hello World! data-flow-01
 
 #### 조건
 * 엔진 타입이 V1인 경우
-  * 조건문 → `[logLevel] == "ERROR"`
+    * 조건문 → `[logLevel] == "ERROR"`
 * 엔진 타입이 V2인 경우
-  * 조건문 → `logLevel == "ERROR"`
+    * 조건문 → `logLevel == "ERROR"`
 
 #### 통과 메시지
 
@@ -2509,9 +2509,9 @@ Hello World! data-flow-01
 #### 조건
 
 * 엔진 타입이 V1인 경우
-  * 조건문 → `[response][status] == 200`
+    * 조건문 → `[response][status] == 200`
 * 엔진 타입이 V2인 경우
-  * 조건문 → `response.status == 200` 또는 `response["status"] == 200`
+    * 조건문 → `response.status == 200` 또는 `response["status"] == 200`
 
 #### 통과 메시지
 
