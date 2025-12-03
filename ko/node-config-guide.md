@@ -402,8 +402,8 @@
 | 액세스 키 | - | string | V1, V2 | S3가 발급한 자격 증명 액세스 키를 입력합니다. |  |
 | 리스트 갱신 주기 | - | number | V1, V2 | 버킷에 포함된 오브젝트 리스트 갱신 주기를 입력합니다. |  |
 | 메타데이터 포함 여부 | - | boolean | V1 | S3 오브젝트의 메타데이터를 키로 포함할지 여부를 결정합니다. 메타데이터 필드를 Sink 플러그인에 노출하기 위해서는 filter 노드 유형을 조합해야 합니다(하단 가이드 참조). | 생성되는 필드는 다음과 같습니다.<br/>server_side_encryption: 서버 측 암호화 알고리즘<br/>last_modified: 오브젝트가 마지막으로 수정된 시간<br/>content_length: 오브젝트 크기<br/>key: 오브젝트 이름<br/>content_type: 오브젝트 형식<br/>metadata: 메타데이터<br/>etag: etag |
-| Prefix | - | V1, V2 | string | 읽어 올 오브젝트의 접두사를 입력합니다. |  |
-| 제외할 키 패턴 | - | V1, V2 | string | 읽지 않을 오브젝트의 패턴을 입력합니다. |   |
+| Prefix | - | string | V1, V2 | 읽어 올 오브젝트의 접두사를 입력합니다. |  |
+| 제외할 키 패턴 | - | string | V1, V2 | 읽지 않을 오브젝트의 패턴을 입력합니다. |   |
 | 처리 완료 오브젝트 삭제 | false | boolean | V1 | 속성값이 true일 경우 읽기 완료한 오브젝트를 삭제합니다. |  |
 | 추가 설정 | - | hash | V1 | S3 서버와 연결할 때 사용할 추가적인 설정을 입력합니다. | 사용 가능한 설정의 전체 목록은 다음 링크를 참조하세요.<br/>https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html<br/>예:<br/>{<br/>"force\_path\_style": true<br/>}  
 
