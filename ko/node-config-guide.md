@@ -1864,7 +1864,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 ### 조건
 * 대상 필드 → `fieldname`
-* 버킷 → `default_value`
+* 기본 값 → `default_value`
 
 #### 입력 메시지
 
