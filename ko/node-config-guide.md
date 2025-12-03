@@ -1951,8 +1951,8 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 ### 기본값 설정 예제
 
 ### 조건
-* 대상 필드 → `fieldname`
-* 필드명 → `changed_fieldname`
+* 소스 필드 → `fieldname`
+* 대상 필드 → `changed_fieldname`
 
 #### 입력 메시지
 
