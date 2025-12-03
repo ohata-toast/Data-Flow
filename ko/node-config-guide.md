@@ -1944,9 +1944,9 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 | 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
 | --- | --- | --- | --- | --- | --- |
-| 대상 필드 | message | string | V2 | 이름을 변경할 대상 필드를 입력합니다. |  |
-| 필드명 | - | string | V2 |  | 변경할 필드명을 입력합니다. |
-| 덮어쓰기 | false | boolean | V2 | true일 경우 필드명과 같은 필드가 존재하면 덮어 씌웁니다.  |  |
+| 소스 필드 |  | string | V2 | 이름을 변경할 소스 필드를 입력합니다. |  |
+| 대상 필드 | - | string | V2 |  | 변경할 필드명을 입력합니다. |
+| 덮어쓰기 | false | boolean | V2 | true일 경우 대상 필드가 이미 존재할 경우 덮어 씌웁니다.  |  |
 
 ### 기본값 설정 예제
 
