@@ -2410,8 +2410,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 엔진 타입 | 지원 여부 | 비고 |
 | --- | --- | --- |
 | V1 | O |  |
-| V2 | O |  |
-  * debug는 지원하지 않음
+| V2 | O | debug는 지원하지 않음 |
 
 ### 코덱별 출력 예제
 
@@ -2477,7 +2476,7 @@ Hello World! data-flow-01
 
 | 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
 | --- | --- | --- | --- | --- | --- |
-| 조건문 | - | string | V1, V2 | 메시지를 필터링할 조건을 입력합니다. | 엔진 타입에 따라 조건 문법이 다를 수 있습니다. |
+| 조건문 | - | string | V1, V2 | 메시지를 필터링할 조건을 입력합니다. | 엔진 타입에 따라 조건 문법이 다릅니다. 아래 예제를 참고하세요. |
 
 ### 필터링 예제 - first depth field reference
 
