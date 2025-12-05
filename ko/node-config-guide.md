@@ -4,17 +4,17 @@
 * 노드 유형의 종류는 Source, Filter, Branch, Sink입니다.
 * Source, Sink 노드 유형은 반드시 테스트를 수행하여 엔드포인트 정보가 유효한지 확인하기를 권장합니다.
 * 접근 제어가 설정된 데이터 소스 연결 시에는 DataFlow IP 고정 기능을 사용해야 합니다.
-    * DataFlow IP 고정 기능을 사용하려면 고객 센터로 문의하세요.
-* 각 노드 유형은 엔진 타입에 따라 지원 여부, 속성, 동작이 다를 수 있습니다. 자세한 건 각 노드 별 설명을 참고하세요.
+    * DataFlow IP 고정 기능을 사용하려면 고객문의로 문의하세요.
+* 각 노드 유형은 엔진 타입에 따라 지원 여부, 속성, 동작이 다를 수 있습니다. 자세한 건 각 노드별 설명을 참고하세요.
 
 ## 엔진 타입 요약
 
 | 노드 카테고리 | V1 | V2 | 비고 |
 | --- | --- | --- | --- |
-| Source | O · Kafka, JDBC 등 검증된 커넥터 전체 제공 | O · NHN Cloud/오브젝트 스토리지 커넥터 우선, Kafka·JDBC는 추후 제공 예정 | 각 노드 섹션의 `지원 엔진 타입` 표로 최종 지원 여부를 확인하세요. |
-| Filter | O · Alter, Grok, Mutate 등 기존 플러그인 전부 제공 | O · JSON/Date 공통 노드 + Coerce/Copy/Rename/Strip 등 V2 전용 노드 포함 | 동일 노드라도 파라미터/기본값이 다를 수 있으니 “엔진 타입별 파라미터” 표를 확인하세요. |
+| Source | O<br>Kafka, JDBC 등 검증된 커넥터 전체 제공 | O<br>NHN Cloud/오브젝트 스토리지 커넥터 우선, Kafka·JDBC는 추후 제공 예정 | 각 노드 섹션의 `지원 엔진 타입` 표로 최종 지원 여부를 확인하세요. |
+| Filter | O<br>Alter, Grok, Mutate 등 기존 플러그인 전부 제공 | O<br>JSON/Date 공통 노드 + Coerce/Copy/Rename/Strip 등 V2 전용 노드 포함 | 동일 노드라도 파라미터/기본값이 다를 수 있으니 “엔진 타입별 파라미터” 표를 확인하세요. |
 | Branch | O | O |  |
-| Sink | O · Object Storage, S3, Kafka 등 전체 제공 | O · 대부분 공통 제공. Parquet 고급 옵션 등은 현재 V1 우선 | 속성 표의 `지원 엔진 타입` 열에서 세부 제한을 확인하세요. |
+| Sink | O<br>Object Storage, S3, Kafka 등 전체 제공 | O<br>대부분 공통 제공. Parquet 고급 옵션 등은 현재 V1 우선 | 속성 표의 `지원 엔진 타입` 열에서 세부 제한을 확인하세요. |
 
 **V1 전용 또는 우선 제공 노드/기능**
 - `Source > (Apache) Kafka`, `Source > JDBC`는 현재 V1에서만 실행되며 V2는 추후 지원 예정입니다.
@@ -23,8 +23,8 @@
 
 **V2 전용 노드/추가 기능**
 - `Filter > Coerce`, `Filter > Copy`, `Filter > Rename`, `Filter > Strip`는 V2에서 제공되는 관리용 노드입니다.
-- `Filter > JSON`의 `덮어쓰기`, `원본 필드 삭제`와 같이 “지원 엔진 타입: V2”로 표시된 속성은 V2에서만 설정할 수 있습니다.
-- 모니터링, 템플릿 섹션에 “V2는 추후 제공”으로 표기된 차트/옵션은 출시 후 자동으로 업데이트되며, 현재는 V1 실행 정보만 노출됩니다.
+- `Filter > JSON`의 `덮어쓰기`, `원본 필드 삭제`와 같이 **지원 엔진 타입: V2**로 표시된 속성은 V2에서만 설정할 수 있습니다.
+- 모니터링, 템플릿 섹션에 **V2는 추후 제공**으로 표기된 차트/옵션은 출시 후 자동으로 업데이트되며, 현재는 V1 실행 정보만 노출됩니다.
 
 엔진 타입에 따라 호환 여부가 갈리는 노드는 항상 `### 지원 엔진 타입` 표와 `비고`/`주의` 블록에 최신 상태가 기재됩니다. 새 플로우를 설계할 때는 위 요약으로 대략적인 범위를 파악한 뒤, 실제 사용할 노드 섹션에서 세부 지원 현황과 제한 사항을 다시 확인하세요.
 
@@ -134,7 +134,7 @@
 * Source 노드에는 실행 모드가 존재하며, BATCH 모드와 STREAMING 모드로 나뉩니다.
     * STREAMING 모드: 플로우를 종료하지 않고 실시간으로 데이터를 처리합니다.
     * BATCH 모드: 정해진 데이터를 처리한 후 플로우를 종료합니다.
-* Source 노드 별로 지원하는 실행 모드가 다릅니다.
+* Source 노드별로 지원하는 실행 모드가 다릅니다.
 
 ### Source 노드의 공통 설정
 
@@ -707,7 +707,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 | 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
 | --- | --- | --- | --- | --- | --- |
-| 아이디 | - | string | V1, V2 | 노드의 아이디를 설정합니다<br/>이 속성에 정의된 값으로 차트보드에 노드 이름을 표기합니다. |  |
+| 아이디 | - | string | V1, V2 | 노드의 아이디를 설정합니다.<br/>이 속성에 정의된 값으로 차트보드에 노드 이름을 표기합니다. |  |
 | 태그 추가 | - | array of strings | V1 |  각 메시지에 태그를 추가합니다. |  |
 | 태그 삭제 | - | array of strings | V1 | 각 메시지에 주어진 태그를 삭제합니다. |  |
 | 필드 삭제 | - | array of strings | V1 | 각 메시지의 필드를 삭제합니다. |  |
@@ -1092,7 +1092,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | --- | --- | --- | --- | --- | --- |
 | 소스 필드 | message | string | V1, V2 | JSON 문자열을 파싱할 필드명을 입력합니다. |  |
 | 저장할 필드 | - | string | V1, V2 | JSON 파싱 결과를 저장할 필드명을 입력합니다.<br/>만약 속성값을 지정하지 않을 경우 root 필드에 결과를 저장합니다. |  |
-| 덮어쓰기 | false | boolean | V2 | true일 경우 JSON 파싱 결과가 저장할 필드나 기존 필드와 겹치면 덮어 씌웁니다.  |  |
+| 덮어쓰기 | false | boolean | V2 | true일 경우 JSON 파싱 결과가 저장할 필드나 기존 필드와 겹치면 덮어씌웁니다.  |  |
 | 원본 필드 삭제 | false | boolean | V2 | JSON 파싱이 완료되면 소스 필드를 삭제합니다. 파싱이 실패한다면 유지합니다. |  |
 
 ### JSON 파싱 예제
@@ -1141,7 +1141,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | --- | --- | --- | --- | --- | --- |
 | 소스 필드 | - | string | V1, V2 | 문자열을 가져오기 위한 필드명을 입력합니다. |  |
 | 형식 | - | array of strings | V1, V2 | 문자열을 가져오기 위한 형식을 입력합니다. | 사전 정의된 형식은 다음과 같습니다.<br/>ISO8601, UNIX, UNIX_MS, TAI64N(V2 미지원) |
-| Locale | - | string | V1, V2 | Date 문자열 분석을 위해 사용할 Locale을 입력합니다. | ex) en, en-US, ko-kr |
+| Locale | - | string | V1, V2 | Date 문자열 분석을 위해 사용할 Locale을 입력합니다. | 예: en, en-US, ko-kr |
 | 저장할 필드 | - | string | V1, V2 | Date 문자열 파싱 결과를 저장할 필드명을 입력합니다. |  |
 | 실패 태그 | - | array of strings | V1 | Date 문자열 파싱에 실패했을 경우 정의할 태그명을 입력합니다. |  |
 | 시간대 | - | string | V1, V2 | 날짜의 시간대를 입력합니다. |  |
@@ -1901,7 +1901,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | --- | --- | --- | --- | --- | --- |
 | 대상 필드 | - | string | V2 | 복사할 소스 필드명을 입력합니다. |  |
 | 저장할 필드 | - | string | V2 | 복사한 결과를 저장할 필드명을 입력합니다. |  |
-| 덮어쓰기 | false | boolean | V2 | true일 경우 저장할 필드가 이미 존재하면 덮어 씌웁니다.  |  |
+| 덮어쓰기 | false | boolean | V2 | true일 경우 저장할 필드가 이미 존재하면 덮어씌웁니다.  |  |
 
 ### 기본값 설정 예제
 
@@ -1946,7 +1946,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | --- | --- | --- | --- | --- | --- |
 | 소스 필드 |  | string | V2 | 이름을 변경할 소스 필드를 입력합니다. |  |
 | 대상 필드 | - | string | V2 |  | 변경할 필드명을 입력합니다. |
-| 덮어쓰기 | false | boolean | V2 | true일 경우 대상 필드가 이미 존재할 경우 덮어 씌웁니다.  |  |
+| 덮어쓰기 | false | boolean | V2 | true일 경우 대상 필드가 이미 존재할 경우 덮어씌웁니다.  |  |
 
 ### 기본값 설정 예제
 
@@ -2032,7 +2032,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * NHN Cloud의 Object Storage에 데이터를 업로드하는 노드입니다.
 * OBS에 작성되는 오브젝트는 기본적으로 다음 경로 포맷에 맞게 출력됩니다.
     * `/{container_name}/year={yyyy}/month={MM}/day={dd}/hour={HH}/ls.s3.{uuid}.{yyyy}-{MM}-{dd}T{HH}.{mm}.part{seq_id}.txt`
-* 엔진 타입이 V2인 경우 제공하는 코덱은 json, line 입니다. 추후 plain, parquet 코덱 등을 지원할 예정입니다.
+* 엔진 타입이 V2인 경우 제공하는 코덱은 json, line입니다. 추후 plain, parquet 코덱 등을 지원할 예정입니다.
 
 ### 지원 엔진 타입
 
@@ -2051,7 +2051,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 액세스 키 | - | string | V1, V2 | S3 API 자격 증명 액세스 키를 입력합니다. |  |
 | Prefix | /year=%{+YYYY}/month=%{+MM}/day=%{+dd}/hour=%{+HH} | string | V1, V2 | 오브젝트 업로드 시 이름 앞에 붙일 접두사를 입력합니다.<br/>필드 또는 시간 형식을 입력할 수 있습니다. | [사용 가능한 시간 형식](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html) |
 | Prefix 시간 필드 | @timestamp | string | V1, V2 | Prefix에 적용할 시간 필드를 입력합니다. |  |
-| Prefix 시간 필드 타입 | DATE_FILTER_RESULT | enum | V1, V2 | Prefix에 적용할 시간 필드의 타입을 입력합니다. | 엔진 타입 V2는 DATE_FILTER_RESULT 타입만 가능 (추후 다른 타입 지원 예정) |
+| Prefix 시간 필드 타입 | DATE_FILTER_RESULT | enum | V1, V2 | Prefix에 적용할 시간 필드의 타입을 입력합니다. | 엔진 타입 V2는 DATE_FILTER_RESULT 타입만 가능(추후 다른 타입 지원 예정) |
 | Prefix 시간대 | UTC | string | V1, V2 | Prefix에 적용할 시간 필드의 타임 존을 입력합니다. |  |
 | Prefix 시간 적용 fallback  | _prefix_datetime_parse_failure | string | V1, V2 | Prefix 시간 적용에 실패한 경우 대체할 Prefix를 입력합니다. |  |
 | 인코딩 | none | enum | V1 | 인코딩 여부를 입력합니다. gzip 인코딩을 사용할 수 있습니다. |  |
@@ -2237,7 +2237,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 ### 노드 설명
 
 * Amazon S3에 데이터를 업로드하는 노드입니다.
-* 엔진 타입이 V2인 경우 제공하는 코덱은 json, line 입니다. 추후 plain, parquet 코덱 등을 지원할 예정입니다.
+* 엔진 타입이 V2인 경우 제공하는 코덱은 json, line입니다. 추후 plain, parquet 코덱 등을 지원할 예정입니다.
 
 ### 지원 엔진 타입
 
