@@ -182,7 +182,7 @@ Define a flow logic.
 
 * Define a flow by importing flow components from Node type or Template from flow settings.
     * The Collapse/Expand button allows to zoom-in/zoom-out the flow screen.
-    * The available engine type varies by engine type.
+    * The available node varies by engine type.
 * Adjust the flow screen to define flows and change the graph configuration.
 
     * Define a node behavior by entering the appropriate settings for each node.
