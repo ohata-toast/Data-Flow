@@ -4,7 +4,29 @@
 * Types of node types are Source, Filter, Branch, and Sink.
 * It is recommended that Source, Sink Node type have to be tested to ensure that Endpoint information is valid.
 * You must use the DataFlow IP fixation feature when connecting to data sources with access control enabled.
-    * To enable the DataFlow IP fixation feature, contact the Customer Center.
+    * To use static DataFlow IP, please contact customer service.
+* Each node type may have different support, properties, and behavior depending on the engine type. For more information, refer to the description for each node.
+
+## Engine Type Summary
+
+| Node Category | V1 | V2 | Note |
+| --- | --- | --- | --- |
+| Source | O<br>Provides all proven connectors, including Kafka and JDBC | O<br>NHN Cloud/Object Storage connectors first, with Kafka and JDBC to be provided later | Check the "Supported Engine Type" table in each node section for final support. |
+| Filter | O<br>Provides all existing plugins, including Alter, Grok, and Mutate | O<br>Includes common JSON/Date nodes + V2-specific nodes, such as Coerce/Copy/Rename/Strip | Parameters/default values ​​may vary even for the same node, so check the "Parameters by Engine Type" table. |
+| Branch | O | O | | |
+| Sink | O<br>Provides all Object Storage, S3, Kafka, etc. | O<br>Provides most common connectors. Parquet advanced options, etc. are currently V1-first | Check the "Supported Engine Type" column in the properties table for detailed limitations. |
+
+**V1 Dedicated or Priority Node/Feature**
+- `Source > (Apache) Kafka` and `Source > JDBC` currently only work on V1, with V2 support planned for the future.
+- Some filters, such as `Filter > (Logstash) Grok` and `Filter > Mutate`, only work on V1.
+- The Parquet compression/format advanced options for `Sink > (NHN Cloud) Object Storage` and `(Amazon) S3` only support V1 settings, with V2 support planned for the future.
+
+**V2 Dedicated Node/Additional Feature**
+- `Filter > Coerce`, `Filter > Copy`, `Filter > Rename`, and `Filter > Strip` are management nodes provided in V2.
+- Properties marked as **Supported Engine Type: V2**, such as `Overwrite` and `Delete Original Field` in `Filter > JSON`, can only be set in V2.
+- Charts/options marked as **V2 Available Later** in the Monitoring and Templates sections will be automatically updated after release, and currently only display V1 execution information.
+
+Nodes whose compatibility varies depending on engine type are always updated in the `### Supported Engine Types` table and `Note`/`Caution` blocks. When designing a new flow, first get a general idea of ​​the scope from the summary above, then review the detailed support status and limitations in the actual node section.
 
 ## Domain Specific Language(DSL) Definition 
 
@@ -112,17 +134,16 @@
 * The Source node has two execution modes, BATCH and STREAMING.
     * STREAMING mode: Processes data in real time without exiting the flow.
     * BATCH mode: Processes a set amount of data and then terminates the flow.
-* Different Source nodes support different execution modes.
-* In a single flow, all source nodes must be set to the same execution mode.
+* The execution modes are supported differently by each source node.
 
 ## Common Settings on Source Node
 
-| Property name | Default value | Data type | Description | Others |
-| --- | --- | --- | --- | --- |
-| Type | - | string | Create `type` field with the value given in each message. |  |
-| ID | - | string | Sets Node ID<br/>Mark the Node name on the chart board with values defined in this property. |  |
-| Tag | - | array of strings | Add the tag of given value to each message. |  |
-| Add Field | - | Hash | You can add a custom field<br/>You can add fields by calling in the value of each field with `%{[depth1_field]}`. |  |
+| Property name | Default value | Data type | Supported engine type | Description | Others |
+| --- | --- | --- | --- | --- | --- |
+| Type | - | string | V1 | Create `type` field with the value given in each message. |  |
+| ID | - | string | V1, V2 | Sets Node ID<br/>Mark the Node name on the chart board with values defined in this property. |  |
+| Tag | - | array of strings | V1 | Add the tag of given value to each message. |  |
+| Add Field | - | Hash | V1 | You can add a custom field<br/>You can add fields by calling in the value of each field with `%{[depth1_field]}`. |  |
 
 ## Example of adding fields
 
@@ -143,20 +164,28 @@
 * Affected by tokens from Log & Crash Search's Log Search API.
     * If you don't have enough tokens, you need to contact Log & Crash Search.
 
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
+
 ### Execution Mode
 * STREAMING: Continues processing data after the `Query Start time`.
 * BATCH: Processes all data that falls between the `Query Start time` and the `Query End time` and ends the flow.
 
+
 ### Property Description 
 
-| Property name       | Default value | Data type    | Description                                                                                                                                                     | Others |
-|-----------|-----|--------|--------------------------------------------------------------------------------------------------------------------------------------------------------|----|
-| Appkey    | -   | string | Enter the app key for Log & Crash Search.                                                                                                                         |    |
-| SecretKey | -   | string | Enter the secret key for Log & Crash Search.                                                                                                                       |    |
-| Query Start time  | -   | string | Enter the start time of log query. Must be entered in ISO 8601 format with offset or [DSL](#domain-specific-languagedsl) format. <br/>Example: 2025-07-23T11:23:00+09:00, {{ executionTime }} |    |
-| Query End time  | -   | string | Enter the end time of log query. Must be entered in ISO 8601 format with offset or [DSL](#domain-specific-languagedsl) format. <br/>Example: 2025-07-23T11:23:00+09:00, {{ executionTime }} |    |
-| Number of retries    | -   | number | Enter the maximum number of times to retry when a log query fails.                                                                                                                       |    |
-| Search Query     | *   | string | Enter the search query to use when requesting a Log & Crash Search query. For detailed query writing instructions, please refer to the "Lucene Query Guide" of the Log & Crash Search service.                             |    |
+| Property name       | Default value | Data type | Supported engine type | Description | Others |
+|-----|-----|-----|-----|-----|-----|
+| Appkey    | - | string | V1, V2 | Enter the app key for Log & Crash Search.                                                                                                                         |    |
+| SecretKey | - | string | V1, V2 | Enter the secret key for Log & Crash Search.                                                                                                                       |    |
+| Query Start time  | -  | string | V1, V2 | Enter the start time of log query. Must be entered in ISO 8601 format with offset or [DSL](#domain-specific-languagedsl) format. <br/>Example: 2025-07-23T11:23:00+09:00, {{ executionTime }} |    |
+| Query End time  | -  | string | V1, V2 | Enter the end time of log query. Must be entered in ISO 8601 format with offset or [DSL](#domain-specific-languagedsl) format. <br/>Example: 2025-07-23T11:23:00+09:00, {{ executionTime }} |    |
+| Number of retries    | - | number | V1 | Enter the maximum number of times to retry when a log query fails.                                                                                                                       |    |
+| Search Query     | *   | string | V1, V2 | Enter the search query to use when requesting a Log & Crash Search query. For detailed query writing instructions, please refer to the "Lucene Query Guide" of the Log & Crash Search service.                             |    |
 
 * Set the number of retries
     * If the number of retries fails, no more log queries are attempted, and the flow ends.
@@ -189,18 +218,28 @@
 * You can set the data query start time for a node. If not set, data is read from the start of the flow.
 * If no end time is entered in the node, data is read in streaming format. If an end time is entered, the data up to the end time is read and the flow ends.
 
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
+
 ### Execution Mode
 * STREAMING: Continues processing data after the `Query Start time`.
 * BATCH: Processes all data that falls between the `Query Start time` and the `Query End time` and ends the flow.
 
 ### Property Description 
 
-| Property name      | Default value | Data type    | Description                                                                                                                                                      | Others |
-|----------|-----|--------|---------------------------------------------------------------------------------------------------------------------------------------------------------|----|
-| Appkey   | -   | string | Enter the app key for CloudTrail.                                                                                                                                  |    |
-| Query Start time  | -   | string | Enter the start time of data query. Must be entered in ISO 8601 format with offset or [DSL](#domain-specific-languagedsl) format. <br/>Example: 2025-07-23T11:23:00+09:00, {{ executionTime }} |    |
-| Query End time  | -   | string | Enter the end time of data query. Must be entered in ISO 8601 format with offset or [DSL](#domain-specific-languagedsl) format. <br/>Example: 2025-07-23T11:23:00+09:00, {{ executionTime }} |    |
-| Number of retries    | -   | number | Enter the maximum number of times to retry when a data query fails.    
+| Property name      | Default value | Data type    | Supported engine type | Description | Others |
+|------|-----|-------|--------------|----|----|
+| Appkey   | - | string | V1, V2 | Enter the app key for CloudTrail.                                                                                                                                  |    |
+| User Access Key ID | - | string | V2 | Enter the User Access Key ID of the user account. |    |
+| Secret Access Key  | - | string | V2 | Enter the User Secret Key of the user account.   |    |
+| Query Start time  | - | string | V1, V2 | Enter the start time of data query. Must be entered in ISO 8601 format with offset or [DSL](#domain-specific-languagedsl) format. <br/>Example: 2025-07-23T11:23:00+09:00, {{ executionTime }} |    |
+| Query End time  | - | string | V1, V2 | Enter the end time of data query. Must be entered in ISO 8601 format with offset or [DSL](#domain-specific-languagedsl) format. <br/>Example: 2025-07-23T11:23:00+09:00, {{ executionTime }} |    |
+| Number of Retries    | - | number | V1 | Enter the maximum number of times to retry when a data query fails.    
+| Event Type | * | string | V2 | Enter the event ID you want to search for. |  |
 
 * Set the number of retries
     * If the number of retries fails, no more data queries are attempted, and the flow ends.
@@ -232,23 +271,30 @@
 * Node that receives data from Object Storage of NHN Cloud.
 * Based on the object creation time, data is read from the object created the earliest.
 
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
+
 ### Execution Mode
 * STREAMING: Updates the object list on each `list update cycle`and processes data by reading newly added objects.
 * BATCH: Fetches the object list once at the beginning of the flow, reads the objects, processes the data, and ends the flow.
 
 ### Property Description 
 
-| Property name | Default value | Data type | Description | Note |
-| --- | --- | --- | --- | --- |
-| Bucket | - | string | Enter a bucket name to read data. |  |
-| Region | - | string | Enter region information configured in the storage. |  |
-| Secret Key | - | string | Enter the credential secret key issued by S3. |  |
-| Access key | - | string | Enter the credential access key issued by S3. |  |
-| List update cycle | - | number | Enter the object list update cycle included in the bucket. |  |
-| Metadata included or not | - | boolean | Determine whether to include metadata from the S3 object as a key. In order to expose metadata fields to the Sink plugin, you need to combine filter node types (see guide below). | fields to be created are as follows.<br/>last_modified: The last time the object was modified<br/>content_length: Object size<br/>key: Object name<br/>content_type: Object type<br/>metadata: Metadata<br/>etag: etag |
-| Prefix | - | string | Enter a prefix of an object to read. |  |
-| Key pattern to exclude | - | string | Enter the pattern of an object not to be read. |  |
-| Delete processed objects  | false | boolean | If the property value is true, delete the object read. |  |
+| Property name | Default value | Data type | Supported engine type | Description | Note |
+| --- | --- | --- | --- | --- | --- |
+| Bucket | - | string | V1, V2 | Enter a bucket name to read data. |  |
+| Region | - | string | V1, V2 | Enter region information configured in the storage. |  |
+| Secret Key | - | string | V1, V2 | Enter the credential secret key issued by S3. |  |
+| Access key | - | string | V1, V2 | Enter the credential access key issued by S3. |  |
+| List update cycle | - | number | V1, V2 | Enter the object list update cycle included in the bucket. |  |
+| Metadata included or not | - | boolean | V1| Determine whether to include metadata from the S3 object as a key. In order to expose metadata fields to the Sink plugin, you need to combine filter node types (see guide below). | fields to be created are as follows.<br/>last_modified: The last time the object was modified<br/>content_length: Object size<br/>key: Object name<br/>content_type: Object type<br/>metadata: Metadata<br/>etag: etag |
+| Prefix | - | string | V1, V2 | Enter a prefix of an object to read. |  |
+| Key pattern to exclude | - | string | V1, V2 | Enter the pattern of an object not to be read. |  |
+| Delete processed objects  | false | boolean | V1| If the property value is true, delete the object read. |  |
 
 ### Metadata Field Usage
 
@@ -333,26 +379,33 @@
 * Node for uploading data to Amazon S3.
 * Based on the object creation time, data is read from the object created the earliest.
 
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
+
 ### Execution Mode
 * STREAMING: Updates the object list on each `list update cycle`and processes data by reading newly added objects.
 * BATCH: Updates the object list once at the start of the flow, then reads the objects, processes the data, and ends the flow.
 
 ### Property Description 
 
-| Property name | Default value | Data type | Description | Note                                                                                                                                                                                                           |
-| --- | --- | --- | --- |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Endpoint | - | string | Enter endpoint for S3 storage. | Only HTTP and HTTPS URL types can be entered.                                                                                                                                                                                |
-| Bucket | - | string | Enter a bucket name to read data. |                                                                                                                                                                                                              |
-| Region | - | string | Enter region information configured in the storage. |                                                                                                                                                                                                              |
-| Session token | - | string | Enter AWS session token. |                                                                                                                                                                                                              |
-| Secret Key | - | string | Enter the credential secret key issued by S3. |                                                                                                                                                                                                              |
-| Access key | - | string | Enter the credential access key issued by S3. |                                                                                                                                                                                                              |
-| List update cycle | - | number | Enter the object list update cycle included in the bucket. |                                                                                                                                                                                                              |
-| Metadata included or not | - | boolean | Determine whether to include metadata from the S3 object as a key. In order to expose metadata fields to the Sink plugin, you need to combine filter node types (see guide below). | fields to be created are as follows.<br/>last_modified: The last time the object was modified<br/>content_length: Object size<br/>key: Object name<br/>content_type: Object type<br/>metadata: Metadata<br/>etag: etag |
-| Prefix | - | string | Enter a prefix of an object to read. |                                                                                                                                                                                                              |
-| Key pattern to exclude | - | string | Enter the pattern of an object not to be read. |                                                                                                                                                                                                              |
-| Delete | false | boolean | If the property value is true, delete the object read. |                                                                                                                                                                                                              |
-| Additional settings | - | hash | Enter additional settings to use when connecting to the S3 server. | See the following link for a full list of available settings.<br/>https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html<br/>Example:<br/>{<br/>"force_path_style": true<br/>}                                                     |
+| Property name | Default value | Data type | Supported engine type | Description | Note |
+| --- | --- | --- | --- | --- | --- |
+| Endpoint | - | string | V1, V2 | Enter endpoint for S3 storage. | Only HTTP and HTTPS URL types can be entered.                                                                                                                                                                                |
+| Bucket | - | string | V1, V2 | Enter a bucket name to read data. |                                                                                                                                                                                                              |
+| Region | - | string | V1, V2 | Enter region information configured in the storage. |                                                                                                                                                                                                              |
+| Session token | - | string | V1 | Enter AWS session token. |                                                                                                                                                                                                              |
+| Secret Key | - | string | V1, V2 | Enter the credential secret key issued by S3. |                                                                                                                                                                                                              |
+| Access key | - | string | V1, V2 | Enter the credential access key issued by S3. |                                                                                                                                                                                                              |
+| List update cycle | - | number | V1, V2 | Enter the object list update cycle included in the bucket. |                                                                                                                                                                                                              |
+| Metadata included or not | - | boolean | V1 | Determine whether to include metadata from the S3 object as a key. In order to expose metadata fields to the Sink plugin, you need to combine filter node types (see guide below). | fields to be created are as follows.<br/>last_modified: The last time the object was modified<br/>content_length: Object size<br/>key: Object name<br/>content_type: Object type<br/>metadata: Metadata<br/>etag: etag |
+| Prefix | - | string | V1, V2 | Enter a prefix of an object to read. |                                                                                                                                                                                                              |
+| Key pattern to exclude | - | string | V1, V2 | Enter the pattern of an object not to be read. |                                                                                                                                                                                                              |
+| Delete | false | boolean | V1 | If the property value is true, delete the object read. |                                                                                                                                                                                                              |
+| Additional settings | - | hash | V1 | Enter additional settings to use when connecting to the S3 server. | See the following link for a full list of available settings.<br/>https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html<br/>Example:<br/>{<br/>"force_path_style": true<br/>}                                                     |
 
 ### Metadata Field Usage
 
@@ -440,45 +493,53 @@
 
 * Node that receives data from Kafka.
 
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | - | To be supported |
+
 ### Execution Mode
 * STREAMING: Processes data every time a new message arrives in a topic.
 
 !!! danger "Caution"
     * Kafka nodes do not support BATCH mode.
+    * V2 engine type - Kafka node will be supported later.
 
 ### Property Description 
 
-| Property name | Default value | Data type | Description | Note                                                                                                                                                                                                                                                                                                                                                       |
-| --- | --- | --- | --- |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Broker server list | localhost:9092 | string | Enter the Kafka broker server. Separate multiple servers with commas ( , ). | [bootstrap.servers](https://kafka.apache.org/documentation/#consumerconfigs_bootstrap.servers)<br/>ex: 10.100.1.1:9092,10.100.1.2:9092                                                                                                                                                                                                                    |
-| Consumer group ID | dataflow | string | Enter an ID that identifies the Kafka Consumer Group. | [group.id](https://kafka.apache.org/documentation/#consumerconfigs_group.id)                                                                                                                                                                                                                                                                             |
-| Internal topic excluded or not | true | boolean |  | [exclude.internal.topics](https://kafka.apache.org/documentation/#consumerconfigs_exclude.internal.topics)<br/>Exclude internal topics such as `__consumer_offsets` from recipients.                                                                                                                                                                                            |
-| Topic pattern | - | string | Enter a Kafka topic patter to receive messages. | ex: `*-messages`                                                                                                                                                                                                                                                                                                                                          |
-| Client ID | dataflow | string | Enter an ID to identify Kafka Consumer. | [client.id](https://kafka.apache.org/documentation/#consumerconfigs_client.id)                                                                                                                                                                                                                                                                           |
-| Partition allocation policy | - | string | Determines how Kafka assigns partitions to consumer groups when receiving messages. | [partition.assignment.strategy](https://kafka.apache.org/documentation/#consumerconfigs_partition.assignment.strategy)<br/>org.apache.kafka.clients.consumer.RangeAssignor<br/>org.apache.kafka.clients.consumer.RoundRobinAssignor<br/>org.apache.kafka.clients.consumer.StickyAssignor<br/>org.apache.kafka.clients.consumer.CooperativeStickyAssignor |
+| Property name | Default value | Data type | Supported engine type | Description | Note |
+| --- | --- | --- | --- | --- | --- |
+| Broker server list | localhost:9092 | string | V1 | Enter the Kafka broker server. Separate multiple servers with commas ( , ). | [bootstrap.servers](https://kafka.apache.org/documentation/#consumerconfigs_bootstrap.servers)<br/>ex: 10.100.1.1:9092,10.100.1.2:9092                                                                                                                                                                                                                    |
+| Consumer group ID | dataflow | string | V1 | Enter an ID that identifies the Kafka Consumer Group. | [group.id](https://kafka.apache.org/documentation/#consumerconfigs_group.id)                                                                                                                                                                                                                                                                             |
+| Internal topic excluded or not | true | boolean |  V1 | | [exclude.internal.topics](https://kafka.apache.org/documentation/#consumerconfigs_exclude.internal.topics)<br/>Exclude internal topics such as `__consumer_offsets` from recipients.                                                                                                                                                                                            |
+| Topic pattern | - | string | V1 | Enter a Kafka topic patter to receive messages. | ex: `*-messages`                                                                                                                                                                                                                                                                                                                                          |
+| Client ID | dataflow | string | V1 | Enter an ID to identify Kafka Consumer. | [client.id](https://kafka.apache.org/documentation/#consumerconfigs_client.id)                                                                                                                                                                                                                                                                           |
+| Partition allocation policy | - | string | V1 | Determines how Kafka assigns partitions to consumer groups when receiving messages. | [partition.assignment.strategy](https://kafka.apache.org/documentation/#consumerconfigs_partition.assignment.strategy)<br/>org.apache.kafka.clients.consumer.RangeAssignor<br/>org.apache.kafka.clients.consumer.RoundRobinAssignor<br/>org.apache.kafka.clients.consumer.StickyAssignor<br/>org.apache.kafka.clients.consumer.CooperativeStickyAssignor |
 | Offset settings | none | enum | Enter  | [auto.offset.reset](https://kafka.apache.org/documentation/#consumerconfigs_auto.offset.reset)<br/>All of the settings below preserve the existing offset if the consumer group already exists.<br/>none: Return an error when there is no consumer group.<br/>earliest: Initialize to the partition’s oldest offset if there is no consumer group.<br/>latest: Initialize to the partition’s most recent offset if there is no consumer group.                                                                                                                                                                                                                                               |
-| Offset commit cycle | 5000 | number | Enter a cycle to update the consumer group offset. | [auto.commit.internal.ms](https://kafka.apache.org/documentation/#consumerconfigs_auto.commit.interval.ms)                                                                                                                                                                                                                                               |
-| Offset auto commit or not | true | boolean |  | [enable.auto.commit](https://kafka.apache.org/documentation/#consumerconfigs_enable.auto.commit)                                                                                                                                                                                                                                               |
-| Key deserialization type | org.apache.kafka.common.serialization.StringDeserializer | string | Enter how to serialize the keys of incoming messages. | [key.deserializer](https://kafka.apache.org/documentation/#consumerconfigs_key.deserializer)                                                                                                                                                                                                                                               |
-| Message deserialization type | org.apache.kafka.common.serialization.StringDeserializer | string | Enter how to serialize the values of incoming messages. | [value.deserializer](https://kafka.apache.org/documentation/#consumerconfigs_value.deserializer)                                                                                                                                                                                                                                               |
-| Metadata created or not | false | boolean | If the property value is true, creates a metadata field for the message. You need to combine filter node types to expose metadata fields to the Sink plugin (see the guide below). | fields to be created are as follows.<br/>topic: Topic that receives message<br/>consumer_group: Consumer group ID used to receive messages<br/>partition: Topic partition number that receives messages<br/>offset: Partition offset that receives messages<br/>key: ByteBuffer that includes message keys                                                                                                                                                                                                                                               |
-| Minimum Fetch size | - | number | Enter the minimum size of data to be imported in one fetch request. | [fetch.min.bytes](https://kafka.apache.org/documentation/#consumerconfigs_fetch.min.bytes)                                                                                                                                                                                                                                               |
-| Transfer buffer size | - | number | Enter size (byte) of TCP send buffer used to transfer data.  | [send.buffer.bytes](https://kafka.apache.org/documentation/#consumerconfigs_send.buffer.bytes)                                                                                                                                                                                                                                               |
-| Retry request cycle | 100 | number | Enter the retry cycle (ms) when a transfer request fails. | [retry.backoff.ms](https://kafka.apache.org/documentation/#consumerconfigs_retry.backoff.ms)                                                                                                                                                                                                                                               |
-| Cyclic redundancy check | true | enum | Check the message CRC. | [check.crcs](https://kafka.apache.org/documentation/#consumerconfigs_check.crcs)                                                                                                                                                                                                                                               |
-| Server reconnection cycle | 50 | number | Enter a retry cycle when connecting to broker server fails. | [reconnect.backoff.ms](https://kafka.apache.org/documentation/#consumerconfigs_reconnect.backoff.ms)                                                                                                                                                                                                                                               |
-| Poll timeout | 100 | number | Enter the timeout (ms) for requests to fetch new messages from the topic. |                                                                                                                                                                                                                                               |
-| Maximum fetch size per partition | - | number | Enter the maximum size to be imported in one fetch request per partition. | [max.partition.fetch.bytes](https://kafka.apache.org/documentation/#consumerconfigs_max.partition.fetch.bytes)                                                                                                                                                                                                                                               |
-| Server request timeout | 30000 | number | Enter the timeout (ms) for sent request. | [request.timeout.ms](https://kafka.apache.org/documentation/#consumerconfigs_request.timeout.ms)                                                                                                                                                                                                                                               |
-| TCP receive buffer size | - | number | Enter the size in bytes of the TCP receive buffer used to read data. | [receive.buffer.bytes](https://kafka.apache.org/documentation/#consumerconfigs_receive.buffer.bytes)                                                                                                                                                                                                                                               |
-| session_timeout_ms | - | number | Enter a session timeout (ms) of consumer.<br/>If a consumer fails to send a heartbeat within that time, it is excluded from the consumer group. | [session.timeout.ms](https://kafka.apache.org/documentation/#consumerconfigs_session.timeout.ms)                                                                                                                                                                                                                                               |
-| Maximum poll message count | - | number | Enter the maximum number of messages to retrieve in one poll request. | [max.poll.records](https://kafka.apache.org/documentation/#consumerconfigs_max.poll.records)                                                                                                                                                                                                                                               |
-| Maximum poll cycle | - | number | Enter the maximum cycle (ms) between poll requests. | [max.poll.interval.ms](https://kafka.apache.org/documentation/#consumerconfigs_max.poll.interval.ms)                                                                                                                                                                                                                                               |
-| Maximum Fetch size | - | number | Enter the maximum size to be imported in one fetch request. | [fetch.max.bytes](https://kafka.apache.org/documentation/#consumerconfigs_fetch.max.bytes)                                                                                                                                                                                                                                               |
-| Maximum Fetch wait time | - | number | Enter the wait time (ms) to send a fetch request when data is not gathered as much as the minimum fetch size setting. | [fetch.max.wait.ms](https://kafka.apache.org/documentation/#consumerconfigs_fetch.max.wait.ms)                                                                                                                                                                                                                                               |
-| Consumer health check cycle | - | number | Enter a cycle of consumer sending heartbeat. | [heartbeat.interval.ms](https://kafka.apache.org/documentation/#consumerconfigs_heartbeat.interval.ms)                                                                                                                                                                                                                                               |
-| Metadata update cycle | - | number | Enter the cycle (ms) to update the partition, broker server status, etc. | [metadata.max.age.ms](https://kafka.apache.org/documentation/#producerconfigs_metadata.max.age.ms)                                                                                                                                                                                                                                               |
-| IDLE timeout | - | number | Enter the wait time (ms) to close a connection without data transmission. | [connections.max.idle.ms](https://kafka.apache.org/documentation/#consumerconfigs_connections.max.idle.ms)                                                                                                                                                                                                                                               |
+| Offset commit cycle | 5000 | number | V1 | Enter a cycle to update the consumer group offset. | [auto.commit.internal.ms](https://kafka.apache.org/documentation/#consumerconfigs_auto.commit.interval.ms)                                                                                                                                                                                                                                               |
+| Offset auto commit or not | true | boolean |  V1 | | [enable.auto.commit](https://kafka.apache.org/documentation/#consumerconfigs_enable.auto.commit)                                                                                                                                                                                                                                               |
+| Key deserialization type | org.apache.kafka.common.serialization.StringDeserializer | string | V1 | Enter how to serialize the keys of incoming messages. | [key.deserializer](https://kafka.apache.org/documentation/#consumerconfigs_key.deserializer)                                                                                                                                                                                                                                               |
+| Message deserialization type | org.apache.kafka.common.serialization.StringDeserializer | string | V1 | Enter how to serialize the values of incoming messages. | [value.deserializer](https://kafka.apache.org/documentation/#consumerconfigs_value.deserializer)                                                                                                                                                                                                                                               |
+| Metadata created or not | false | boolean | V1 | If the property value is true, creates a metadata field for the message. You need to combine filter node types to expose metadata fields to the Sink plugin (see the guide below). | fields to be created are as follows.<br/>topic: Topic that receives message<br/>consumer_group: Consumer group ID used to receive messages<br/>partition: Topic partition number that receives messages<br/>offset: Partition offset that receives messages<br/>key: ByteBuffer that includes message keys                                                                                                                                                                                                                                               |
+| Minimum Fetch size | - | number | V1 | Enter the minimum size of data to be imported in one fetch request. | [fetch.min.bytes](https://kafka.apache.org/documentation/#consumerconfigs_fetch.min.bytes)                                                                                                                                                                                                                                               |
+| Transfer buffer size | - | number | V1 | Enter size (byte) of TCP send buffer used to transfer data.  | [send.buffer.bytes](https://kafka.apache.org/documentation/#consumerconfigs_send.buffer.bytes)                                                                                                                                                                                                                                               |
+| Retry request cycle | 100 | number | V1 | Enter the retry cycle (ms) when a transfer request fails. | [retry.backoff.ms](https://kafka.apache.org/documentation/#consumerconfigs_retry.backoff.ms)                                                                                                                                                                                                                                               |
+| Cyclic redundancy check | true | enum | V1 | Check the message CRC. | [check.crcs](https://kafka.apache.org/documentation/#consumerconfigs_check.crcs)                                                                                                                                                                                                                                               |
+| Server reconnection cycle | 50 | number | V1 | Enter a retry cycle when connecting to broker server fails. | [reconnect.backoff.ms](https://kafka.apache.org/documentation/#consumerconfigs_reconnect.backoff.ms)                                                                                                                                                                                                                                               |
+| Poll timeout | 100 | number | V1 | Enter the timeout (ms) for requests to fetch new messages from the topic. |                                                                                                                                                                                                                                               |
+| Maximum fetch size per partition | - | number | V1 | Enter the maximum size to be imported in one fetch request per partition. | [max.partition.fetch.bytes](https://kafka.apache.org/documentation/#consumerconfigs_max.partition.fetch.bytes)                                                                                                                                                                                                                                               |
+| Server request timeout | 30000 | number | V1 | Enter the timeout (ms) for sent request. | [request.timeout.ms](https://kafka.apache.org/documentation/#consumerconfigs_request.timeout.ms)                                                                                                                                                                                                                                               |
+| TCP receive buffer size | - | number | V1 | Enter the size in bytes of the TCP receive buffer used to read data. | [receive.buffer.bytes](https://kafka.apache.org/documentation/#consumerconfigs_receive.buffer.bytes)                                                                                                                                                                                                                                               |
+| session_timeout_ms | - | number | V1 | Enter a session timeout (ms) of consumer.<br/>If a consumer fails to send a heartbeat within that time, it is excluded from the consumer group. | [session.timeout.ms](https://kafka.apache.org/documentation/#consumerconfigs_session.timeout.ms)                                                                                                                                                                                                                                               |
+| Maximum poll message count | - | number | V1 | Enter the maximum number of messages to retrieve in one poll request. | [max.poll.records](https://kafka.apache.org/documentation/#consumerconfigs_max.poll.records)                                                                                                                                                                                                                                               |
+| Maximum poll cycle | - | number | V1 | Enter the maximum cycle (ms) between poll requests. | [max.poll.interval.ms](https://kafka.apache.org/documentation/#consumerconfigs_max.poll.interval.ms)                                                                                                                                                                                                                                               |
+| Maximum Fetch size | - | number | V1 | Enter the maximum size to be imported in one fetch request. | [fetch.max.bytes](https://kafka.apache.org/documentation/#consumerconfigs_fetch.max.bytes)                                                                                                                                                                                                                                               |
+| Maximum Fetch wait time | - | number | V1 | Enter the wait time (ms) to send a fetch request when data is not gathered as much as the minimum fetch size setting. | [fetch.max.wait.ms](https://kafka.apache.org/documentation/#consumerconfigs_fetch.max.wait.ms)                                                                                                                                                                                                                                               |
+| Consumer health check cycle | - | number | V1 | Enter a cycle of consumer sending heartbeat. | [heartbeat.interval.ms](https://kafka.apache.org/documentation/#consumerconfigs_heartbeat.interval.ms)                                                                                                                                                                                                                                               |
+| Metadata update cycle | - | number | V1 | Enter the cycle (ms) to update the partition, broker server status, etc. | [metadata.max.age.ms](https://kafka.apache.org/documentation/#producerconfigs_metadata.max.age.ms)                                                                                                                                                                                                                                               |
+| IDLE timeout | - | number | V1 | Enter the wait time (ms) to close a connection without data transmission. | [connections.max.idle.ms](https://kafka.apache.org/documentation/#consumerconfigs_connections.max.idle.ms)                                                                                                                                                                                                                                               |
 
 ### Metadata Field Usage
 
@@ -589,21 +650,28 @@
 * STREAMING: Processes data by executing a query at every `query execute frequency`.
 * BATCH: Executes the query once at the beginning of the flow, processes the data, and ends the flow.
 
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | - | To be supported |
+
 ### Property Description
 
-| Property name | Default value | Data type | Description | Note                                                                                          |
-| --- | --- | --- | --- |---------------------------------------------------------------------------------------------|
+| Property name | Default value | Data type | Supported engine type | Description | Note                                                                                          |
+| --- | --- | --- | --- | --- |---------------------------------------------------------------------------------------------|
 | User | - | string | Enter a DB user. |                                                                                             |
-| Connection String | - | string | Enter the DB connection information. | Example: `jdbc:mysql://my.sql.endpoint:3306/my_db_name`                                           |
-| Password | - | string | Enter the user password. |                                                                                             |
-| Query | - | string | Write a query to create a message. |                                                                                             |
-| Whether to convert columns to lowercase | true | boolean | Determine whether to lowercase the column names you get as a result of the query. |                                                                                             |
-| Query execute frequency | `* * * * *` | string | Enter the execute frequency of the query in a cron-like expression. |                                                                                             |
-| Tracking Columns | - | string | Select the columns you want to track. | The predefined parameter `:SQL_LAST_VALUE`allows you to use a value corresponding to the column you want to track in the last query result.<br>See how to write a query below. |
-| Tracking column type | array of strings | string | Select the type of data in the column you want to track. | Example: `numeric` or `timestamp`                                                                 |
-| Time zone | - | string | Define the time zone to use when converting a column of type timestamp to a human-readable string. | Example: `Asia/Seoul`                                                                             |
-| Whether to apply paging | true | boolean | Determines whether to apply paging to the query. | When paging is applied, the query is split into multiple executions, the order of which is not guaranteed.                                               |
-| Page size | - | number | In a paged query, it determines how many pages to query at once. |                                                                                             |
+| Connection String | - | string | V1 | Enter the DB connection information. | Example: `jdbc:mysql://my.sql.endpoint:3306/my_db_name`                                           |
+| Password | - | string | V1 | Enter the user password. |                                                                                             |
+| Query | - | string | V1 | Write a query to create a message. |                                                                                             |
+| Whether to convert columns to lowercase | true | boolean | V1 | Determine whether to lowercase the column names you get as a result of the query. |                                                                                             |
+| Query execute frequency | `* * * * *` | string | V1 | Enter the execute frequency of the query in a cron-like expression. |                                                                                             |
+| Tracking Columns | - | string | V1 | Select the columns you want to track. | The predefined parameter `:SQL_LAST_VALUE`allows you to use a value corresponding to the column you want to track in the last query result.<br>See how to write a query below. |
+| Tracking column type | array of strings | string | V1 | Select the type of data in the column you want to track. | Example: `numeric` or `timestamp`                                                                 |
+| Time zone | - | string | V1 | Define the time zone to use when converting a column of type timestamp to a human-readable string. | Example: `Asia/Seoul`                                                                             |
+| Whether to apply paging | true | boolean | V1 | Determines whether to apply paging to the query. | When paging is applied, the query is split into multiple executions, the order of which is not guaranteed.                                               |
+| Page size | - | number | V1 | In a paged query, it determines how many pages to query at once. |                                                                                             |
 
 ### How to write a query
 
@@ -637,13 +705,13 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 ## Common Settings on Filter Node
 
-| Property name | Default value | Data type | Description | Others |
-| --- | --- | --- | --- | --- |
-| ID | - | string | Sets Node ID<br/>Mark node name on chart board with values defined in this property. |  |
-| Add Tag | - | array of strings | Add Tag of each message |  |
-| Delete Tag | - | array of strings | Delete Tag that was given to each message |  |
-| Delete Field | - | array of strings | Delete Field of each message  |  |
-| Add Field | - | Hash | You can add a custom field<br/>You can add fields by calling in the value of each Field with `%{[depth1_field]}`. |  |
+| Property name | Default value | Data type | Supported engine type | Description | Others |
+| --- | --- | --- | --- | --- | --- |
+| ID | - | string | V1, V2 | Sets Node ID.<br/>Mark node name on chart board with values defined in this property. |  |
+| Add Tag | - | array of strings | V1 |  Add Tag of each message |  |
+| Delete Tag | - | array of strings | V1 |  Delete Tag that was given to each message |  |
+| Delete Field | - | array of strings | V1 |  Delete Field of each message  |  |
+| Add Field | - | Hash | V1 |  You can add a custom field<br/>You can add fields by calling in the value of each Field with `%{[depth1_field]}`. |  |
 
 ## Filter > Alter
 
@@ -652,13 +720,20 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * Node that changes message field values to another values.
 * You can only change the top-level fields.
 
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | X |  |
+
 ### Property Description
 
-| Property name | Default value | Data type | Description | Others |
-| --- | --- | --- | --- | --- |
-| Modify Field | - | array of strings | Compare the field value to a given value, if they are equal, modify the field value to the given value. |  |
-| Overwrite Field | - | array of strings | Compare the field value to a given value, if they are equal, modify other field value to the given value. |  |
-| Coalesce | - | array of strings | Assign a non-null value to the first of the fields that follow one field. |  |
+| Property name | Default value | Data type | Supported engine type | Description | Others |
+| --- | --- | --- | --- | --- | --- |
+| Modify Field | - | array of strings | V1 | Compare the field value to a given value, if they are equal, modify the field value to the given value. |  |
+| Overwrite Field | - | array of strings | V1 | Compare the field value to a given value, if they are equal, modify other field value to the given value. |  |
+| Coalesce | - | array of strings | V1 | Assign a non-null value to the first of the fields that follow one field. |  |
 
 ### Order of applying settings
 
@@ -765,18 +840,25 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
     * Secure Key Manager symmetric keys can be created through the Secure Key Manager web console or Add Key API in Secure Key Manager.
     * Even if a flow contains multiple Cipher nodes, all Cipher nodes can only refer to one Secure Key Manager's key reference.
 
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | - | To be supported |
+
 ### Property Description 
 
-| Property name | Default value | Data type | Description | Others |
-| --- | --- | --- | --- | --- |
-| Mode | - | enum | Choose between encryption mode and decryption mode. | Select one from the list. |
-| Appkey | - | string | Enter SKM app key that saves the key for encryption/decryption. |  |
-| Key ID | - | string | Enter SKM ID that saves the key for encryption/decryption. |  |
-| Key Version | - | string | Enter SKM key version that saves the key for encryption/decryption. |  |
-| Encryption/decryption key length | 16 | number | Enter encryption/decryption key length |  |
-| IV Random Length | - | number | Enter random bytes length of Initial Vector.  |  |
-| Source Field | - | string | Enter Field name for encryption/decryption. |  |
-| Field to be stored | - | string | Enter Field name to save encryption/decryption result. |  |
+| Property name | Default value | Data type | Supported engine type | Description | Others |
+| --- | --- | --- | --- | --- | --- |
+| Mode | - | enum | V1 | Choose between encryption mode and decryption mode. | Select one from the list. |
+| Appkey | - | string | V1 | Enter SKM app key that saves the key for encryption/decryption. |  |
+| Key ID | - | string | V1 | Enter SKM ID that saves the key for encryption/decryption. |  |
+| Key Version | - | string | V1 | Enter SKM key version that saves the key for encryption/decryption. |  |
+| Encryption/decryption key length | 16 | number | V1 | Enter encryption/decryption key length |  |
+| IV Random Length | - | number | V1 | Enter random bytes length of Initial Vector.  |  |
+| Source Field | - | string | V1 | Enter Field name for encryption/decryption. |  |
+| Field to be stored | - | string | V1 | Enter Field name to save encryption/decryption result. |  |
 
 ### Encrypt example exercise 
 
@@ -842,18 +924,27 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 * Node that parses a string according to a set rule and stores it in each set field.
 
+
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | - | To be supported |
+
+
 ### Property Description 
 
-| Property name | Default value | Data type | Description | Note |
-| --- | --- | --- | --- | --- |
-| Match | - | hash | Enter the information of the string to be parsed. |  |
-| Pattern definition | - | hash | Enter a custom pattern as a regular expression for the rule of tokens to be parsed. | Check the link below for system defined patterns.<br/>https://github.com/logstash-plugins/logstash-patterns-core/blob/main/patterns/legacy/grok-patterns |
-| Failure tag | - | array of strings | Enter the tag name to define if string parsing fails. |  |
-| Timeout | 30000 | number | Enter the amount of time to wait for string parsing. |  |
-| Overwrite | - | array of strings | When writing a value to a designated field after parsing, if a value is already defined in the field, enter the field names to be overwritten. |  |
-| Store only values with specified names | true | boolean | If the property value is true, do not store unnamed parting results. |  |
-| Capture empty string | false | boolean | If the property value is true, store empty strings in fields. |  |
-| Close or not when match | true | boolean | If the property value is true, the grok match result will terminate the plugin. |  |
+| Property name | Default value | Data type | Supported engine type | Description | Note |
+| --- | --- | --- | --- | --- | --- |
+| Match | - | hash | V1 | Enter the information of the string to be parsed. |  |
+| Pattern definition | - | hash | V1 | Enter a custom pattern as a regular expression for the rule of tokens to be parsed. | Check the link below for system defined patterns.<br/>https://github.com/logstash-plugins/logstash-patterns-core/blob/main/patterns/legacy/grok-patterns |
+| Failure tag | - | array of strings | V1 | Enter the tag name to define if string parsing fails. |  |
+| Timeout | 30000 | number | V1 | Enter the amount of time to wait for string parsing. |  |
+| Overwrite | - | array of strings | V1 | When writing a value to a designated field after parsing, if a value is already defined in the field, enter the field names to be overwritten. |  |
+| Store only values with specified names | true | boolean | V1 | If the property value is true, do not store unnamed parting results. |  |
+| Capture empty string | false | boolean | V1 | If the property value is true, store empty strings in fields. |  |
+| Close or not when match | true | boolean | V1 | If the property value is true, the grok match result will terminate the plugin. |  |
 
 ### Grok parsing examples
 
@@ -891,24 +982,46 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 * Node that parses a message in CSV format and stores it in a field.
 
-### Property Description 
+### Supported Engine Type
 
-| Property name | Default value | Data type | Description | Note |
-| --- | --- | --- | --- | --- |
-| Field to save | - | string | Enter the field name to save the CSV parsing result. |  |
-| Quote | " | string | Enter the character that divides the column fields. |  |
-| First line ignored or not | false | boolean | If the property value is true, the column name entered in the first row of the read data is ignored. |  |
-| Column | - | array of strings | Enter the column name. |  |
-| Separator | , | string | Enter a string to separate columns. |  |
-| Source field | message | string | Enter the field name to parse CSV. |  |
-| Schema | - | hash | Enter the name and data type of each column in the form of a dictionary. | Register separately from the fields defined in the column.<br/>The data type is basically a string, and if you need to convert to another data type, use the schema setting.<br/>Possible data types are as follows.<br/>integer, float, date, date_time, boolean |
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
+
+### Property Description
+
+| Property Name | Default | Data Type | Supported Engine Type | Description | Note |
+| --- | --- | --- | --- | --- | --- |
+| Field to Save | - | string | V1, V2 | Enter the field name to save the CSV parsing results. | |
+| Quote | " | string | V1, V2 | Enter the character that separates the column fields. | |
+| Ignore First Row | false | boolean | V1, V2 | If the property value is true, the column name entered in the first row of the read data is ignored. | |
+| Column | - | array of strings | V1 | Enter the column name. | |
+| Delimiter | , | string | V1, V2 | Enter the string that separates the columns. | |
+| Source Field | message | string | V1, V2 | Enter the field name to parse the CSV. | |
+| Schema | - | hash | V1, V2 | Enter the name and data type of each column in dictionary format. | See `Schema Input Method by Engine Type` |
+
+#### How to Input Schema per Engine Type
+* If the engine type is V1
+    * Register separately from the fields defined in the column.
+    * The default data type is string. If conversion to a different data type is required, use the schema settings.
+    * The following data types are available:
+        * integer, float, date, date_time, boolean
+* If the engine type is V2
+    * V2 does not support column types and accepts all columns and data types as schema input.
+    * The following data types are available:
+        * string, integer, long, float, double, boolean
+
 
 ### Examples of CSV parsing without data type
 
 #### Condition
 
 * Source field → `message`
-* Column → `["one", "two", "t hree"]`
+* If the engine type is V1
+    * Column → `["one", "two", "t hree"]`
+* If the engine type is V2
+    * Schema → `{"one": "string", "two": "string", "t hree": "string"}`
 
 #### Input messages
 
@@ -929,39 +1042,17 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 }
 ```
 
-### Examples of CSV parsing without data type
-
-#### Condition
-
-* Source field → `message`
-* Column → `["one", "two", "t hree"]`
-
-#### Input messages
-
-```js
-{
-    "message": "hey,foo,\\\"bar baz\\\""
-}
-```
-
-#### Output message
-
-```js
-{
-    "message": "hey,foo,\"bar baz\"",
-    "one": "hey",
-    "t hree": "bar baz",
-    "two": "foo"
-}
-```
 
 ### Examples of CSV parsing that requires data type conversion
 
 #### Condition
 
 * Source field → `message`
-* Column → `["one", "two", "t hree"]`
-* Schema →`{"two": "integer", "t hree": "boolean"}`
+* If the engine type is V1
+    * Column → `["one", "two", "t hree"]`
+    * Schema → `{"two": "integer", "t hree": "boolean"}`
+* If the engine type is V2
+    * Schema → `{"one": "string", "two": "integer", "t hree": "boolean"}`
 
 #### Input messages
 
@@ -988,12 +1079,21 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 * Node that parses a JSON string and stores it in a specified field.
 
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
+
 ### Property Description 
 
-| Property name | Default value | Data type | Description | Note |
-| --- | --- | --- | --- | --- |
-| Source field | message | string | Enter a field name to parse JSON strings. |  |
-| Field to save | - | string | Enter the field name to save the JSON parsing result.<br/>If no property value is specified, the result is stored in the root field. |  |
+| Property name | Default value | Data type | Supported engine type | Description | Note |
+| --- | --- | --- | --- | --- | --- |
+| Source field | message | string | V1, V2 | Enter a field name to parse JSON strings. |  |
+| Field to save | - | string | V1, V2 | Enter the field name to save the JSON parsing result.<br/>If no property value is specified, the result is stored in the root field. |  |
+| Overwrite | false | boolean | V2 | If true, overwrites the JSON parsing result with a field to be saved or an existing field. | |
+| Delete original field | false | boolean | V2 | Deletes the source field when JSON parsing is complete. If parsing fails, keep it. | |
 
 ### JSON 
 
@@ -1028,16 +1128,23 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 * A node that parses a data string and stores it in timestamp format.
 
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
+
 ### Property Description
 
-| Property name | Default value | Data type | Description | Others |
-| --- | --- | --- | --- | --- |
-| Source Field | - | string | Enter a field name to get strings. |  |
-| Formats | - | array of strings | Enter formats to get strings. | The pre-defined formats are as follows.<br/>ISO8601, UNIX, UNIX_MS, TAI64N |
-| Locale | - | Enter a locale to use for string analysis. | ex) en, en-US, ko-kr |
-| Field to be stored | - | string | Enter a field name to store the result of parsing data strings. |  |
-| Failure tag | - | array of strings | Enter the tag name to define if data string parsing fails. |  |
-| Time zone | - | string | Enter the time zone for the date. |  |
+| Property name | Default value | Data type | Supported engine type | Description | Others |
+| --- | --- | --- | --- | --- | --- |
+| Source Field | - | string | V1, V2 | Enter a field name to get strings. |  |
+| Formats | - | array of strings | V1, V2 | Enter formats to get strings. | The pre-defined formats are as follows.<br/>ISO8601, UNIX, UNIX_MS, TAI64N (V2 미지원) | |
+| Locale | - | string | V1, V2 | Enter a locale to use for string analysis. | e.g. en, en-US, ko-kr |
+| Field to be stored | - | string | V1, V2 | Enter a field name to store the result of parsing data strings. |  |
+| Failure tag | - | array of strings | V1 | Enter the tag name to define if data string parsing fails. |  |
+| Time zone | - | string | V1, V2 | Enter the time zone for the date. |  |
 
 ### Examples of Date String Parsing
 
@@ -1070,12 +1177,19 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 * A node that creates UUIDs and stores them in a field.
 
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
+
 ### Property Description
 
-| Property name | Default value | Data type | Description | Others |
-| --- | --- | --- | --- | --- |
-| Field to store UUID | - | string | Enter a field name to store UUID creation result. |  |
-| Overwrite | - | boolean | Select whether to overwrite the value if it exists in the specified field name. |  |
+| Property name | Default value | Data type | Supported engine type | Description | Others |
+| --- | --- | --- | --- | --- | --- |
+| Field to store UUID | - | string | V1, V2 | Enter a field name to store UUID creation result. |  |
+| Overwrite | - | boolean | V1, V2 | Select whether to overwrite the value if it exists in the specified field name. |  |
 
 ### Example of UUID Creation
 
@@ -1107,13 +1221,20 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * A node that splits a single message into multiple messages.
 * Splits the message based on the result of parsing according to the settings.
 
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | X |  |
+
 ### Property Description
 
-| Property name | Default value | Data type | Description | Others |
+| Property name | Default value | Data type | Supported engine type | Description | Others |
 | --- | --- | --- | --- | --- |
-| Source field | - | string | Enter a field name to separate messages. |  |
-| Field to be stored | - | string | Enter a field name to store separated messages. |  |
-| Separator | `\n` | string |  |  |
+| Source field | - | string | V1 | Enter a field name to separate messages. |  |
+| Field to be stored | - | string | V1 | Enter a field name to store separated messages. |  |
+| Separator | `\n` | string |  V1 | |  |
 
 ### Example of Default Message Split
 
@@ -1216,16 +1337,23 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 ### Node Description
 
-* A node that parses JSON strings and stores it in a specified field.
+* This node removes strings exceeding the byte length.
+
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | X |  |
 
 ### Property Description
 
-| Property name | Default value | Data type | Description | Others |
-| --- | --- | --- | --- | --- |
-| Byte length | - | number | Enter the maximum byte length to represent a string. |  |
-| Source field | - | string | Enter a field name for truncate. |  |
+| Property name | Default value | Data type | Supported engine type | Description | Others |
+| --- | --- | --- | --- | --- | --- |
+| Byte length | - | number | V1 | Enter the maximum byte length to represent a string. |  |
+| Source field | - | string | V1 | Enter a field name for truncate. |  |
 
-### JSON Parsing Example
+### String Removal Example
 
 #### Condition
 
@@ -1254,25 +1382,32 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 * A node that transforms the value of a field.
 
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | X |  |
+
 ### Property Description
 
-| Property name | Default value | Data type | Description | Remarks |
-| --- | --- | --- | --- | --- |
-| Set Defaults | - | Hash | Replace null with defaults. |  |
-| Rename Field | - | Hash | Rename the field. |  |
-| Update field values | - | Hash | Replaces the field value with the new value. If the field does not exist, no action is taken. |  |
-| Replace Value | - | Hash | Replace the field value with a new value. If there is no field, create a new field.  |  |
-| Convert Type | - | Hash | Convert the field value to another type. | The following types are supported: integer, interger_eu, float, float_eu, string, and boolean. |
-| Replace String | - | array | Replace the part of string with regular expression. |  |
-| Uppercase Letter | - | array | Uppercase Letter the string in the target field to uppercase letter. |  |
-| Capitalize First Letter | - | array | Convert the first letter in the target field to uppercase letter, and the rest to lowercase letter. |  |
-| Lowercase Letter | - | array | Lowercase the string in the target field to lowercase letter. |  |
-| Strip Space | - | array | Remove spaces before and after the string in the target field. |  |
-| Split String | - | Hash | Split strings using separators. |  |
-| Join Array | - | Hash | Join array elements to separator. |  |
-| Merge Field | - | Hash | Merge the two fields. |  |
-| Copy Field | - | Hash | Copy the existing field to another field. If the field exists, overwrite field. |  |
-| Failure Tag | \_mutate_error | string | Enter a tag to define if an error occurs. |  |
+| Property name | Default value | Data type | Supported engine type | Description | Remarks |
+| --- | --- | --- | --- | --- | --- |
+| Set Defaults | - | Hash | V1 | Replace null with defaults. |  |
+| Rename Field | - | Hash | V1 | Rename the field. |  |
+| Update field values | - | Hash | V1 | Replaces the field value with the new value. If the field does not exist, no action is taken. |  |
+| Replace Value | - | Hash | V1 | Replace the field value with a new value. If there is no field, create a new field.  |  |
+| Convert Type | - | Hash | V1 | Convert the field value to another type. | The following types are supported: integer, interger_eu, float, float_eu, string, and boolean. |
+| Replace String | - | array | V1 | Replace the part of string with regular expression. |  |
+| Uppercase Letter | - | array | V1 | Uppercase Letter the string in the target field to uppercase letter. |  |
+| Capitalize First Letter | - | array | V1 | Convert the first letter in the target field to uppercase letter, and the rest to lowercase letter. |  |
+| Lowercase Letter | - | array | V1 | Lowercase the string in the target field to lowercase letter. |  |
+| Strip Space | - | array | V1 | Remove spaces before and after the string in the target field. |  |
+| Split String | - | Hash | V1 | Split strings using separators. |  |
+| Join Array | - | Hash | V1 | Join array elements to separator. |  |
+| Merge Field | - | Hash | V1 | Merge the two fields. |  |
+| Copy Field | - | Hash | V1 | Copy the existing field to another field. If the field exists, overwrite field. |  |
+| Failure Tag | \_mutate_error | string | V1 | Enter a tag to define if an error occurs. |  |
 
 ### Order of applying settings
 * Each setting is applied in the order listed in the property description.
@@ -1705,6 +1840,181 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 }
 ```
 
+## Filter > Coerce
+
+### Node Description
+
+* A node that replaces null values ​​with default values.
+
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | X |  |
+| V2 | O |  |
+
+### Property Description
+
+| Property Name | Default Value | Data Type | Supported Engine Type | Description | Note |
+| --- | --- | --- | --- | --- | --- |
+| Target Field | - | string | V2 | Enter the name of the field for which you want to specify a default value. | |
+| Default Value | - | string | V2 | Enter a default value. | |
+
+### Default Setting Example
+
+### Condition
+* Target field → `fieldname`
+* Default value → `default_value`
+
+#### Input Message
+
+```json
+{
+    "fieldname": null
+}
+```
+
+#### Output Message
+
+```json
+{
+    "fieldname": "default_value"
+}
+```
+
+## Filter > Copy
+
+### Node Description
+
+* A node that copies an existing field to another field.
+
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | X |  |
+| V2 | O |  |
+
+### Property Description
+
+| Property Name | Default | Data Type | Supported Engine Type | Description | Note |
+| --- | --- | --- | --- | --- | --- |
+| Target Field | - | string | V2 | Enter the name of the source field to copy. | |
+| Field to Save | - | string | V2 | Enter the name of the field to save the copied result. | |
+| Overwrite | false | boolean | V2 | If true, the field to save will be overwritten if it already exists. | |
+
+### Default Setting Example
+
+### Condition
+* Source field → `source_field`
+* Field to be saved → `dest_field`
+
+#### Input Message
+
+```json
+{
+    "source_field": "Hello World!"
+}
+
+```
+
+#### Output Message
+
+```json
+{
+    "source_field": "Hello World!",
+    "dest_field": "Hello World!"
+}
+```
+
+## Filter > Rename
+
+### Node Description
+
+* A node that changes the field name.
+
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | X |  |
+| V2 | O |  |
+
+### Property Description
+
+| Property Name | Default | Data Type | Supported Engine Type | Description | Note |
+| --- | --- | --- | --- | --- | --- |
+| Source Field | | string | V2 | Enter the source field to be renamed. | |
+| Target Field | - | string | V2 | | Enter the field name to be renamed. |
+| Overwrite | false | boolean | V2 | If true, the target field will be overwritten if it already exists. | |
+
+### Default Setting Example
+
+### Condition
+* Source field → `fieldname`
+* Target field → `changed_fieldname`
+
+#### Input Message
+
+```json
+{
+    "fieldname": "Hello World!"
+}
+```
+
+#### Output Message
+
+```json
+{
+    "changed_fieldname": "Hello World!"
+}
+```
+
+## Filter > Strip
+
+### Node Description
+
+* A node that removes leading and trailing spaces from a string in a field.
+
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | X |  |
+| V2 | O |  |
+
+### Property Description
+
+| Property Name | Default Value | Data Type | Supported Engine Type | Description | Note |
+| --- | --- | --- | --- | --- | --- |
+| Target Fields | - | array | V2 | Enter the target fields from which to remove blank. | |
+
+### Example of Setting Default Values
+
+### Condition
+* Target field → `["field1", "field2"]`
+
+#### Input Message
+
+```json
+{
+    "field1": "Hello World!   ",
+    "field2": "   Hello DataFlow!"
+}
+
+```
+
+#### Output Message
+
+```json
+{
+    "field1": "Hello World!",
+    "field2": "Hello DataFlow!"
+}
+
+```
+
+
 ## Sink
 
 * Type of node that defines an endpoint to load data that has completed filter operation.
@@ -1722,24 +2032,32 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * Node for uploading data to Object Storage in NHN Cloud.
 * Object created on OBS is output in the following path format by default. 
     * `/{container_name}/year={yyyy}/month={MM}/day={dd}/hour={HH}/ls.s3.{uuid}.{yyyy}-{MM}-{dd}T{HH}.{mm}.part{seq_id}.txt`
+* If the engine type is V2, the provided codecs are JSON and LINE. Plain and parquet codecs will be supported later.
+
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
 
 ### Property Description 
 
-| Property name | Default value | Data type | Description | Others |
-| --- | --- | --- | --- | --- |
-| region | - | enum | Enter the region of Object Storage product |  |
-| Bucket | - | string | Enter bucket name |  |
-| Secret Key | - | string | Enter S3 API Credential Secret Key. |  |
-| Access Key | - | string | Enter S3 API Credential Access Key. |  |
-| Prefix | /year=%{+YYYY}/month=%{+MM}/day=%{+dd}/hour=%{+HH} | string | Enter a prefix to prefix the name when uploading the object.<br/>You can enter a field or time format. | [Available Time Format](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html) |
-| Prefix Time Field | @timestamp | string | Enter a time field to apply to the prefix. |  |
-| Prefix Time Field Type | DATE_FILTER_RESULT | enum | Enter a time field type to apply to the prefix. |  |
-| Prefix Time Zone | UTC | string | Enter a time zone for the Time field to apply to the prefix. |  |
-| Prefix Time Application fallback  | _prefix_datetime_parse_failure | string | Enter a prefix to replace if the prefix time application fails. |  |
-| Encoding | none | enum | Enter whether to encode or not . gzip encoding is available. |  |
-| Object Rotation Policy | size_and_time | enum | Determines object creation rules. | size_and_time – Use object size and time to decide<br/>size – Use object size to decide <br/>Time – Use time to decide |
-| Reference Time | 15 | number | Set the time to be the basis for object splitting.   | Set if object rotation policy is size_and_time or time |
-| Object size | 5242880 | number | Set the size to be the basis for object splitting.   | Set when object rotation policy is size_and_time or size |
+| Property name | Default value | Data type | Supported engine type | Description | Others |
+| --- | --- | --- | --- | --- | --- |
+| region | - | enum | V1, V2 | Enter the region of Object Storage product |  |
+| Bucket | - | string | V1, V2 | Enter bucket name |  |
+| Secret Key | - | string | V1, V2 | Enter S3 API Credential Secret Key. |  |
+| Access Key | - | string | V1, V2 | Enter S3 API Credential Access Key. |  |
+| Prefix | /year=%{+YYYY}/month=%{+MM}/day=%{+dd}/hour=%{+HH} | string | V1, V2 | Enter a prefix to prefix the name when uploading the object.<br/>You can enter a field or time format. | [Available Time Format](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html) |
+| Prefix Time Field | @timestamp | string | V1, V2 | Enter a time field to apply to the prefix. |  |
+| Prefix Time Field Type | DATE_FILTER_RESULT | enum | V1, V2 | Enter a time field type to apply to the prefix. | Engine type V2 supports DATE_FILTER_RESULT type only (other types will be supported later) |
+| Prefix Time Zone | UTC | string | V1, V2 | Enter a time zone for the Time field to apply to the prefix. |  |
+| Prefix Time Application fallback  | _prefix_datetime_parse_failure | string | V1, V2 | Enter a prefix to replace if the prefix time application fails. |  |
+| Encoding | none | enum | V1 | Enter whether to encode or not . gzip encoding is available. |  |
+| Object Rotation Policy | size_and_time | enum | V1, V2 | Determines object creation rules. | size_and_time – Use object size and time to decide<br/>size – Use object size to decide <br/>Time – Use time to decide<br/>Engine type V2 supports size\_and\_time only |
+| Reference Time | 15 | number | V1, V2 | Set the time to be the basis for object splitting.   | Set if object rotation policy is size_and_time or time |
+| Object size | 5242880 | number | V1, V2 | Set the size (unit: byte) to be the basis for object splitting.   | Set when object rotation policy is size_and_time or size |
 
 ### Json Codec Output example exercise
 
@@ -1837,9 +2155,9 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 ### Parquet Codec Property Description
 
-| Property name | Default value | Data type | Description | Note |
-| --- | --- | --- | --- | --- |
-| parquet compression codec | SNAPPY | enum | Enter the compression codec to use when converting PARQUET files. | [Reference](https://parquet.apache.org/docs/file-format/data-pages/compression/) |
+| Property name | Default value | Data type | Supported engine type | Description | Note |
+| --- | --- | --- | --- | --- | --- |
+| parquet compression codec | SNAPPY | enum | V1 | Enter the compression codec to use when converting PARQUET files. | * [Reference](https://parquet.apache.org/docs/file-format/data-pages/compression/) </br>* Engine type V2 will be supported later |
 
 ### Prefix Example - Field
 
@@ -1919,28 +2237,36 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 ### Node Description
 
 * Node for uploading data to Amazon S3.
+* If the engine type is V2, the provided codecs are JSON and LINE. Plain and parquet codecs will be supported later.
+
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
 
 ### Property Description 
-| Property name | Default value | Data type | Description | Others |
-| --- | --- | --- | --- | --- |
+| Property name | Default value | Data type | Supported engine type | Description | Others |
+| --- | --- | --- | --- | --- |--- |
 | region | - | enum | Enter Region of S3 product. | [s3 region](https://docs.aws.amazon.com/general/latest/gr/s3.html) |
-| Bucket | - | string | Enter bucket name |  |
-| Access Key | - | string | Enter S3 API Credential Access Key. |  |
-| Secret Key | - | string | Enter S3 API Credential Secret Key. |  |
-| Signature Version | - | enum | Enter the version to use when signing AWS requests. |  |
-| Session Token | - | string | Enter the Session Token for AWS temporary Credentials. | [ Session Token Guide](https://docs.aws.amazon.com/en_kr/IAM/latest/UserGuide/id_credentials_temp_use-resources.html) |
-| Prefix | - | string | Enter a prefix to prefix the name when uploading the object.<br/>You can enter a field or time format. | [Available Time Format](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html) |
-| Prefix Time Field | @timestamp | string | Enter a time field to apply to the prefix. |  |
-| Prefix Time Field Type | DATE_FILTER_RESULT | enum | Enter a time field type to apply to the prefix. |  |
-| Prefix Time Zone | UTC | string | Enter a time zone for the Time field to apply to the prefix. |  |
-| Prefix Time Application fallback  | _prefix_datetime_parse_failure | string | Enter a prefix to replace if the prefix time application fails. |  |
-| Storage Class | STANDARD | enum | Set Storage Class when object is uploaded. | [Storage Class Guide](https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html) |
-| Encoding | none | enum | Enter whether to encode or not . gzip encoding is available. |  |
-| Object Rotation Policy | size_and_time | enum | Determine object creation rules. | size_and_time – Use object size and time to decide<br/>size – Use object size to decide <br/>Time – Use time to decide |
-| Reference Time | 15 | number | Set the time to be the basis for object splitting.   | Set when the object rotation policy is size_and_time or time |
-| Object size | 5242880 | number | Set the size to be the basis for object splitting.   | Set when the object rotation policy is size_and_time or size |
-| ACL | private | enum | Enter ACL policy to set when object is uploaded. |  |
-| Additional Settings | { } | Hash | Enter additional settings to connect to S3. | [Guide](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
+| Bucket | - | string | V1, V2 | Enter bucket name |  |
+| Access Key | - | string | V1, V2 | Enter S3 API Credential Access Key. |  |
+| Secret Key | - | string | V1, V2 | Enter S3 API Credential Secret Key. |  |
+| Signature Version | - | enum | V1, V2 | Enter the version to use when signing AWS requests. |  |
+| Session Token | - | string | V1, V2 | Enter the Session Token for AWS temporary Credentials. | [ Session Token Guide](https://docs.aws.amazon.com/en_kr/IAM/latest/UserGuide/id_credentials_temp_use-resources.html) |
+| Prefix | - | string | V1, V2 | Enter a prefix to prefix the name when uploading the object.<br/>You can enter a field or time format. | [Available Time Format](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html) |
+| Prefix Time Field | @timestamp | string | V1, V2 | Enter a time field to apply to the prefix. |  |
+| Prefix Time Field Type | DATE_FILTER_RESULT | enum | V1, V2 | Enter a time field type to apply to the prefix. |Engine type V2 is only available with DATE_FILTER_RESULT type (other types will be supported in the future)|
+| Prefix Time Zone | UTC | string | V1, V2 | Enter a time zone for the Time field to apply to the prefix. |  |
+| Prefix Time Application fallback  | _prefix_datetime_parse_failure | string | V1, V2 | Enter a prefix to replace if the prefix time application fails. |  |
+| Storage Class | STANDARD | enum | V1 | Set Storage Class when object is uploaded. | [Storage Class Guide](https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html) |
+| Encoding | none | enum | V1 | Enter whether to encode or not . gzip encoding is available. |  |
+| Object Rotation Policy | size_and_time | enum | V1, V2 | Determine object creation rules. | size_and_time – Use object size and time to decide<br/>size – Use object size to decide <br/>Time – Use time to decide<br/>Engine type V2 supports size\_and\_time only |
+| Reference Time | 15 | number | V1, V2 |Set the time to be the basis for object splitting.   | Set when the object rotation policy is size_and_time or time |
+| Object size | 5242880 | number | V1, V2 |Set the size to be the basis for object splitting.   | Set when the object rotation policy is size_and_time or size |
+| ACL | private | enum | V1 | Enter ACL policy to set when object is uploaded. |  |
+| Additional Settings | { } | Hash | V1 | Enter additional settings to connect to S3. | [Guide](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
 
 ### Output example exercise
 
@@ -1948,9 +2274,9 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 ### Parquet Codec Property Description
 
-| Property name | Default value | Data type | Description | Note |
-| --- | --- | --- | --- | --- |
-| parquet compression codec | SNAPPY | enum | Enter the compression codec to use when converting PARQUET files. | [Reference](https://parquet.apache.org/docs/file-format/data-pages/compression/) |
+| Property name | Default value | Data type | Supported engine type | Description | Note |
+| --- | --- | --- | --- | --- | --- |
+| parquet compression codec | SNAPPY | enum | V1 | Enter the compression codec to use when converting PARQUET files. | * [Reference](https://parquet.apache.org/docs/file-format/data-pages/compression/) </br>* Engine type V2 will be supported later |
 
 ### Additional Settings example
 
@@ -1990,29 +2316,36 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 * Node for sending data to Kafka.
 
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | - | To be supported |
+
 ### Property Description 
 
-| Property name           | Default value                                                    | Data type    | Description                                                 | Others                                                                                                                                                                                                                                               |
-|---------------|--------------------------------------------------------|--------|----------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Property name           | Default value                                                    | Data type    | Supported engine type | Description                                                 | Others                                                                                                                                                                                                                                               |
+| --- | --- | --- | --- | --- | --- |
 | Topic            | -                                                      | string | Type the name of Kafka topic to which want to send message.                       |                                                                                                                                                                                                                                                  |
-| Broker Server List     | localhost:9092                                         | string | Enter Kafka Broker server. Separate multiple servers with commas (`, `).  | [bootstrap.servers](https://kafka.apache.org/documentation/#producerconfigs_bootstrap.servers)<br/>ex: 10.100.1.1:9092,10.100.1.2:9092                                                                                                            |
-| Client ID     | dataflow                                                | string | Enter ID that identifies Kafka Producer.                     | [client.id](https://kafka.apache.org/documentation/#producerconfigs_client.id)                                                                                                                                                                    |
-| Message Serialization Type    | org.apache.kafka.common.serialization.StringSerializer | string | Enter how to serialize message value to send.                       | [value.serializer](https://kafka.apache.org/documentation/#producerconfigs_value.serializer)                                                                                                                                                     |
-| Compression type         | none                                                   | enum   | Enter how to compress data to send.                           | [compression.type](https://kafka.apache.org/documentation/#topicconfigs_compression.type)<br/>Select out of none, gzip, snappy, lz4                                                                                                                       |
-| Key Serialization Type      | org.apache.kafka.common.serialization.StringSerializer | string | Enter how to serialize message key to send.                       | [key.serializer](https://kafka.apache.org/documentation/#producerconfigs_key.serializer)                                                                                                                                                         |
-| Meta data upload cycle   | 300000                                                 | number | Enter the interval (ms) at which want to update partition, broker server status, etc.               | [metadata.max.age.ms](https://kafka.apache.org/documentation/#producerconfigs_metadata.max.age.ms)                                                                                                                                                         |
-| Maximum Request Size      | 1048576                                                | number | Enter maximum size (byte) per transfer request.                         | [max.request.size](https://kafka.apache.org/documentation/#producerconfigs_max.request.size)                                                                                                                                                     |
-| Server Reconnection Cycle     | 50                                                     | number | Enter how often to retry when Connection to broker server fails.                 | [reconnect.backoff.ms](https://kafka.apache.org/documentation/#producerconfigs_reconnect.backoff.ms)                                                                                                                                             |
-| Batch Size         | 16384                                                  | number | Enter size (byte) to send to Batch Request.                       | [batch.size](https://kafka.apache.org/documentation/#producerconfigs_batch.size)                                                                                                                                                                 |
-| Buffer Memory        | 33554432                                               | number | Enter size (byte) of buffer used to transfer Kafka.                | [buffer.memory](https://kafka.apache.org/documentation/#producerconfigs_buffer.memory)                                                                                                                                                           |
-| Receiving Buffer Size      | 32768                                                  | number | Enter size (byte) of TCP receive buffer used to read data.    | [receive.buffer.bytes](https://kafka.apache.org/documentation/#producerconfigs_receive.buffer.bytes)                                                                                                                                             |
-| Transfer Delay Time      | 0                                                      | number | Enter delay time for message sending. Delayed messages are sent as batch requests at once. | [linger.ms](https://kafka.apache.org/documentation/#producerconfigs_linger.ms)                                                                                                                                             |
-| Server Request Timeout    | 40000                                                  | number | Enter timeout (ms) for Transfer Request.                         | [request.timeout.ms](https://kafka.apache.org/documentation/#producerconfigs_request.timeout.ms)                                                                                                                                                 |
-| Meta data Query Timeout                                                        |  | number |                                                    | [https://kafka.apache.org/documentation/#upgrade_1100_notable](https://kafka.apache.org/documentation/#upgrade_1100_notable)                                                                                                                   |
-| Transfer Buffer Size      | 131072                                                 | number | Enter size (byte) of TCP send buffer used to transfer data.     | [send.buffer.bytes](https://kafka.apache.org/documentation/#producerconfigs_send.buffer.bytes)                                                                                                                                                   |
-| Ack Property        | 1                                                      | enum   | Enter settings to verify that messages have been received from Broker server.                 | [acks](https://kafka.apache.org/documentation/#producerconfigs_acks)<br/>0 - Does not check if 6543eyu0=message is received.<br/>1 - Leader of topic responds that the message was received without waiting for follower to copy data.<br/>all - Leader of topic waits for follower to copy the data before responding that they have received the message. |
-| Request Reconnection Cycle     | 100                                                    | number | Enter the interval (ms) to retry when transfer request fails.                  | [retry.backoff.ms](https://kafka.apache.org/documentation/#producerconfigs_retry.backoff.ms)                                                                                                                                                     |
-| Retry times        | -                                                      | number | Enter the maximum times (ms) to retry when transfer request fails.                   | [retries](https://kafka.apache.org/documentation/#producerconfigs_retries)<br/>Retrying exceeding the set value may result in data loss.                                                                                                                            |
+| Broker Server List     | localhost:9092                                         | string | V1 | Enter Kafka Broker server. Separate multiple servers with commas (`, `).  | [bootstrap.servers](https://kafka.apache.org/documentation/#producerconfigs_bootstrap.servers)<br/>ex: 10.100.1.1:9092,10.100.1.2:9092                                                                                                            |
+| Client ID     | dataflow                                                | string | V1 | Enter ID that identifies Kafka Producer.                     | [client.id](https://kafka.apache.org/documentation/#producerconfigs_client.id)                                                                                                                                                                    |
+| Message Serialization Type    | org.apache.kafka.common.serialization.StringSerializer | string | V1 | Enter how to serialize message value to send.                       | [value.serializer](https://kafka.apache.org/documentation/#producerconfigs_value.serializer)                                                                                                                                                     |
+| Compression type         | none                                                   | enum   | V1 | Enter how to compress data to send.                           | [compression.type](https://kafka.apache.org/documentation/#topicconfigs_compression.type)<br/>Select out of none, gzip, snappy, lz4                                                                                                                       |
+| Key Serialization Type      | org.apache.kafka.common.serialization.StringSerializer | string | V1 | Enter how to serialize message key to send.                       | [key.serializer](https://kafka.apache.org/documentation/#producerconfigs_key.serializer)                                                                                                                                                         |
+| Meta data upload cycle   | 300000                                                 | number | V1 | Enter the interval (ms) at which want to update partition, broker server status, etc.               | [metadata.max.age.ms](https://kafka.apache.org/documentation/#producerconfigs_metadata.max.age.ms)                                                                                                                                                         |
+| Maximum Request Size      | 1048576                                                | number | V1 | Enter maximum size (byte) per transfer request.                         | [max.request.size](https://kafka.apache.org/documentation/#producerconfigs_max.request.size)                                                                                                                                                     |
+| Server Reconnection Cycle     | 50                                                     | number | V1 | Enter how often to retry when Connection to broker server fails.                 | [reconnect.backoff.ms](https://kafka.apache.org/documentation/#producerconfigs_reconnect.backoff.ms)                                                                                                                                             |
+| Batch Size         | 16384                                                  | number | V1 | Enter size (byte) to send to Batch Request.                       | [batch.size](https://kafka.apache.org/documentation/#producerconfigs_batch.size)                                                                                                                                                                 |
+| Buffer Memory        | 33554432                                               | number | V1 | Enter size (byte) of buffer used to transfer Kafka.                | [buffer.memory](https://kafka.apache.org/documentation/#producerconfigs_buffer.memory)                                                                                                                                                           |
+| Receiving Buffer Size      | 32768                                                  | number | V1 | Enter size (byte) of TCP receive buffer used to read data.    | [receive.buffer.bytes](https://kafka.apache.org/documentation/#producerconfigs_receive.buffer.bytes)                                                                                                                                             |
+| Transfer Delay Time      | 0                                                      | number | V1 | Enter delay time for message sending. Delayed messages are sent as batch requests at once. | [linger.ms](https://kafka.apache.org/documentation/#producerconfigs_linger.ms)                                                                                                                                             |
+| Server Request Timeout    | 40000                                                  | number | V1 | Enter timeout (ms) for Transfer Request.                         | [request.timeout.ms](https://kafka.apache.org/documentation/#producerconfigs_request.timeout.ms)                                                                                                                                                 |
+| Meta data Query Timeout                                                        |  | number |V1 |                                                     | [https://kafka.apache.org/documentation/#upgrade_1100_notable](https://kafka.apache.org/documentation/#upgrade_1100_notable)                                                                                                                   |
+| Transfer Buffer Size      | 131072                                                 | number |V1 |  Enter size (byte) of TCP send buffer used to transfer data.     | [send.buffer.bytes](https://kafka.apache.org/documentation/#producerconfigs_send.buffer.bytes)                                                                                                                                                   |
+| Ack Property        | 1                                                      | enum   |V1 |  Enter settings to verify that messages have been received from Broker server.                 | [acks](https://kafka.apache.org/documentation/#producerconfigs_acks)<br/>0 - Does not check if 6543eyu0=message is received.<br/>1 - Leader of topic responds that the message was received without waiting for follower to copy data.<br/>all - Leader of topic waits for follower to copy the data before responding that they have received the message. |
+| Request Reconnection Cycle     | 100                                                    | number |V1 |  Enter the interval (ms) to retry when transfer request fails.                  | [retry.backoff.ms](https://kafka.apache.org/documentation/#producerconfigs_retry.backoff.ms)                                                                                                                                                     |
+| Retry times        | -                                                      | number |V1 |  Enter the maximum times (ms) to retry when transfer request fails.                   | [retries](https://kafka.apache.org/documentation/#producerconfigs_retries)<br/>Retrying exceeding the set value may result in data loss.                                                                                                                            |
 
 ### Json Codec Output example exercise
 
@@ -2074,6 +2407,13 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * Node that outputs messages to standard output.
 * This is useful for checking the data processed by the Source, Filter nodes.
 
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O | debug is not supported |
+
 ### Example output by codec
 
 #### Input message
@@ -2127,23 +2467,33 @@ Hello World! data-flow-01
 
 * Node for filtering messages through conditional sentence.
 
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+| --- | --- | --- |
+| V1 | O |  |
+| V2 | O |  |
+
 ### Property Description 
 
-| Property name | Default value | Data type | Description | Others |
-| --- | --- | --- | --- | --- |
-| conditional sentence. | - | string | Enter the conditions for message filtering. |  |
+| Property name | Default value | Data type | Supported engine type | Description | Others |
+| --- | --- | --- | --- | --- | --- |
+| conditional sentence. | - | string | V1, V2 | Enter the conditions for message filtering. |Conditional syntax varies depending on the engine type. See the examples below.|
 
 ### Filtering example exercise - first depth field reference
 
 #### condition
 
-* conditional sentence → `[logLevel] == "ERROR"`
+* If the engine type is V1
+    * Conditional → `[logLevel] == "ERROR"`
+* If the engine type is V2
+    * Conditional → `logLevel == "ERROR"`
 
 #### Pass message
 
 ``` json
 { 
-       "logLevel": "ERROR" 
+    "logLevel": "ERROR"
 }
 ```
 
@@ -2151,7 +2501,7 @@ Hello World! data-flow-01
 
 ``` json
 { 
-   "logLevel": "INFO" 
+    "logLevel": "INFO"
 }
 ```
 
@@ -2159,7 +2509,10 @@ Hello World! data-flow-01
 
 #### condition
 
-* conditional sentence → `[response][status] == 200`
+* If the engine type is V1
+    * Conditional → `[response][status] == 200`
+* If the engine type is V2
+    * Conditional → `response.status == 200` or `response["status"] == 200`
 
 #### Passed message
 

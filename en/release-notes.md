@@ -1,5 +1,11 @@
 ## Data & Analytics > DataFlow > Release Notes
 
+### December 23, 2025
+#### Added Features
+* Added engine type
+    * V1: it is a legacy engine and is fully compatible with all standard nodes and existing templates.
+    * V2: it provides faster performance than V1 with the latest architecture-based engine.
+
 ### October 28, 2025
 #### Bug Fixes
 * Fixed an issue where CPU, Memory, and Network metrics in the Monitoring tab were only displayed for the most recently executed flow.
