@@ -7,7 +7,7 @@ DataFlow can be used in the following order:
     2. Select the desired project.
     3. Enable the DataFlow service.
 * Execute Flow
-    1. Create a flow by entering a name and description.
+    1. Create a flow.
     2. Add the nodes you need, and enter settings to define how each node behaves.
     3. Node connections determine the order of nodes' actions to complete the flow.
     4. Execute the file.
@@ -74,14 +74,29 @@ Create metadata to define flows.
 
 * Create flow metadata by adding name and description to identify a flow.
 * Flow names can overlap with other flows.
+* Select an engine type. The default ls V1, and refer to **Engine Type** section for features by engine.
+* Select the execution mode according to the flow purpose.
 * You can specify Flow Template to easily load flows of features users wants.
 * You can set an instance type to run flows.
+
+#### Engine Type
+
+* Select either V1 or V2 from the **Engine Type** option on the Create Flow screen.
+    * V1: the existing engine supports a variety of nodes.
+    * V2: the latest architecture-based engine provides faster performance than V1.
+* The engine cannot be changed after creating the flow.
+
+
+!!! tip "Notice"
+    The provided node and monitoring information vary by engine type.
+
 
 ### Change Flow
 
 Modify metadata of flows.
 
 * Modify the existing flow name and description to reflect it in flow metadata.
+* Engine type cannot be changed.
 * Flow templates cannot be specified.
 * Changing flows are possible even when the flow is running.
 * You cannot change the instance type to run flows.
@@ -142,6 +157,7 @@ Displays detailed flow metadata.
 
 * Display the name and description information entered when creating a flow.
 * Display the flow creation date and creator name, latest modification date/modifier, and latest execution date/runner information.
+* Display the engine type of the flow.
 * Display the total running time at the time of the most recent run.
 * Display the instance type at the time of the most recent run.
 
@@ -166,7 +182,9 @@ Define a flow logic.
 
 * Define a flow by importing flow components from Node type or Template from flow settings.
     * The Collapse/Expand button allows to zoom-in/zoom-out the flow screen.
+    * The available engine type varies by engine type.
 * Adjust the flow screen to define flows and change the graph configuration.
+
     * Define a node behavior by entering the appropriate settings for each node.
         * [Detailed Node Guide](https://docs.toast.com/ko/Data%20&%20Analytics/DataFlow/ko/node-config-guide/)
     * Define the flow of messages by linking connections among nodes.
@@ -253,6 +271,7 @@ Display a list of flows that can be monitored.
 * By collapsing the list, you can expand the detailed page for monitoring.
 * You can also check Monitoring information of deleted flows through the View button.
 
+
 ### Flow Screen Area
 
 Area that displays the appearance of flow.
@@ -283,6 +302,7 @@ It is area to display the monitoring chart.
         * The cancel button allows you not to apply the time period you want to change.
     * Chart
         * You can zoom the Chart zoom-in/zoom-out by specifying the chart range.
+* Event in/out charts for flows with engine type V2 will be provided later.
 
 ## Template
 
@@ -313,6 +333,7 @@ Create metadata to define a template.
 
 * Create template metadata by adding name and description to identify a template.
 * Template names can overlap with other Template names.
+* Select an engine type. The default is V1.
 * Flow templates cannot be specified.
 * Created templates can be found in the node type list when defining flows or template logics.
 
