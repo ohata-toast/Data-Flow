@@ -855,8 +855,6 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 앱키 | - | string | V1 | 암/복호화에 사용할 키를 저장한 SKM 앱키를 입력합니다. |  |
 | 키 ID | - | string | V1 | 암/복호화에 사용할 키를 저장한 SKM 키 ID를 입력합니다. |  |
 | 키 버전 | - | string | V1 | 암/복호화에 사용할 키를 저장한 SKM 키 버전을 입력합니다. |  |
-| 암/복호화 키 길이 | 16 | number | V1 | 암/복호화 키의 길이를 입력합니다. |  |
-| IV 랜덤 길이 | - | number | V1 | Initial Vector의 random bytes 길이를 입력합니다. |  |
 | 소스 필드 | - | string | V1 | 암/복호화할 필드명을 입력합니다. |  |
 | 저장할 필드 | - | string | V1 | 암/복호화 결과를 저장할 필드명을 입력합니다. |  |
 
@@ -941,6 +939,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 패턴 정의 | - | hash | V1 | 파싱할 토큰의 규칙의 사용자 정의 패턴을 정규표현식으로 입력합니다. | 시스템 정의 패턴은 아래 링크를 확인하세요.<br/>https://github.com/logstash-plugins/logstash-patterns-core/blob/main/patterns/legacy/grok-patterns |
 | 실패 태그 | - | array of strings | V1 | 문자열 파싱에 실패할 경우 정의할 태그명을 입력합니다. |  |
 | 타임아웃 | 30000 | number | V1 | 문자열 파싱이 될 때까지 기다리는 시간을 입력합니다. |  |
+| 타임아웃 태그 | _groktimeout | string | V1 | 타임아웃 시 설정할 태그를 입력합니다. |  |
 | 덮어쓰기 | - | array of strings | V1 | 파싱 후 지정된 필드에 값을 쓸 때 해당 필드에 이미 값이 정의되어 있을 경우 덮어쓸 필드명들을 입력합니다. |  |
 | 이름이 지정된 값만 저장 | true | boolean | V1 | 속성값이 true일 경우 이름이 지정되지 않은 파싱 결과를 저장하지 않습니다. |  |
 | 빈 문자열 캡처 | false | boolean | V1 | 속성값이 true일 경우 빈 문자열도 필드에 저장합니다. |  |
@@ -1118,7 +1117,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
         "json": "parse",
         "example": "string"
     },
-    "message": "uuid test message"
+    "message": "{\\\"json\\\": \\\"parse\\\", \\\"example\\\": \\\"string\\\"}"
 }
 ```
 
@@ -1231,7 +1230,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 ### 속성 설명
 
 | 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
-| --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- | --- |
 | 소스 필드 | - | string | V1 | 메시지를 분리할 필드명을 입력합니다. |  |
 | 저장할 필드 | - | string | V1 | 분리된 메시지를 저장할 필드명을 입력합니다. |  |
 | 구분자 | `\n` | string | V1 |  |  |
@@ -1945,7 +1944,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
 | --- | --- | --- | --- | --- | --- |
 | 소스 필드 |  | string | V2 | 이름을 변경할 소스 필드를 입력합니다. |  |
-| 대상 필드 | - | string | V2 |  | 변경할 필드명을 입력합니다. |
+| 대상 필드 | - | string | V2 | 변경할 필드명을 입력합니다. |  |
 | 덮어쓰기 | false | boolean | V2 | true일 경우 대상 필드가 이미 존재할 경우 덮어씌웁니다.  |  |
 
 ### 기본값 설정 예제

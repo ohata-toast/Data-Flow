@@ -855,8 +855,6 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Appkey | - | string | V1 | Enter SKM app key that saves the key for encryption/decryption. |  |
 | Key ID | - | string | V1 | Enter SKM ID that saves the key for encryption/decryption. |  |
 | Key Version | - | string | V1 | Enter SKM key version that saves the key for encryption/decryption. |  |
-| Encryption/decryption key length | 16 | number | V1 | Enter encryption/decryption key length |  |
-| IV Random Length | - | number | V1 | Enter random bytes length of Initial Vector.  |  |
 | Source Field | - | string | V1 | Enter Field name for encryption/decryption. |  |
 | Field to be stored | - | string | V1 | Enter Field name to save encryption/decryption result. |  |
 
@@ -941,6 +939,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Pattern definition | - | hash | V1 | Enter a custom pattern as a regular expression for the rule of tokens to be parsed. | Check the link below for system defined patterns.<br/>https://github.com/logstash-plugins/logstash-patterns-core/blob/main/patterns/legacy/grok-patterns |
 | Failure tag | - | array of strings | V1 | Enter the tag name to define if string parsing fails. |  |
 | Timeout | 30000 | number | V1 | Enter the amount of time to wait for string parsing. |  |
+| Timeout tag | _groktimeout | string | V1 | Enter the tag to register for an event when a timeout occurs. |  |
 | Overwrite | - | array of strings | V1 | When writing a value to a designated field after parsing, if a value is already defined in the field, enter the field names to be overwritten. |  |
 | Store only values with specified names | true | boolean | V1 | If the property value is true, do not store unnamed parting results. |  |
 | Capture empty string | false | boolean | V1 | If the property value is true, store empty strings in fields. |  |
@@ -1118,7 +1117,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
         "json": "parse",
         "example": "string"
     },
-    "message": "uuid test message"
+    "message": "{\\\"json\\\": \\\"parse\\\", \\\"example\\\": \\\"string\\\"}"
 }
 ```
 
@@ -1231,7 +1230,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 ### Property Description
 
 | Property name | Default value | Data type | Supported engine type | Description | Others |
-| --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- | --- |
 | Source field | - | string | V1 | Enter a field name to separate messages. |  |
 | Field to be stored | - | string | V1 | Enter a field name to store separated messages. |  |
 | Separator | `\n` | string |  V1 | |  |
@@ -1945,7 +1944,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Property Name | Default | Data Type | Supported Engine Type | Description | Note |
 | --- | --- | --- | --- | --- | --- |
 | Source Field | | string | V2 | Enter the source field to be renamed. | |
-| Target Field | - | string | V2 | | Enter the field name to be renamed. |
+| Target Field | - | string | V2 | Enter the field name to be renamed | |
 | Overwrite | false | boolean | V2 | If true, the target field will be overwritten if it already exists. | |
 
 ### Default Setting Example
