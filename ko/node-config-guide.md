@@ -405,7 +405,8 @@
 | Prefix | - | string | V1, V2 | 읽어 올 오브젝트의 접두사를 입력합니다. |  |
 | 제외할 키 패턴 | - | string | V1, V2 | 읽지 않을 오브젝트의 패턴을 입력합니다. |   |
 | 처리 완료 오브젝트 삭제 | false | boolean | V1 | 속성값이 true일 경우 읽기 완료한 오브젝트를 삭제합니다. |  |
-| 추가 설정 | - | hash | V1 | S3 서버와 연결할 때 사용할 추가적인 설정을 입력합니다. | 사용 가능한 설정의 전체 목록은 다음 링크를 참조하세요.<br/>https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html<br/>예:<br/>{<br/>"force\_path\_style": true<br/>}  
+| 추가 설정 | - | hash | V1 | S3 서버와 연결할 때 사용할 추가적인 설정을 입력합니다. | [가이드](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
+| 경로 방식 요청 | false | boolean | V2 | 경로 방식 요청을 사용할지 여부를 결정합니다. |  |
 
 ### 메타데이터 필드 사용법
 
@@ -2266,6 +2267,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 기준 오브젝트 크기 | 5242880 | number | V1, V2 | 오브젝트를 분할할 기준이 될 크기를 설정합니다. | 오브젝트 로테이션 정책이 size\_and\_time 또는 size인 경우 설정 |
 | ACL | private | enum | V1 | 오브젝트를 업로드했을 때 설정할 ACL 정책을 입력합니다. |  |
 | 추가 설정 | { } | hash | V1 | S3에 연결하기 위한 추가 설정을 입력합니다. | [가이드](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
+| 경로 방식 요청 | false | boolean | V2 | 경로 방식 요청을 사용할지 여부를 결정합니다. |  |
 
 ### 출력 예제
 
