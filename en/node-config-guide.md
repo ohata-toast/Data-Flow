@@ -405,7 +405,7 @@ Nodes whose compatibility varies depending on engine type are always updated in 
 | Prefix | - | string | V1, V2 | Enter a prefix of an object to read. |                                                                                                                                                                                                              |
 | Key pattern to exclude | - | string | V1, V2 | Enter the pattern of an object not to be read. |                                                                                                                                                                                                              |
 | Delete | false | boolean | V1 | If the property value is true, delete the object read. |                                                                                                                                                                                                              |
-| Additional settings | - | hash | V1 | Enter additional settings to use when connecting to the S3 server. | See the following link for a full list of available settings.<br/>https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html<br/>Example:<br/>{<br/>"force_path_style": true<br/>}                                                     |
+| Additional settings | - | hash | V1 | Enter additional settings to use when connecting to the S3 server. | [Guide](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html)                             |
 
 ### Metadata Field Usage
 

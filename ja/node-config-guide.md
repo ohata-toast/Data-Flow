@@ -406,7 +406,7 @@
 | Prefix | - | string | V1, V2 | 読み込むオブジェクトのプレフィックスを入力します。 |  |
 | 除外するキーパターン | - | string | V1, V2 | 読み込まないオブジェクトのパターンを入力します。 |   |
 | 処理完了オブジェクト削除 | false | boolean | V1 | プロパティ値がtrueの場合、読み込み完了したオブジェクトを削除します。 |  |
-| 追加設定 | - | hash | V1 | S3サーバーと接続する際に使用する追加設定を入力します。 | 使用可能な設定の全リストは次のリンクを参照してください。<br/>https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html<br/>例:<br/>{<br/>"force\_path\_style": true<br/>}   |  
+| 追加設定 | - | hash | V1 | S3サーバーと接続する際に使用する追加設定を入力します。 | [ガイド](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html)  |  
 
 ### メタデータフィールドの使い方
 
