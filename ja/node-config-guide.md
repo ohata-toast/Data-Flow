@@ -933,7 +933,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | --- | --- | --- | --- | --- | --- |
 | Match | - | hash | V1 | 解析する文字列の情報を入力します。 |  |
 | パターン定義 | - | hash | V1 | 解析するトークンのルールのユーザー定義パターンを正規表現で入力します。 | システム定義パターンは以下のリンクを確認してください。<br/>https://github.com/logstash-plugins/logstash-patterns-core/blob/main/patterns/legacy/grok-patterns |
-| 失敗タグ | - | array of strings | V1 | 文字列解析に失敗した場合に定義するタグ名を入力します。 |  |
+| 失敗タグ | _grokparsefailure | array of strings | V1 | 文字列解析に失敗した場合に定義するタグ名を入力します。 |  |
 | タイムアウト | 30000 | number | V1 | 文字列解析が完了するまで待機する時間を入力します。 |  |
 | タイムアウトタグ | _groktimeout | string | V1 | タイムアウト発生時にイベントに登録するタグを入力します。 |  |
 | 上書き | - | array of strings | V1 | 解析後、指定されたフィールドに値を書き込む際、該当フィールドに既に値が定義されている場合に上書きするフィールド名を入力します。 |  |

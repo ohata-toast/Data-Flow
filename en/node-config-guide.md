@@ -937,7 +937,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | --- | --- | --- | --- | --- | --- |
 | Match | - | hash | V1 | Enter the information of the string to be parsed. |  |
 | Pattern definition | - | hash | V1 | Enter a custom pattern as a regular expression for the rule of tokens to be parsed. | Check the link below for system defined patterns.<br/>https://github.com/logstash-plugins/logstash-patterns-core/blob/main/patterns/legacy/grok-patterns |
-| Failure tag | - | array of strings | V1 | Enter the tag name to define if string parsing fails. |  |
+| Failure tag | _grokparsefailure | array of strings | V1 | Enter the tag name to define if string parsing fails. |  |
 | Timeout | 30000 | number | V1 | Enter the amount of time to wait for string parsing. |  |
 | Timeout tag | _groktimeout | string | V1 | Enter the tag to register for an event when a timeout occurs. |  |
 | Overwrite | - | array of strings | V1 | When writing a value to a designated field after parsing, if a value is already defined in the field, enter the field names to be overwritten. |  |
