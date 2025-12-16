@@ -1146,7 +1146,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Locale | * V1: - <br/> * V2: `ko_KR`      | string           | V1, V2   | Date 문자열 분석을 위해 사용할 Locale을 입력합니다.   | 예: en, en-US, ko_KR                                             |
 | 저장할 필드 | * V1: `@timestamp`<br/> * V2: -  | string           | V1, V2   | Date 문자열 파싱 결과를 저장할 필드명을 입력합니다.      |                                                                 |
 | 실패 태그  | `_dateparsefailure`              | array of strings | V1       | Date 문자열 파싱에 실패했을 경우 정의할 태그명을 입력합니다. |                                                                 |
-| 시간대    | * V1: - <br/> * V2: `Asia/Seoul` | string           | V1, V2   | 날짜의 시간대를 입력합니다.                      | * 예: `Asia/Seoul`                                               |
+| 시간대    | * V1: - <br/> * V2: `Asia/Seoul` | string           | V1, V2   | 날짜의 시간대를 입력합니다.                      | 예: Asia/Seoul                                                   |
 
 ### Date 문자열 파싱 예제
 
