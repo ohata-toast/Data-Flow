@@ -1000,7 +1000,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 最初の行を無視するか | false | boolean | V1, V2 | プロパティ値がtrueの場合、読み込んだデータのうち最初の行に入力されたカラム名を無視します。 |  |
 | カラム | - | array of strings | V1 | カラム名を入力します。 |  |
 | 区切り文字 | , | string | V1, V2 | カラムを区切る文字列を入力します。 |  |
-| ソースフィールド | message | string | V1, V2 | CSV解析するフィールド名を入力します。 |  |
+| ソースフィールド | * V1: message<br>* V2: - | string | V1, V2 | CSV解析するフィールド名を入力します。 |  |
 | スキーマ | - | hash | V1, V2 | 各カラムの名前とデータ型をdictionary形式で入力します。 | `エンジンタイプによるスキーマ入力方法` 参照 |
 
 #### エンジンタイプによるスキーマ入力方法
@@ -1087,7 +1087,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 | プロパティ名 | デフォルト値 | データ型 | サポートエンジンタイプ | 説明 | 備考 |
 | --- | --- | --- | --- | --- | --- |
-| ソースフィールド | message | string | V1, V2 | JSON文字列を解析するフィールド名を入力します。 |  |
+| ソースフィールド | * V1: message<br>* V2: - | string | V1, V2 | JSON文字列を解析するフィールド名を入力します。 |  |
 | 保存するフィールド | - | string | V1, V2 | JSON解析結果を保存するフィールド名を入力します。<br/>もしプロパティ値を指定しない場合、rootフィールドに結果を保存します。 |  |
 | 上書き | false | boolean | V2 | trueの場合、JSON解析結果が保存するフィールドや既存フィールドと重複すれば上書きします。  |  |
 | 元フィールド削除 | false | boolean | V2 | JSON解析が完了すればソースフィールドを削除します。解析が失敗すれば維持します。 |  |
@@ -2051,7 +2051,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Prefixタイムゾーン | UTC | string | V1, V2 | Prefixに適用する時間フィールドのタイムゾーンを入力します。 |  |
 | Prefix時間適用fallback  | _prefix_datetime_parse_failure | string | V1, V2 | Prefix時間適用に失敗した場合に代替するPrefixを入力します。 |  |
 | エンコーディング | none | enum | V1 | エンコーディング可否を入力します。gzipエンコーディングを使用できます。 |  |
-| オブジェクトローテーションポリシー | size\_and\_time | enum | V1, V2 | オブジェクトの生成ルールを決定します。 | size\_and\_time: オブジェクトのサイズと時間を利用して決定<br/>size: オブジェクトのサイズを利用して決定<br/>time: 時間を利用して決定<br/>エンジンタイプV2はsize\_and\_timeのみサポート |
+| オブジェクトローテーションポリシー | size\_and\_time | enum | V1 | オブジェクトの生成ルールを決定します。 | size\_and\_time: オブジェクトのサイズと時間を利用して決定<br/>size: オブジェクトのサイズを利用して決定<br/>time: 時間を利用して決定<br/>エンジンタイプV2はsize\_and\_timeのみサポート |
 | 基準時刻 | 15 | number | V1, V2 | オブジェクトを分割する基準となる時間を設定します。 | オブジェクトローテーションポリシーがsize\_and\_timeまたはtimeの場合設定 |
 | 基準オブジェクトサイズ | 5242880 | number | V1, V2 | オブジェクトを分割する基準となるサイズ(単位： byte)を設定します。 | オブジェクトローテーションポリシーがsize\_and\_timeまたはsizeの場合設定 |
 
@@ -2258,7 +2258,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Prefix時間適用fallback  | _prefix_datetime_parse_failure | string | V1, V2 | Prefix時間適用に失敗した場合に代替するPrefixを入力します。 |  |
 | ストレージクラス | STANDARD | enum | V1 | オブジェクトをアップロードする際に使用するストレージクラスを設定します。 | [ストレージクラスガイド](https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html) |
 | エンコーディング | none | enum | V1 | エンコーディング可否を入力します。gzipエンコーディングを使用できます。 |  |
-| オブジェクトローテーションポリシー | size\_and\_time | enum | V1, V2 | オブジェクトの生成ルールを決定します。 | size\_and\_time: オブジェクトのサイズと時間を利用して決定<br/>size: オブジェクトのサイズを利用して決定<br/>time: 時間を利用して決定<br/>エンジンタイプV2はsize\_and\_timeのみサポート |
+| オブジェクトローテーションポリシー | size\_and\_time | enum | V1 | オブジェクトの生成ルールを決定します。 | size\_and\_time: オブジェクトのサイズと時間を利用して決定<br/>size: オブジェクトのサイズを利用して決定<br/>time: 時間を利用して決定<br/>エンジンタイプV2はsize\_and\_timeのみサポート |
 | 基準時刻 | 15 | number | V1, V2 | オブジェクトを分割する基準となる時間を設定します。 | オブジェクトローテーションポリシーがsize\_and\_timeまたはtimeの場合設定 |
 | 基準オブジェクトサイズ | 5242880 | number | V1, V2 | オブジェクトを分割する基準となるサイズを設定します。 | オブジェクトローテーションポリシーがsize\_and\_timeまたはsizeの場合設定 |
 | ACL | private | enum | V1 | オブジェクトをアップロードした際に設定するACLポリシーを入力します。 |  |
