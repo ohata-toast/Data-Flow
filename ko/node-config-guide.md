@@ -405,7 +405,8 @@
 | Prefix | - | string | V1, V2 | 읽어 올 오브젝트의 접두사를 입력합니다. |  |
 | 제외할 키 패턴 | - | string | V1, V2 | 읽지 않을 오브젝트의 패턴을 입력합니다. |   |
 | 처리 완료 오브젝트 삭제 | false | boolean | V1 | 속성값이 true일 경우 읽기 완료한 오브젝트를 삭제합니다. |  |
-| 추가 설정 | - | hash | V1 | S3 서버와 연결할 때 사용할 추가적인 설정을 입력합니다. | 사용 가능한 설정의 전체 목록은 다음 링크를 참조하세요.<br/>https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html<br/>예:<br/>{<br/>"force\_path\_style": true<br/>}  
+| 추가 설정 | - | hash | V1 | S3 서버와 연결할 때 사용할 추가적인 설정을 입력합니다. | [가이드](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
+| 경로 방식 요청 | false | boolean | V2 | 경로 방식 요청을 사용할지 여부를 결정합니다. |  |
 
 ### 메타데이터 필드 사용법
 
@@ -855,8 +856,6 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 앱키 | - | string | V1 | 암/복호화에 사용할 키를 저장한 SKM 앱키를 입력합니다. |  |
 | 키 ID | - | string | V1 | 암/복호화에 사용할 키를 저장한 SKM 키 ID를 입력합니다. |  |
 | 키 버전 | - | string | V1 | 암/복호화에 사용할 키를 저장한 SKM 키 버전을 입력합니다. |  |
-| 암/복호화 키 길이 | 16 | number | V1 | 암/복호화 키의 길이를 입력합니다. |  |
-| IV 랜덤 길이 | - | number | V1 | Initial Vector의 random bytes 길이를 입력합니다. |  |
 | 소스 필드 | - | string | V1 | 암/복호화할 필드명을 입력합니다. |  |
 | 저장할 필드 | - | string | V1 | 암/복호화 결과를 저장할 필드명을 입력합니다. |  |
 
@@ -941,6 +940,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 패턴 정의 | - | hash | V1 | 파싱할 토큰의 규칙의 사용자 정의 패턴을 정규표현식으로 입력합니다. | 시스템 정의 패턴은 아래 링크를 확인하세요.<br/>https://github.com/logstash-plugins/logstash-patterns-core/blob/main/patterns/legacy/grok-patterns |
 | 실패 태그 | - | array of strings | V1 | 문자열 파싱에 실패할 경우 정의할 태그명을 입력합니다. |  |
 | 타임아웃 | 30000 | number | V1 | 문자열 파싱이 될 때까지 기다리는 시간을 입력합니다. |  |
+| 타임아웃 태그 | _groktimeout | string | V1 | 타임아웃 시 설정할 태그를 입력합니다. |  |
 | 덮어쓰기 | - | array of strings | V1 | 파싱 후 지정된 필드에 값을 쓸 때 해당 필드에 이미 값이 정의되어 있을 경우 덮어쓸 필드명들을 입력합니다. |  |
 | 이름이 지정된 값만 저장 | true | boolean | V1 | 속성값이 true일 경우 이름이 지정되지 않은 파싱 결과를 저장하지 않습니다. |  |
 | 빈 문자열 캡처 | false | boolean | V1 | 속성값이 true일 경우 빈 문자열도 필드에 저장합니다. |  |
@@ -998,7 +998,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 첫 행 무시 여부 | false | boolean | V1, V2 | 속성값이 true일 경우 읽은 데이터 중 첫 행에 입력된 컬럼 이름을 무시합니다. |  |
 | 컬럼 | - | array of strings | V1 | 컬럼 이름을 입력합니다. |  |
 | 구분자 | , | string | V1, V2 | 컬럼을 구분할 문자열을 입력합니다. |  |
-| 소스 필드 | message | string | V1, V2 | CSV 파싱할 필드명을 입력합니다. |  |
+| 소스 필드 | * V1: message<br>* V2: - | string | V1, V2 | CSV 파싱할 필드명을 입력합니다. |  |
 | 스키마 | - | hash | V1, V2 | 각 컬럼의 이름과 자료형을 dictionary 형태로 입력합니다. | `엔진 타입에 따른 스키마 입력 방법` 참고 |
 
 #### 엔진 타입에 따른 스키마 입력 방법
@@ -1090,7 +1090,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 | 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
 | --- | --- | --- | --- | --- | --- |
-| 소스 필드 | message | string | V1, V2 | JSON 문자열을 파싱할 필드명을 입력합니다. |  |
+| 소스 필드 | * V1: message<br>* V2: - | string | V1, V2 | JSON 문자열을 파싱할 필드명을 입력합니다. |  |
 | 저장할 필드 | - | string | V1, V2 | JSON 파싱 결과를 저장할 필드명을 입력합니다.<br/>만약 속성값을 지정하지 않을 경우 root 필드에 결과를 저장합니다. |  |
 | 덮어쓰기 | false | boolean | V2 | true일 경우 JSON 파싱 결과가 저장할 필드나 기존 필드와 겹치면 덮어씌웁니다.  |  |
 | 원본 필드 삭제 | false | boolean | V2 | JSON 파싱이 완료되면 소스 필드를 삭제합니다. 파싱이 실패한다면 유지합니다. |  |
@@ -1118,7 +1118,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
         "json": "parse",
         "example": "string"
     },
-    "message": "uuid test message"
+    "message": "{\\\"json\\\": \\\"parse\\\", \\\"example\\\": \\\"string\\\"}"
 }
 ```
 
@@ -1231,7 +1231,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 ### 속성 설명
 
 | 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
-| --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- | --- |
 | 소스 필드 | - | string | V1 | 메시지를 분리할 필드명을 입력합니다. |  |
 | 저장할 필드 | - | string | V1 | 분리된 메시지를 저장할 필드명을 입력합니다. |  |
 | 구분자 | `\n` | string | V1 |  |  |
@@ -1945,7 +1945,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
 | --- | --- | --- | --- | --- | --- |
 | 소스 필드 |  | string | V2 | 이름을 변경할 소스 필드를 입력합니다. |  |
-| 대상 필드 | - | string | V2 |  | 변경할 필드명을 입력합니다. |
+| 대상 필드 | - | string | V2 | 변경할 필드명을 입력합니다. |  |
 | 덮어쓰기 | false | boolean | V2 | true일 경우 대상 필드가 이미 존재할 경우 덮어씌웁니다.  |  |
 
 ### 기본값 설정 예제
@@ -2055,7 +2055,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Prefix 시간대 | UTC | string | V1, V2 | Prefix에 적용할 시간 필드의 타임 존을 입력합니다. |  |
 | Prefix 시간 적용 fallback  | _prefix_datetime_parse_failure | string | V1, V2 | Prefix 시간 적용에 실패한 경우 대체할 Prefix를 입력합니다. |  |
 | 인코딩 | none | enum | V1 | 인코딩 여부를 입력합니다. gzip 인코딩을 사용할 수 있습니다. |  |
-| 오브젝트 로테이션 정책 | size\_and\_time | enum | V1, V2 | 오브젝트의 생성 규칙을 결정합니다. | size\_and\_time: 오브젝트의 크기와 시간을 이용하여 결정<br/>size: 오브젝트의 크기를 이용하여 결정<br/>time: 시간을 이용하여 결정<br/>엔진 타입 V2는 size\_and\_time만 지원 |
+| 오브젝트 로테이션 정책 | size\_and\_time | enum | V1 | 오브젝트의 생성 규칙을 결정합니다. | size\_and\_time: 오브젝트의 크기와 시간을 이용하여 결정<br/>size: 오브젝트의 크기를 이용하여 결정<br/>time: 시간을 이용하여 결정<br/>엔진 타입 V2는 size\_and\_time만 지원 |
 | 기준 시각 | 15 | number | V1, V2 | 오브젝트를 분할할 기준이 될 시간을 설정합니다. | 오브젝트 로테이션 정책이 size\_and\_time 또는 time인 경우 설정 |
 | 기준 오브젝트 크기 | 5242880 | number | V1, V2 | 오브젝트를 분할할 기준이 될 크기(단위: byte)를 설정합니다. | 오브젝트 로테이션 정책이 size\_and\_time 또는 size인 경우 설정 |
 
@@ -2262,11 +2262,12 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Prefix 시간 적용 fallback  | _prefix_datetime_parse_failure | string | V1, V2 | Prefix 시간 적용에 실패한 경우 대체할 Prefix를 입력합니다. |  |
 | 스토리지 클래스 | STANDARD | enum | V1 | 오브젝트를 업로드할 때 사용할 스토리지 클래스를 설정합니다. | [스토리지 클래스 가이드](https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html) |
 | 인코딩 | none | enum | V1 | 인코딩 여부를 입력합니다. gzip 인코딩을 사용할 수 있습니다. |  |
-| 오브젝트 로테이션 정책 | size\_and\_time | enum | V1, V2 | 오브젝트의 생성 규칙을 결정합니다. | size\_and\_time: 오브젝트의 크기와 시간을 이용하여 결정<br/>size: 오브젝트의 크기를 이용하여 결정<br/>time: 시간을 이용하여 결정<br/>엔진 타입 V2는 size\_and\_time만 지원 |
+| 오브젝트 로테이션 정책 | size\_and\_time | enum | V1 | 오브젝트의 생성 규칙을 결정합니다. | size\_and\_time: 오브젝트의 크기와 시간을 이용하여 결정<br/>size: 오브젝트의 크기를 이용하여 결정<br/>time: 시간을 이용하여 결정<br/>엔진 타입 V2는 size\_and\_time만 지원 |
 | 기준 시각 | 15 | number | V1, V2 | 오브젝트를 분할할 기준이 될 시간을 설정합니다. | 오브젝트 로테이션 정책이 size\_and\_time 또는 time인 경우 설정 |
 | 기준 오브젝트 크기 | 5242880 | number | V1, V2 | 오브젝트를 분할할 기준이 될 크기를 설정합니다. | 오브젝트 로테이션 정책이 size\_and\_time 또는 size인 경우 설정 |
 | ACL | private | enum | V1 | 오브젝트를 업로드했을 때 설정할 ACL 정책을 입력합니다. |  |
 | 추가 설정 | { } | hash | V1 | S3에 연결하기 위한 추가 설정을 입력합니다. | [가이드](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
+| 경로 방식 요청 | false | boolean | V2 | 경로 방식 요청을 사용할지 여부를 결정합니다. |  |
 
 ### 출력 예제
 
