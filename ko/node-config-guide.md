@@ -938,7 +938,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | --- | --- | --- | --- | --- | --- |
 | Match | - | hash | V1 | 파싱할 문자열의 정보를 입력합니다. |  |
 | 패턴 정의 | - | hash | V1 | 파싱할 토큰의 규칙의 사용자 정의 패턴을 정규표현식으로 입력합니다. | 시스템 정의 패턴은 아래 링크를 확인하세요.<br/>https://github.com/logstash-plugins/logstash-patterns-core/blob/main/patterns/legacy/grok-patterns |
-| 실패 태그 | - | array of strings | V1 | 문자열 파싱에 실패할 경우 정의할 태그명을 입력합니다. |  |
+| 실패 태그 | _grokparsefailure | array of strings | V1 | 문자열 파싱에 실패할 경우 정의할 태그명을 입력합니다. |  |
 | 타임아웃 | 30000 | number | V1 | 문자열 파싱이 될 때까지 기다리는 시간을 입력합니다. |  |
 | 타임아웃 태그 | _groktimeout | string | V1 | 타임아웃 시 설정할 태그를 입력합니다. |  |
 | 덮어쓰기 | - | array of strings | V1 | 파싱 후 지정된 필드에 값을 쓸 때 해당 필드에 이미 값이 정의되어 있을 경우 덮어쓸 필드명들을 입력합니다. |  |
