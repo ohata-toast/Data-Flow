@@ -1227,6 +1227,29 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | V1    | X     |    |
 | V2    | O     |    |
 
+### 데이터 변환 예제
+
+#### 조건
+
+* 대상 필드 -> `message`
+* 변환 타입 -> `INTEGER`
+
+#### 입력 메시지
+
+```js
+{
+    "message": "2025"
+}
+```
+
+#### 출력 메시지
+
+```js
+{
+    "message": 2025
+}
+```
+
 ### 속성 설명
 
 | 속성명   | 기본값 | 자료형    | 지원 엔진 타입 | 설명                                                                          | 비고 |
