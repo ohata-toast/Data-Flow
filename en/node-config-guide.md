@@ -153,7 +153,7 @@ Nodes whose compatibility varies depending on engine type are always updated in 
 }
 ```
 
-## (NHN Cloud) Log & Crash Search
+## Source > (NHN Cloud) Log & Crash Search
 
 ### Node Description
 
@@ -178,14 +178,14 @@ Nodes whose compatibility varies depending on engine type are always updated in 
 
 ### Property Description 
 
-| Property name       | Default value | Data type | Supported engine type | Description | Others |
-|-----|-----|-----|-----|-----|-----|
-| Appkey    | - | string | V1, V2 | Enter the app key for Log & Crash Search.                                                                                                                         |    |
-| SecretKey | - | string | V1, V2 | Enter the secret key for Log & Crash Search.                                                                                                                       |    |
-| Query Start time  | -  | string | V1, V2 | Enter the start time of log query. Must be entered in ISO 8601 format with offset or [DSL](#domain-specific-languagedsl) format. <br/>Example: 2025-07-23T11:23:00+09:00, {{ executionTime }} |    |
-| Query End time  | -  | string | V1, V2 | Enter the end time of log query. Must be entered in ISO 8601 format with offset or [DSL](#domain-specific-languagedsl) format. <br/>Example: 2025-07-23T11:23:00+09:00, {{ executionTime }} |    |
-| Number of retries    | - | number | V1 | Enter the maximum number of times to retry when a log query fails.                                                                                                                       |    |
-| Search Query     | *   | string | V1, V2 | Enter the search query to use when requesting a Log & Crash Search query. For detailed query writing instructions, please refer to the "Lucene Query Guide" of the Log & Crash Search service.                             |    |
+| Property name     | Default value       | Data type | Supported engine type | Description                                                                                                                                                                                    | Others |
+|-------------------|---------------------|-----------|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|
+| Appkey            | -                   | string    | V1, V2                | Enter the app key for Log & Crash Search.                                                                                                                                                      |        |
+| SecretKey         | -                   | string    | V1, V2                | Enter the secret key for Log & Crash Search.                                                                                                                                                   |        |
+| Query Start time  | `{{exeuctionTime}}` | string    | V1, V2                | Enter the start time of log query. Must be entered in ISO 8601 format with offset or [DSL](#domain-specific-languagedsl) format. <br/>Example: 2025-07-23T11:23:00+09:00, {{ executionTime }}  |        |
+| Query End time    | -                   | string    | V1, V2                | Enter the end time of log query. Must be entered in ISO 8601 format with offset or [DSL](#domain-specific-languagedsl) format. <br/>Example: 2025-07-23T11:23:00+09:00, {{ executionTime }}    |        |
+| Number of retries | -                   | number    | V1                    | Enter the maximum number of times to retry when a log query fails.                                                                                                                             |        |
+| Search Query      | *                   | string    | V1, V2                | Enter the search query to use when requesting a Log & Crash Search query. For detailed query writing instructions, please refer to the "Lucene Query Guide" of the Log & Crash Search service. |        |
 
 * Set the number of retries
     * If the number of retries fails, no more log queries are attempted, and the flow ends.
@@ -210,7 +210,7 @@ Nodes whose compatibility varies depending on engine type are always updated in 
 {"log":"&", "Crash": "Search", "Result": "Data"}
 ```
 
-## (NHN Cloud) CloudTrail
+## Source > (NHN Cloud) CloudTrail
 
 ### Node Description
 
@@ -231,15 +231,15 @@ Nodes whose compatibility varies depending on engine type are always updated in 
 
 ### Property Description 
 
-| Property name      | Default value | Data type    | Supported engine type | Description | Others |
-|------|-----|-------|--------------|----|----|
-| Appkey   | - | string | V1, V2 | Enter the app key for CloudTrail.                                                                                                                                  |    |
-| User Access Key ID | - | string | V2 | Enter the User Access Key ID of the user account. |    |
-| Secret Access Key  | - | string | V2 | Enter the User Secret Key of the user account.   |    |
-| Query Start time  | - | string | V1, V2 | Enter the start time of data query. Must be entered in ISO 8601 format with offset or [DSL](#domain-specific-languagedsl) format. <br/>Example: 2025-07-23T11:23:00+09:00, {{ executionTime }} |    |
-| Query End time  | - | string | V1, V2 | Enter the end time of data query. Must be entered in ISO 8601 format with offset or [DSL](#domain-specific-languagedsl) format. <br/>Example: 2025-07-23T11:23:00+09:00, {{ executionTime }} |    |
-| Number of Retries    | - | number | V1 | Enter the maximum number of times to retry when a data query fails.    
-| Event Type | * | string | V2 | Enter the event ID you want to search for. |  |
+| Property name      | Default value       | Data type | Supported engine type | Description                                                                                                                                                                                    | Others |
+|--------------------|---------------------|-----------|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|
+| Appkey             | -                   | string    | V1, V2                | Enter the app key for CloudTrail.                                                                                                                                                              |        |
+| User Access Key ID | -                   | string    | V2                    | Enter the User Access Key ID of the user account.                                                                                                                                              |        |
+| Secret Access Key  | -                   | string    | V2                    | Enter the User Secret Key of the user account.                                                                                                                                                 |        |
+| Query Start time   | `{{executionTime}}` | string    | V1, V2                | Enter the start time of data query. Must be entered in ISO 8601 format with offset or [DSL](#domain-specific-languagedsl) format. <br/>Example: 2025-07-23T11:23:00+09:00, {{ executionTime }} |        |
+| Query End time     | -                   | string    | V1, V2                | Enter the end time of data query. Must be entered in ISO 8601 format with offset or [DSL](#domain-specific-languagedsl) format. <br/>Example: 2025-07-23T11:23:00+09:00, {{ executionTime }}   |        |
+| Number of Retries  | -                   | number    | V1                    | Enter the maximum number of times to retry when a data query fails.                                                                                                                            |        |
+| Event Type         | *                   | string    | V2                    | Enter the event ID you want to search for.                                                                                                                                                     |        |
 
 * Set the number of retries
     * If the number of retries fails, no more data queries are attempted, and the flow ends.
@@ -284,17 +284,17 @@ Nodes whose compatibility varies depending on engine type are always updated in 
 
 ### Property Description 
 
-| Property name | Default value | Data type | Supported engine type | Description | Note |
-| --- | --- | --- | --- | --- | --- |
-| Bucket | - | string | V1, V2 | Enter a bucket name to read data. |  |
-| Region | - | string | V1, V2 | Enter region information configured in the storage. |  |
-| Secret Key | - | string | V1, V2 | Enter the credential secret key issued by S3. |  |
-| Access key | - | string | V1, V2 | Enter the credential access key issued by S3. |  |
-| List update cycle | - | number | V1, V2 | Enter the object list update cycle included in the bucket. |  |
-| Metadata included or not | - | boolean | V1| Determine whether to include metadata from the S3 object as a key. In order to expose metadata fields to the Sink plugin, you need to combine filter node types (see guide below). | fields to be created are as follows.<br/>last_modified: The last time the object was modified<br/>content_length: Object size<br/>key: Object name<br/>content_type: Object type<br/>metadata: Metadata<br/>etag: etag |
-| Prefix | - | string | V1, V2 | Enter a prefix of an object to read. |  |
-| Key pattern to exclude | - | string | V1, V2 | Enter the pattern of an object not to be read. |  |
-| Delete processed objects  | false | boolean | V1| If the property value is true, delete the object read. |  |
+| Property name            | Default value | Data type | Supported engine type | Description                                                                                                                                                                        | Note                                                                                                                                                                                                                   |
+|--------------------------|---------------|-----------|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Bucket                   | -             | string    | V1, V2                | Enter a bucket name to read data.                                                                                                                                                  |                                                                                                                                                                                                                        |
+| Region                   | -             | string    | V1, V2                | Enter region information configured in the storage.                                                                                                                                |                                                                                                                                                                                                                        |
+| Secret Key               | -             | string    | V1, V2                | Enter the credential secret key issued by S3.                                                                                                                                      |                                                                                                                                                                                                                        |
+| Access key               | -             | string    | V1, V2                | Enter the credential access key issued by S3.                                                                                                                                      |                                                                                                                                                                                                                        |
+| List update cycle        | `60`          | number    | V1, V2                | Enter the object list update cycle included in the bucket.                                                                                                                         |                                                                                                                                                                                                                        |
+| Metadata included or not | `false`       | boolean   | V1                    | Determine whether to include metadata from the S3 object as a key. In order to expose metadata fields to the Sink plugin, you need to combine filter node types (see guide below). | fields to be created are as follows.<br/>last_modified: The last time the object was modified<br/>content_length: Object size<br/>key: Object name<br/>content_type: Object type<br/>metadata: Metadata<br/>etag: etag |
+| Prefix                   | -             | string    | V1, V2                | Enter a prefix of an object to read.                                                                                                                                               |                                                                                                                                                                                                                        |
+| Key pattern to exclude   | -             | string    | V1, V2                | Enter the pattern of an object not to be read.                                                                                                                                     |                                                                                                                                                                                                                        |
+| Delete processed objects | false         | boolean   | V1                    | If the property value is true, delete the object read.                                                                                                                             |                                                                                                                                                                                                                        |
 
 ### Metadata Field Usage
 
