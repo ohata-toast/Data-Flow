@@ -2020,7 +2020,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | --- | --- | --- | --- | --- |
 | ID | - | string | ノードのIDを設定します。<br/>このプロパティに定義された値でチャートボードにノード名を表記します。 |  |
 
-## (NHN Cloud) Object Storage
+## Sink > (NHN Cloud) Object Storage
 
 ### ノードの説明
 
@@ -2227,7 +2227,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 /obs-test-container/_failure/ls.s3.d53c090b-9718-4833-926a-725b20c85974.2022-11-21T00.47.part0.txt
 ```
 
-## (Amazon) S3
+## Sink > (Amazon) S3
 
 ### ノードの説明
 
@@ -2244,24 +2244,24 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 ### プロパティの説明
 | プロパティ名 | デフォルト値 | データ型 | サポートエンジンタイプ | 説明 | 備考 |
 | --- | --- | --- | --- | --- | --- |
-| リージョン | - | enum | V1, V2 | S3商品のリージョンを入力します。 | [s3 region](https://docs.aws.amazon.com/general/latest/gr/s3.html) |
+| リージョン | * V1: `us-east-1`<br/> * V2: - | enum | V1, V2 | S3商品のリージョンを入力します。 | [s3 region](https://docs.aws.amazon.com/general/latest/gr/s3.html) |
 | バケット | - | string | V1, V2 | バケット名を入力します。 |  |
 | アクセスキー | - | string | V1, V2 | S3 API認証情報アクセスキーを入力します。 |  |
 | シークレットキー | - | string | V1, V2 | S3 API認証情報シークレットキーを入力します。 |  |
-| 署名バージョン | - | enum | V1 | AWSリクエストに署名する際に使用するバージョンを入力します。 |  |
+| 署名バージョン | v4 | enum | V1 | AWSリクエストに署名する際に使用するバージョンを入力します。 |  |
 | セッショントークン | - | string | V1 | AWS一時認証情報のためのセッショントークンを入力します。 | [セッショントークンガイド](https://docs.aws.amazon.com/ko_kr/IAM/latest/UserGuide/id_credentials_temp_use-resources.html) |
 | Prefix | - | string | V1, V2 | オブジェクトアップロード時に名前の前に付けるプレフィックスを入力します。<br/>フィールドまたは時間形式を入力できます。 | [使用可能な時間形式](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html) |
-| Prefix時間フィールド | @timestamp | string | V1, V2 | Prefixに適用する時間フィールドを入力します。 |  |
+| Prefix時間フィールド | * V1: `@timestamp`<br>* v2: - | string | V1, V2 | Prefixに適用する時間フィールドを入力します。 |  |
 | Prefix時間フィールドタイプ | DATE_FILTER_RESULT | enum | V1, V2 | Prefixに適用する時間フィールドのタイプを入力します。 | エンジンタイプV2はDATE_FILTER_RESULTタイプのみ可能 (今後他のタイプサポート予定) |
 | Prefixタイムゾーン | UTC | string | V1, V2 | Prefixに適用する時間フィールドのタイムゾーンを入力します。 |  |
 | Prefix時間適用fallback  | _prefix_datetime_parse_failure | string | V1, V2 | Prefix時間適用に失敗した場合に代替するPrefixを入力します。 |  |
 | ストレージクラス | STANDARD | enum | V1 | オブジェクトをアップロードする際に使用するストレージクラスを設定します。 | [ストレージクラスガイド](https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html) |
 | エンコーディング | none | enum | V1 | エンコーディング可否を入力します。gzipエンコーディングを使用できます。 |  |
 | オブジェクトローテーションポリシー | size\_and\_time | enum | V1 | オブジェクトの生成ルールを決定します。 | size\_and\_time: オブジェクトのサイズと時間を利用して決定<br/>size: オブジェクトのサイズを利用して決定<br/>time: 時間を利用して決定<br/>エンジンタイプV2はsize\_and\_timeのみサポート |
-| 基準時刻 | 15 | number | V1, V2 | オブジェクトを分割する基準となる時間を設定します。 | オブジェクトローテーションポリシーがsize\_and\_timeまたはtimeの場合設定 |
+| 基準時刻 | 1 | number | V1, V2 | オブジェクトを分割する基準となる時間を設定します。 | オブジェクトローテーションポリシーがsize\_and\_timeまたはtimeの場合設定 |
 | 基準オブジェクトサイズ | 5242880 | number | V1, V2 | オブジェクトを分割する基準となるサイズを設定します。 | オブジェクトローテーションポリシーがsize\_and\_timeまたはsizeの場合設定 |
 | ACL | private | enum | V1 | オブジェクトをアップロードした際に設定するACLポリシーを入力します。 |  |
-| 追加設定 | { } | hash | V1 | S3に接続するための追加設定を入力します。 | [ガイド](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
+| 追加設定 | - | hash | V1 | S3に接続するための追加設定を入力します。 | [ガイド](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
 
 ### 出力例
 

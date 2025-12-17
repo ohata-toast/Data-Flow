@@ -2248,24 +2248,24 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 ### Property Description 
 | Property name | Default value | Data type | Supported engine type | Description | Others |
 | --- | --- | --- | --- | --- |--- |
-| region | - | enum | Enter Region of S3 product. | [s3 region](https://docs.aws.amazon.com/general/latest/gr/s3.html) |
+| region | * V1: `us-east-1`<br/> * V2: - | enum | Enter Region of S3 product. | [s3 region](https://docs.aws.amazon.com/general/latest/gr/s3.html) |
 | Bucket | - | string | V1, V2 | Enter bucket name |  |
 | Access Key | - | string | V1, V2 | Enter S3 API Credential Access Key. |  |
 | Secret Key | - | string | V1, V2 | Enter S3 API Credential Secret Key. |  |
-| Signature Version | - | enum | V1, V2 | Enter the version to use when signing AWS requests. |  |
+| Signature Version | v4 | enum | V1, V2 | Enter the version to use when signing AWS requests. |  |
 | Session Token | - | string | V1, V2 | Enter the Session Token for AWS temporary Credentials. | [ Session Token Guide](https://docs.aws.amazon.com/en_kr/IAM/latest/UserGuide/id_credentials_temp_use-resources.html) |
 | Prefix | - | string | V1, V2 | Enter a prefix to prefix the name when uploading the object.<br/>You can enter a field or time format. | [Available Time Format](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html) |
-| Prefix Time Field | @timestamp | string | V1, V2 | Enter a time field to apply to the prefix. |  |
+| Prefix Time Field | * V1: `@timestamp`<br>* v2: - | string | V1, V2 | Enter a time field to apply to the prefix. |  |
 | Prefix Time Field Type | DATE_FILTER_RESULT | enum | V1, V2 | Enter a time field type to apply to the prefix. |Engine type V2 is only available with DATE_FILTER_RESULT type (other types will be supported in the future)|
 | Prefix Time Zone | UTC | string | V1, V2 | Enter a time zone for the Time field to apply to the prefix. |  |
 | Prefix Time Application fallback  | _prefix_datetime_parse_failure | string | V1, V2 | Enter a prefix to replace if the prefix time application fails. |  |
 | Storage Class | STANDARD | enum | V1 | Set Storage Class when object is uploaded. | [Storage Class Guide](https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html) |
 | Encoding | none | enum | V1 | Enter whether to encode or not . gzip encoding is available. |  |
 | Object Rotation Policy | size_and_time | enum | V1 | Determine object creation rules. | size_and_time – Use object size and time to decide<br/>size – Use object size to decide <br/>Time – Use time to decide<br/>Engine type V2 supports size\_and\_time only |
-| Reference Time | 15 | number | V1, V2 |Set the time to be the basis for object splitting.   | Set when the object rotation policy is size_and_time or time |
+| Reference Time | 1 | number | V1, V2 |Set the time to be the basis for object splitting.   | Set when the object rotation policy is size_and_time or time |
 | Object size | 5242880 | number | V1, V2 |Set the size to be the basis for object splitting.   | Set when the object rotation policy is size_and_time or size |
 | ACL | private | enum | V1 | Enter ACL policy to set when object is uploaded. |  |
-| Additional Settings | { } | Hash | V1 | Enter additional settings to connect to S3. | [Guide](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
+| Additional Settings | - | Hash | V1 | Enter additional settings to connect to S3. | [Guide](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
 
 ### Output example exercise
 
