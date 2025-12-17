@@ -1188,7 +1188,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Property name | Default value | Data type | Supported engine type | Description | Others |
 | --- | --- | --- | --- | --- | --- |
 | Field to store UUID | - | string | V1, V2 | Enter a field name to store UUID creation result. |  |
-| Overwrite | - | boolean | V1, V2 | Select whether to overwrite the value if it exists in the specified field name. |  |
+| Overwrite | false | boolean | V1, V2 | Select whether to overwrite the value if it exists in the specified field name. |  |
 
 ### Example of UUID Creation
 

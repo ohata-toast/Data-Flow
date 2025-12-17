@@ -1189,7 +1189,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
 | --- | --- | --- | --- | --- | --- |
 | UUID 저장 필드 | - | string | V1, V2 | UUID 생성 결과값을 저장할 필드명을 입력합니다. |  |
-| 덮어쓰기 | - | boolean | V1, V2 | 지정된 필드명에 값이 존재할 경우 이를 덮어쓸지 여부를 선택합니다. |  |
+| 덮어쓰기 | false | boolean | V1, V2 | 지정된 필드명에 값이 존재할 경우 이를 덮어쓸지 여부를 선택합니다. |  |
 
 ### UUID 생성 예제
 
