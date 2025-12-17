@@ -990,15 +990,17 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 ### Property Description
 
-| Property Name | Default | Data Type | Supported Engine Type | Description | Note |
-| --- | --- | --- | --- | --- | --- |
-| Field to Save | - | string | V1, V2 | Enter the field name to save the CSV parsing results. | |
-| Quote | " | string | V1, V2 | Enter the character that separates the column fields. | |
-| Ignore First Row | false | boolean | V1, V2 | If the property value is true, the column name entered in the first row of the read data is ignored. | |
-| Column | - | array of strings | V1 | Enter the column name. | |
-| Delimiter | , | string | V1, V2 | Enter the string that separates the columns. | |
-| Source Field | * V1: message<br>* V2: - | string | V1, V2 | Enter the field name to parse the CSV. | |
-| Schema | - | hash | V1, V2 | Enter the name and data type of each column in dictionary format. | See `Schema Input Method by Engine Type` |
+| Property Name         | Default                  | Data Type        | Supported Engine Type | Description                                                                                          | Note                                     |
+|-----------------------|--------------------------|------------------|-----------------------|------------------------------------------------------------------------------------------------------|------------------------------------------|
+| Field to Save         | -                        | string           | V1, V2                | Enter the field name to save the CSV parsing results.                                                |                                          |
+| Quote                 | "                        | string           | V1, V2                | Enter the character that separates the column fields.                                                |                                          |
+| Ignore First Row      | false                    | boolean          | V1, V2                | If the property value is true, the column name entered in the first row of the read data is ignored. |                                          |
+| Column                | -                        | array of strings | V1                    | Enter the column name.                                                                               |                                          |
+| Delimiter             | ,                        | string           | V1, V2                | Enter the string that separates the columns.                                                         |                                          |
+| Source Field          | * V1: message<br>* V2: - | string           | V1, V2                | Enter the field name to parse the CSV.                                                               |                                          |
+| Schema                | -                        | hash             | V1, V2                | Enter the name and data type of each column in dictionary format.                                    | See `Schema Input Method by Engine Type` |
+| Overwrite             | false                    | boolean          | V2                    | If true, overwrites the CSV parsing result with a field to be saved or an existing field.            |                                          |
+| Delete original field | false                    | boolean          | V2                    | Deletes the source field when CSV parsing is complete. If parsing fails, keep it.                    |                                          |
 
 #### How to Input Schema per Engine Type
 * If the engine type is V1
