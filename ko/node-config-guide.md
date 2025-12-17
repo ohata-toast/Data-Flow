@@ -1152,7 +1152,8 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 #### 조건
 
-* Match → `["message" , "yyyy-MM-dd HH:mm:ssZ", "ISO8601"]`
+* 소스 필드 -> `message`
+* 형식 -> `["yyyy-MM-dd HH:mm:ssZ", "ISO8601"]`
 * 저장할 필드 → `time`
 * 시간대 → `Asia/Seoul`
 
@@ -1188,10 +1189,10 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 ### 속성 설명
 
-| 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
-| --- | --- | --- | --- | --- | --- |
-| UUID 저장 필드 | - | string | V1, V2 | UUID 생성 결과값을 저장할 필드명을 입력합니다. |  |
-| 덮어쓰기 | - | boolean | V1, V2 | 지정된 필드명에 값이 존재할 경우 이를 덮어쓸지 여부를 선택합니다. |  |
+| 속성명 | 기본값   | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
+| --- |-------| --- | --- | --- | --- |
+| UUID 저장 필드 | -     | string | V1, V2 | UUID 생성 결과값을 저장할 필드명을 입력합니다. |  |
+| 덮어쓰기 | false | boolean | V1, V2 | 지정된 필드명에 값이 존재할 경우 이를 덮어쓸지 여부를 선택합니다. |  |
 
 ### UUID 생성 예제
 
@@ -2088,21 +2089,22 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 ### 속성 설명
 
-| 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
-| --- | --- | --- | --- | --- | --- |
-| 리전 | - | enum | V1, V2 | Object Storage 상품의 리전을 입력합니다. |  |
-| 버킷 | - | string | V1, V2 | 버킷 이름을 입력합니다. |  |
-| 비밀 키 | - | string | V1, V2 | S3 API 자격 증명 비밀 키를 입력합니다. |  |
-| 액세스 키 | - | string | V1, V2 | S3 API 자격 증명 액세스 키를 입력합니다. |  |
-| Prefix | /year=%{+YYYY}/month=%{+MM}/day=%{+dd}/hour=%{+HH} | string | V1, V2 | 오브젝트 업로드 시 이름 앞에 붙일 접두사를 입력합니다.<br/>필드 또는 시간 형식을 입력할 수 있습니다. | [사용 가능한 시간 형식](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html) |
-| Prefix 시간 필드 | @timestamp | string | V1, V2 | Prefix에 적용할 시간 필드를 입력합니다. |  |
-| Prefix 시간 필드 타입 | DATE_FILTER_RESULT | enum | V1, V2 | Prefix에 적용할 시간 필드의 타입을 입력합니다. | 엔진 타입 V2는 DATE_FILTER_RESULT 타입만 가능(추후 다른 타입 지원 예정) |
-| Prefix 시간대 | UTC | string | V1, V2 | Prefix에 적용할 시간 필드의 타임 존을 입력합니다. |  |
-| Prefix 시간 적용 fallback  | _prefix_datetime_parse_failure | string | V1, V2 | Prefix 시간 적용에 실패한 경우 대체할 Prefix를 입력합니다. |  |
-| 인코딩 | none | enum | V1 | 인코딩 여부를 입력합니다. gzip 인코딩을 사용할 수 있습니다. |  |
-| 오브젝트 로테이션 정책 | size\_and\_time | enum | V1 | 오브젝트의 생성 규칙을 결정합니다. | size\_and\_time: 오브젝트의 크기와 시간을 이용하여 결정<br/>size: 오브젝트의 크기를 이용하여 결정<br/>time: 시간을 이용하여 결정<br/>엔진 타입 V2는 size\_and\_time만 지원 |
-| 기준 시각 | 15 | number | V1, V2 | 오브젝트를 분할할 기준이 될 시간을 설정합니다. | 오브젝트 로테이션 정책이 size\_and\_time 또는 time인 경우 설정 |
-| 기준 오브젝트 크기 | 5242880 | number | V1, V2 | 오브젝트를 분할할 기준이 될 크기(단위: byte)를 설정합니다. | 오브젝트 로테이션 정책이 size\_and\_time 또는 size인 경우 설정 |
+| 속성명                   | 기본값                                                | 자료형    | 지원 엔진 타입 | 설명                                                           | 비고                                                                                                                         |
+|-----------------------|----------------------------------------------------|--------|----------|--------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
+| 리전                    | -                                                  | enum   | V1, V2   | Object Storage 상품의 리전을 입력합니다.                                |                                                                                                                            |
+| 버킷                    | -                                                  | string | V1, V2   | 버킷 이름을 입력합니다.                                                |                                                                                                                            |
+| 비밀 키                  | -                                                  | string | V1, V2   | S3 API 자격 증명 비밀 키를 입력합니다.                                    |                                                                                                                            |
+| 액세스 키                 | -                                                  | string | V1, V2   | S3 API 자격 증명 액세스 키를 입력합니다.                                   |                                                                                                                            |
+| Prefix                | /year=%{+YYYY}/month=%{+MM}/day=%{+dd}/hour=%{+HH} | string | V1, V2   | 오브젝트 업로드 시 이름 앞에 붙일 접두사를 입력합니다.<br/>필드 또는 시간 형식을 입력할 수 있습니다. | [사용 가능한 시간 형식](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html)                         |
+| Prefix 시간 필드          | @timestamp                                         | string | V1, V2   | Prefix에 적용할 시간 필드를 입력합니다.                                    |                                                                                                                            |
+| Prefix 시간 필드 타입       | DATE_FILTER_RESULT                                 | enum   | V1, V2   | Prefix에 적용할 시간 필드의 타입을 입력합니다.                                | 엔진 타입 V2는 DATE_FILTER_RESULT 타입만 가능(추후 다른 타입 지원 예정)                                                                        |
+| Prefix 시간대            | UTC                                                | string | V1, V2   | Prefix에 적용할 시간 필드의 타임 존을 입력합니다.                              |                                                                                                                            |
+| Prefix 시간 적용 fallback | _prefix_datetime_parse_failure                     | string | V1, V2   | Prefix 시간 적용에 실패한 경우 대체할 Prefix를 입력합니다.                      |                                                                                                                            |
+| 인코딩                   | none                                               | enum   | V1       | 인코딩 여부를 입력합니다. gzip 인코딩을 사용할 수 있습니다.                         |                                                                                                                            |
+| 오브젝트 로테이션 정책          | size\_and\_time                                    | enum   | V1       | 오브젝트의 생성 규칙을 결정합니다.                                          | size\_and\_time: 오브젝트의 크기와 시간을 이용하여 결정<br/>size: 오브젝트의 크기를 이용하여 결정<br/>time: 시간을 이용하여 결정<br/>엔진 타입 V2는 size\_and\_time만 지원 |
+| 기준 시각                 | 1                                                  | number | V1, V2   | 오브젝트를 분할할 기준이 될 시간을 설정합니다.                                   | 오브젝트 로테이션 정책이 size\_and\_time 또는 time인 경우 설정                                                                               |
+| 기준 오브젝트 크기            | 5242880                                            | number | V1, V2   | 오브젝트를 분할할 기준이 될 크기(단위: byte)를 설정합니다.                         | 오브젝트 로테이션 정책이 size\_and\_time 또는 size인 경우 설정                                                                               |
+| 비활성 간격                | 1                                                  | number | V2       | 데이터 인입이 없는 상태가 지속될 때 파일을 닫는 시간 간격을 설정합니다.                    |                                                                                                                            |
 
 ### json 코덱 출력 예제
 
@@ -2292,27 +2294,28 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | V2 | O |  |
 
 ### 속성 설명
-| 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
-| --- | --- | --- | --- | --- | --- |
-| 리전 | - | enum | V1, V2 | S3 상품의 리전을 입력합니다. | [s3 region](https://docs.aws.amazon.com/general/latest/gr/s3.html) |
-| 버킷 | - | string | V1, V2 | 버킷 이름을 입력합니다. |  |
-| 액세스 키 | - | string | V1, V2 | S3 API 자격 증명 액세스 키를 입력합니다. |  |
-| 비밀 키 | - | string | V1, V2 | S3 API 자격 증명 비밀 키를 입력합니다. |  |
-| 서명 버전 | - | enum | V1 | AWS 요청을 서명할 때 사용할 버전을 입력합니다. |  |
-| 세션 토큰 | - | string | V1 | AWS 임시 자격 증명을 위한 세션 토큰을 입력합니다. | [세션 토큰 가이드](https://docs.aws.amazon.com/ko_kr/IAM/latest/UserGuide/id_credentials_temp_use-resources.html) |
-| Prefix | - | string | V1, V2 | 오브젝트 업로드 시 이름 앞에 붙일 접두사를 입력합니다.<br/>필드 또는 시간 형식을 입력할 수 있습니다. | [사용 가능한 시간 형식](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html) |
-| Prefix 시간 필드 | @timestamp | string | V1, V2 | Prefix에 적용할 시간 필드를 입력합니다. |  |
-| Prefix 시간 필드 타입 | DATE_FILTER_RESULT | enum | V1, V2 | Prefix에 적용할 시간 필드의 타입을 입력합니다. | 엔진 타입 V2는 DATE_FILTER_RESULT 타입만 가능 (추후 다른 타입 지원 예정) |
-| Prefix 시간대 | UTC | string | V1, V2 | Prefix에 적용할 시간 필드의 타임 존을 입력합니다. |  |
-| Prefix 시간 적용 fallback  | _prefix_datetime_parse_failure | string | V1, V2 | Prefix 시간 적용에 실패한 경우 대체할 Prefix를 입력합니다. |  |
-| 스토리지 클래스 | STANDARD | enum | V1 | 오브젝트를 업로드할 때 사용할 스토리지 클래스를 설정합니다. | [스토리지 클래스 가이드](https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html) |
-| 인코딩 | none | enum | V1 | 인코딩 여부를 입력합니다. gzip 인코딩을 사용할 수 있습니다. |  |
-| 오브젝트 로테이션 정책 | size\_and\_time | enum | V1 | 오브젝트의 생성 규칙을 결정합니다. | size\_and\_time: 오브젝트의 크기와 시간을 이용하여 결정<br/>size: 오브젝트의 크기를 이용하여 결정<br/>time: 시간을 이용하여 결정<br/>엔진 타입 V2는 size\_and\_time만 지원 |
-| 기준 시각 | 15 | number | V1, V2 | 오브젝트를 분할할 기준이 될 시간을 설정합니다. | 오브젝트 로테이션 정책이 size\_and\_time 또는 time인 경우 설정 |
-| 기준 오브젝트 크기 | 5242880 | number | V1, V2 | 오브젝트를 분할할 기준이 될 크기를 설정합니다. | 오브젝트 로테이션 정책이 size\_and\_time 또는 size인 경우 설정 |
-| ACL | private | enum | V1 | 오브젝트를 업로드했을 때 설정할 ACL 정책을 입력합니다. |  |
-| 추가 설정 | { } | hash | V1 | S3에 연결하기 위한 추가 설정을 입력합니다. | [가이드](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
-| 경로 방식 요청 | false | boolean | V2 | 경로 방식 요청을 사용할지 여부를 결정합니다. |  |
+| 속성명                   | 기본값                            | 자료형     | 지원 엔진 타입 | 설명                                                           | 비고                                                                                                                         |
+|-----------------------|--------------------------------|---------|----------|--------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
+| 리전                    | -                              | enum    | V1, V2   | S3 상품의 리전을 입력합니다.                                            | [s3 region](https://docs.aws.amazon.com/general/latest/gr/s3.html)                                                         |
+| 버킷                    | -                              | string  | V1, V2   | 버킷 이름을 입력합니다.                                                |                                                                                                                            |
+| 액세스 키                 | -                              | string  | V1, V2   | S3 API 자격 증명 액세스 키를 입력합니다.                                   |                                                                                                                            |
+| 비밀 키                  | -                              | string  | V1, V2   | S3 API 자격 증명 비밀 키를 입력합니다.                                    |                                                                                                                            |
+| 서명 버전                 | -                              | enum    | V1       | AWS 요청을 서명할 때 사용할 버전을 입력합니다.                                 |                                                                                                                            |
+| 세션 토큰                 | -                              | string  | V1       | AWS 임시 자격 증명을 위한 세션 토큰을 입력합니다.                               | [세션 토큰 가이드](https://docs.aws.amazon.com/ko_kr/IAM/latest/UserGuide/id_credentials_temp_use-resources.html)                 |
+| Prefix                | -                              | string  | V1, V2   | 오브젝트 업로드 시 이름 앞에 붙일 접두사를 입력합니다.<br/>필드 또는 시간 형식을 입력할 수 있습니다. | [사용 가능한 시간 형식](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html)                         |
+| Prefix 시간 필드          | @timestamp                     | string  | V1, V2   | Prefix에 적용할 시간 필드를 입력합니다.                                    |                                                                                                                            |
+| Prefix 시간 필드 타입       | DATE_FILTER_RESULT             | enum    | V1, V2   | Prefix에 적용할 시간 필드의 타입을 입력합니다.                                | 엔진 타입 V2는 DATE_FILTER_RESULT 타입만 가능 (추후 다른 타입 지원 예정)                                                                       |
+| Prefix 시간대            | UTC                            | string  | V1, V2   | Prefix에 적용할 시간 필드의 타임 존을 입력합니다.                              |                                                                                                                            |
+| Prefix 시간 적용 fallback | _prefix_datetime_parse_failure | string  | V1, V2   | Prefix 시간 적용에 실패한 경우 대체할 Prefix를 입력합니다.                      |                                                                                                                            |
+| 스토리지 클래스              | STANDARD                       | enum    | V1       | 오브젝트를 업로드할 때 사용할 스토리지 클래스를 설정합니다.                            | [스토리지 클래스 가이드](https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html)                             |
+| 인코딩                   | none                           | enum    | V1       | 인코딩 여부를 입력합니다. gzip 인코딩을 사용할 수 있습니다.                         |                                                                                                                            |
+| 오브젝트 로테이션 정책          | size\_and\_time                | enum    | V1       | 오브젝트의 생성 규칙을 결정합니다.                                          | size\_and\_time: 오브젝트의 크기와 시간을 이용하여 결정<br/>size: 오브젝트의 크기를 이용하여 결정<br/>time: 시간을 이용하여 결정<br/>엔진 타입 V2는 size\_and\_time만 지원 |
+| 기준 시각                 | 1                              | number  | V1, V2   | 오브젝트를 분할할 기준이 될 시간을 설정합니다.                                   | 오브젝트 로테이션 정책이 size\_and\_time 또는 time인 경우 설정                                                                               |
+| 기준 오브젝트 크기            | 5242880                        | number  | V1, V2   | 오브젝트를 분할할 기준이 될 크기를 설정합니다.                                   | 오브젝트 로테이션 정책이 size\_and\_time 또는 size인 경우 설정                                                                               |
+| 비활성 간격                | 1                              | number  | V2       | 데이터 인입이 없는 상태가 지속될 때 파일을 닫는 시간 간격을 설정합니다.                    |                                                                                                                            |
+| ACL                   | private                        | enum    | V1       | 오브젝트를 업로드했을 때 설정할 ACL 정책을 입력합니다.                             |                                                                                                                            |
+| 추가 설정                 | { }                            | hash    | V1       | S3에 연결하기 위한 추가 설정을 입력합니다.                                    | [가이드](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html)                                                  |
+| 경로 방식 요청              | false                          | boolean | V2       | 경로 방식 요청을 사용할지 여부를 결정합니다.                                    |                                                                                                                            |
 
 ### 출력 예제
 
