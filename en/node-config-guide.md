@@ -1397,11 +1397,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Update field values | - | Hash | V1 | Replaces the field value with the new value. If the field does not exist, no action is taken. |  |
 | Replace Value | - | Hash | V1 | Replace the field value with a new value. If there is no field, create a new field.  |  |
 | Convert Type | - | Hash | V1 | Convert the field value to another type. | The following types are supported: integer, interger_eu, float, float_eu, string, and boolean. |
-| Replace String | - | array | V1 | Replace the part of string with regular expression. |  |
-| Uppercase Letter | - | array | V1 | Uppercase Letter the string in the target field to uppercase letter. |  |
-| Capitalize First Letter | - | array | V1 | Convert the first letter in the target field to uppercase letter, and the rest to lowercase letter. |  |
-| Lowercase Letter | - | array | V1 | Lowercase the string in the target field to lowercase letter. |  |
-| Strip Space | - | array | V1 | Remove spaces before and after the string in the target field. |  |
+| Replace String | - | array of strings | V1 | Replace the part of string with regular expression. |  |
+| Uppercase Letter | - | array of strings | V1 | Uppercase Letter the string in the target field to uppercase letter. |  |
+| Capitalize First Letter | - | array of strings | V1 | Convert the first letter in the target field to uppercase letter, and the rest to lowercase letter. |  |
+| Lowercase Letter | - | array of strings | V1 | Lowercase the string in the target field to lowercase letter. |  |
+| Strip Space | - | array of strings | V1 | Remove spaces before and after the string in the target field. |  |
 | Split String | - | Hash | V1 | Split strings using separators. |  |
 | Join Array | - | Hash | V1 | Join array elements to separator. |  |
 | Merge Field | - | Hash | V1 | Merge the two fields. |  |
@@ -1986,7 +1986,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 | Property Name | Default Value | Data Type | Supported Engine Type | Description | Note |
 | --- | --- | --- | --- | --- | --- |
-| Target Fields | - | array | V2 | Enter the target fields from which to remove blank. | |
+| Target Fields | - | array of strings | V2 | Enter the target fields from which to remove blank. | |
 
 ### Example of Setting Default Values
 
