@@ -849,14 +849,14 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 ### Property Description 
 
-| Property name | Default value | Data type | Supported engine type | Description | Others |
-| --- | --- | --- | --- | --- | --- |
-| Mode | - | enum | V1 | Choose between encryption mode and decryption mode. | Select one from the list. |
-| Appkey | - | string | V1 | Enter SKM app key that saves the key for encryption/decryption. |  |
-| Key ID | - | string | V1 | Enter SKM ID that saves the key for encryption/decryption. |  |
-| Key Version | - | string | V1 | Enter SKM key version that saves the key for encryption/decryption. |  |
-| Source Field | - | string | V1 | Enter Field name for encryption/decryption. |  |
-| Field to be stored | - | string | V1 | Enter Field name to save encryption/decryption result. |  |
+| Property name      | Default value | Data type | Supported engine type | Description                                                         | Others                    |
+|--------------------|---------------|-----------|-----------------------|---------------------------------------------------------------------|---------------------------|
+| Mode               | -             | enum      | V1                    | Choose between encryption mode and decryption mode.                 | Select one from the list. |
+| Appkey             | -             | string    | V1                    | Enter SKM app key that saves the key for encryption/decryption.     |                           |
+| Key ID             | -             | string    | V1                    | Enter SKM ID that saves the key for encryption/decryption.          |                           |
+| Key Version        | -             | string    | V1                    | Enter SKM key version that saves the key for encryption/decryption. |                           |
+| Source Field       | `message`     | string    | V1                    | Enter Field name for encryption/decryption.                         |                           |
+| Field to be stored | `message`     | string    | V1                    | Enter Field name to save encryption/decryption result.              |                           |
 
 ### Encrypt example exercise 
 
@@ -1229,11 +1229,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 ### Property Description
 
-| Property name | Default value | Data type | Supported engine type | Description | Others |
-| --- | --- | --- | --- | --- | --- |
-| Source field | - | string | V1 | Enter a field name to separate messages. |  |
-| Field to be stored | - | string | V1 | Enter a field name to store separated messages. |  |
-| Separator | `\n` | string |  V1 | |  |
+| Property name      | Default value | Data type | Supported engine type | Description                                     | Others |
+|--------------------|---------------|-----------|-----------------------|-------------------------------------------------|--------|
+| Source field       | `message`     | string    | V1                    | Enter a field name to separate messages.        |        |
+| Field to be stored | -             | string    | V1                    | Enter a field name to store separated messages. |        |
+| Separator          | `\n`          | string    | V1                    |                                                 |        |
 
 ### Example of Default Message Split
 
