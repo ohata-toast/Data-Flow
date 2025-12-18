@@ -1138,20 +1138,21 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 ### Property Description
 
-| Property name | Default value | Data type | Supported engine type | Description | Others |
-| --- | --- | --- | --- | --- | --- |
-| Source Field | - | string | V1, V2 | Enter a field name to get strings. |  |
-| Formats | - | array of strings | V1, V2 | Enter formats to get strings. | The pre-defined formats are as follows.<br/>ISO8601, UNIX, UNIX_MS, TAI64N (V2 미지원) | |
-| Locale | - | string | V1, V2 | Enter a locale to use for string analysis. | e.g. en, en-US, ko-kr |
-| Field to be stored | - | string | V1, V2 | Enter a field name to store the result of parsing data strings. |  |
-| Failure tag | - | array of strings | V1 | Enter the tag name to define if data string parsing fails. |  |
-| Time zone | - | string | V1, V2 | Enter the time zone for the date. |  |
+| Property name      | Default value                   | Data type        | Supported engine type | Description                                                     | Others                                                                              |
+|--------------------|---------------------------------|------------------|-----------------------|-----------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| Source Field       | -                               | string           | V1, V2                | Enter a field name to get strings.                              |                                                                                     |
+| Formats            | -                               | array of strings | V1, V2                | Enter formats to get strings.                                   | The pre-defined formats are as follows.<br/>ISO8601, UNIX, UNIX_MS, TAI64N (V2 미지원) | |
+| Locale             | * V1: - <br> * V2: `ko_KR`      | string           | V1, V2                | Enter a locale to use for string analysis.                      | e.g. en, en-US, ko-KR                                                               |
+| Field to be stored | * V1: `@timestamp`<br/> * V2: - | string           | V1, V2                | Enter a field name to store the result of parsing data strings. |                                                                                     |
+| Failure tag        | `_dateparsefailure`             | array of strings | V1                    | Enter the tag name to define if data string parsing fails.      |                                                                                     |
+| Time zone          | * V1: - <br> * V2: `Asia/Seoul` | string           | V1, V2                | Enter the time zone for the date.                               |  e.g. Asia/Seoul                                                                                    |
 
 ### Examples of Date String Parsing
 
 #### Condition
 
-* Match → `["message" , "yyyy-MM-dd HH:mm:ssZ", "ISO8601"]`
+* Source Field -> `message`
+* Formats -> `["yyyy-MM-dd HH:mm:ssZ", "ISO8601"]`
 * Field to be stored → `time`
 * Time zone → `Asia/Seoul`
 
