@@ -1397,11 +1397,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Update field values | - | Hash | V1 | Replaces the field value with the new value. If the field does not exist, no action is taken. |  |
 | Replace Value | - | Hash | V1 | Replace the field value with a new value. If there is no field, create a new field.  |  |
 | Convert Type | - | Hash | V1 | Convert the field value to another type. | The following types are supported: integer, interger_eu, float, float_eu, string, and boolean. |
-| Replace String | - | array | V1 | Replace the part of string with regular expression. |  |
-| Uppercase Letter | - | array | V1 | Uppercase Letter the string in the target field to uppercase letter. |  |
-| Capitalize First Letter | - | array | V1 | Convert the first letter in the target field to uppercase letter, and the rest to lowercase letter. |  |
-| Lowercase Letter | - | array | V1 | Lowercase the string in the target field to lowercase letter. |  |
-| Strip Space | - | array | V1 | Remove spaces before and after the string in the target field. |  |
+| Replace String | - | array of strings | V1 | Replace the part of string with regular expression. |  |
+| Uppercase Letter | - | array of strings | V1 | Uppercase Letter the string in the target field to uppercase letter. |  |
+| Capitalize First Letter | - | array of strings | V1 | Convert the first letter in the target field to uppercase letter, and the rest to lowercase letter. |  |
+| Lowercase Letter | - | array of strings | V1 | Lowercase the string in the target field to lowercase letter. |  |
+| Strip Space | - | array of strings | V1 | Remove spaces before and after the string in the target field. |  |
 | Split String | - | Hash | V1 | Split strings using separators. |  |
 | Join Array | - | Hash | V1 | Join array elements to separator. |  |
 | Merge Field | - | Hash | V1 | Merge the two fields. |  |
@@ -1986,7 +1986,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 | Property Name | Default Value | Data Type | Supported Engine Type | Description | Note |
 | --- | --- | --- | --- | --- | --- |
-| Target Fields | - | array | V2 | Enter the target fields from which to remove blank. | |
+| Target Fields | - | array of strings | V2 | Enter the target fields from which to remove blank. | |
 
 ### Example of Setting Default Values
 
@@ -2248,24 +2248,24 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 ### Property Description 
 | Property name | Default value | Data type | Supported engine type | Description | Others |
 | --- | --- | --- | --- | --- |--- |
-| region | - | enum | Enter Region of S3 product. | [s3 region](https://docs.aws.amazon.com/general/latest/gr/s3.html) |
+| region | * V1: `us-east-1`<br/> * V2: - | enum | Enter Region of S3 product. | [s3 region](https://docs.aws.amazon.com/general/latest/gr/s3.html) |
 | Bucket | - | string | V1, V2 | Enter bucket name |  |
 | Access Key | - | string | V1, V2 | Enter S3 API Credential Access Key. |  |
 | Secret Key | - | string | V1, V2 | Enter S3 API Credential Secret Key. |  |
-| Signature Version | - | enum | V1, V2 | Enter the version to use when signing AWS requests. |  |
+| Signature Version | v4 | enum | V1, V2 | Enter the version to use when signing AWS requests. |  |
 | Session Token | - | string | V1, V2 | Enter the Session Token for AWS temporary Credentials. | [ Session Token Guide](https://docs.aws.amazon.com/en_kr/IAM/latest/UserGuide/id_credentials_temp_use-resources.html) |
 | Prefix | - | string | V1, V2 | Enter a prefix to prefix the name when uploading the object.<br/>You can enter a field or time format. | [Available Time Format](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html) |
-| Prefix Time Field | @timestamp | string | V1, V2 | Enter a time field to apply to the prefix. |  |
+| Prefix Time Field | * V1: `@timestamp`<br>* v2: - | string | V1, V2 | Enter a time field to apply to the prefix. |  |
 | Prefix Time Field Type | DATE_FILTER_RESULT | enum | V1, V2 | Enter a time field type to apply to the prefix. |Engine type V2 is only available with DATE_FILTER_RESULT type (other types will be supported in the future)|
 | Prefix Time Zone | UTC | string | V1, V2 | Enter a time zone for the Time field to apply to the prefix. |  |
 | Prefix Time Application fallback  | _prefix_datetime_parse_failure | string | V1, V2 | Enter a prefix to replace if the prefix time application fails. |  |
 | Storage Class | STANDARD | enum | V1 | Set Storage Class when object is uploaded. | [Storage Class Guide](https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html) |
 | Encoding | none | enum | V1 | Enter whether to encode or not . gzip encoding is available. |  |
 | Object Rotation Policy | size_and_time | enum | V1 | Determine object creation rules. | size_and_time – Use object size and time to decide<br/>size – Use object size to decide <br/>Time – Use time to decide<br/>Engine type V2 supports size\_and\_time only |
-| Reference Time | 15 | number | V1, V2 |Set the time to be the basis for object splitting.   | Set when the object rotation policy is size_and_time or time |
+| Reference Time | 1 | number | V1, V2 |Set the time to be the basis for object splitting.   | Set when the object rotation policy is size_and_time or time |
 | Object size | 5242880 | number | V1, V2 |Set the size to be the basis for object splitting.   | Set when the object rotation policy is size_and_time or size |
 | ACL | private | enum | V1 | Enter ACL policy to set when object is uploaded. |  |
-| Additional Settings | { } | Hash | V1 | Enter additional settings to connect to S3. | [Guide](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
+| Additional Settings | - | Hash | V1 | Enter additional settings to connect to S3. | [Guide](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
 
 ### Output example exercise
 
@@ -2331,8 +2331,9 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Client ID     | dataflow                                                | string | V1 | Enter ID that identifies Kafka Producer.                     | [client.id](https://kafka.apache.org/documentation/#producerconfigs_client.id)                                                                                                                                                                    |
 | Message Serialization Type    | org.apache.kafka.common.serialization.StringSerializer | string | V1 | Enter how to serialize message value to send.                       | [value.serializer](https://kafka.apache.org/documentation/#producerconfigs_value.serializer)                                                                                                                                                     |
 | Compression type         | none                                                   | enum   | V1 | Enter how to compress data to send.                           | [compression.type](https://kafka.apache.org/documentation/#topicconfigs_compression.type)<br/>Select out of none, gzip, snappy, lz4                                                                                                                       |
+| Message Key | - | string   | V1 | Enter the field to use as the message key. The format is as follows .Example: %{FIELD} |  |
 | Key Serialization Type      | org.apache.kafka.common.serialization.StringSerializer | string | V1 | Enter how to serialize message key to send.                       | [key.serializer](https://kafka.apache.org/documentation/#producerconfigs_key.serializer)                                                                                                                                                         |
-| Meta data upload cycle   | 300000                                                 | number | V1 | Enter the interval (ms) at which want to update partition, broker server status, etc.               | [metadata.max.age.ms](https://kafka.apache.org/documentation/#producerconfigs_metadata.max.age.ms)                                                                                                                                                         |
+| Metadata Update Cycle   | 300000                                                 | number | V1 | Enter the interval (ms) at which want to update partition, broker server status, etc.               | [metadata.max.age.ms](https://kafka.apache.org/documentation/#producerconfigs_metadata.max.age.ms)                                                                                                                                                         |
 | Maximum Request Size      | 1048576                                                | number | V1 | Enter maximum size (byte) per transfer request.                         | [max.request.size](https://kafka.apache.org/documentation/#producerconfigs_max.request.size)                                                                                                                                                     |
 | Server Reconnection Cycle     | 50                                                     | number | V1 | Enter how often to retry when Connection to broker server fails.                 | [reconnect.backoff.ms](https://kafka.apache.org/documentation/#producerconfigs_reconnect.backoff.ms)                                                                                                                                             |
 | Batch Size         | 16384                                                  | number | V1 | Enter size (byte) to send to Batch Request.                       | [batch.size](https://kafka.apache.org/documentation/#producerconfigs_batch.size)                                                                                                                                                                 |
@@ -2343,7 +2344,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Meta data Query Timeout                                                        |  | number |V1 |                                                     | [https://kafka.apache.org/documentation/#upgrade_1100_notable](https://kafka.apache.org/documentation/#upgrade_1100_notable)                                                                                                                   |
 | Transfer Buffer Size      | 131072                                                 | number |V1 |  Enter size (byte) of TCP send buffer used to transfer data.     | [send.buffer.bytes](https://kafka.apache.org/documentation/#producerconfigs_send.buffer.bytes)                                                                                                                                                   |
 | Ack Property        | 1                                                      | enum   |V1 |  Enter settings to verify that messages have been received from Broker server.                 | [acks](https://kafka.apache.org/documentation/#producerconfigs_acks)<br/>0 - Does not check if 6543eyu0=message is received.<br/>1 - Leader of topic responds that the message was received without waiting for follower to copy data.<br/>all - Leader of topic waits for follower to copy the data before responding that they have received the message. |
-| Request Reconnection Cycle     | 100                                                    | number |V1 |  Enter the interval (ms) to retry when transfer request fails.                  | [retry.backoff.ms](https://kafka.apache.org/documentation/#producerconfigs_retry.backoff.ms)                                                                                                                                                     |
+| Retry Request Cycle     | 100                                                    | number |V1 |  Enter the interval (ms) to retry when transfer request fails.                  | [retry.backoff.ms](https://kafka.apache.org/documentation/#producerconfigs_retry.backoff.ms)                                                                                                                                                     |
 | Retry times        | -                                                      | number |V1 |  Enter the maximum times (ms) to retry when transfer request fails.                   | [retries](https://kafka.apache.org/documentation/#producerconfigs_retries)<br/>Retrying exceeding the set value may result in data loss.                                                                                                                            |
 
 ### Json Codec Output example exercise

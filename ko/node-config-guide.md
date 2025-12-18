@@ -539,7 +539,7 @@
 | Fetch 최대 크기      | -                                                        | number  | V1                           | 한 번의 fetch 요청으로 가져올 최대 크기를 입력합니다.                                                                                                                                                                                                                                                   | [fetch.max.bytes](https://kafka.apache.org/documentation/#consumerconfigs_fetch.max.bytes)                                                                                                                                                                                                                                                               |
 | Fetch 최대 대기 시간   | -                                                        | number  | V1                           | `Fetch 최소 크기` 설정 만큼의 데이터가 모이지 않은 경우 fetch 요청을 보낼 대기 시간(ms)을 입력합니다.                                                                                                                                                                                                                  | [fetch.max.wait.ms](https://kafka.apache.org/documentation/#consumerconfigs_fetch.max.wait.ms)                                                                                                                                                                                                                                                           |
 | 컨슈머 헬스체크 주기      | -                                                        | number  | V1                           | 컨슈머가 heartbeat를 보내는 주기(ms)를 입력합니다.                                                                                                                                                                                                                                                  | [heartbeat.interval.ms](https://kafka.apache.org/documentation/#consumerconfigs_heartbeat.interval.ms)                                                                                                                                                                                                                                                   |
-| 메타 데이터 갱신 주기     | -                                                        | number  | V1                           | 파티션, 브로커 서버 상태 등을 갱신할 주기(ms)를 입력합니다.                                                                                                                                                                                                                                                | [metadata.max.age.ms](https://kafka.apache.org/documentation/#producerconfigs_metadata.max.age.ms)                                                                                                                                                                                                                                                       |
+| 메타데이터 갱신 주기      | -                                                        | number  | V1                           | 파티션, 브로커 서버 상태 등을 갱신할 주기(ms)를 입력합니다.                                                                                                                                                                                                                                                | [metadata.max.age.ms](https://kafka.apache.org/documentation/#producerconfigs_metadata.max.age.ms)                                                                                                                                                                                                                                                       |
 | IDLE 타임아웃        | -                                                        | number  | V1                           | 데이터 전송이 없는 커넥션을 닫을 대기 시간(ms)을 입력합니다.                                                                                                                                                                                                                                                | [connections.max.idle.ms](https://kafka.apache.org/documentation/#consumerconfigs_connections.max.idle.ms)                                                                                                                                                                                                                                               |
 
 ### 메타데이터 필드 사용법
@@ -1398,11 +1398,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 필드값 갱신 | - | hash | V1 | 필드 값을 새 값으로 교체합니다. 필드가 없다면 아무런 동작도 하지 않습니다. |  |
 | 값 대체 | - | hash | V1 | 필드 값을 새 값으로 교체. 필드가 없다면 새로 생성합니다.  |  |
 | 타입 변환 | - | hash | V1 | 필드 값을 다른 타입으로 변환합니다. | 지원하는 타입은 integer, interger_eu, float, float_eu, string, boolean입니다. |
-| 문자열 치환 | - | array | V1 | 정규식으로 문자열 일부를 교체합니다. |  |
-| 대문자 변환 | - | array | V1 | 필드의 문자열을 대문자로 변경합니다. |  |
-| 첫 글자 대문자화 | - | array | V1 | 필드의 첫 글자를 대문자로 변환하고 나머지는 소문자로 변환합니다. |  |
-| 소문자 변환 | - | array | V1 | 대상 필드의 문자열을 소문자로 변경합니다. |  |
-| 공백 제거 | - | array | V1 | 필드의 문자열 앞뒤 공백을 제거합니다. |  |
+| 문자열 치환 | - | array of strings | V1 | 정규식으로 문자열 일부를 교체합니다. |  |
+| 대문자 변환 | - | array of strings | V1 | 필드의 문자열을 대문자로 변경합니다. |  |
+| 첫 글자 대문자화 | - | array of strings | V1 | 필드의 첫 글자를 대문자로 변환하고 나머지는 소문자로 변환합니다. |  |
+| 소문자 변환 | - | array of strings | V1 | 대상 필드의 문자열을 소문자로 변경합니다. |  |
+| 공백 제거 | - | array of strings | V1 | 필드의 문자열 앞뒤 공백을 제거합니다. |  |
 | 문자열 분할 | - | hash | V1 | 구분자를 이용해 문자열을 배열로 분할합니다. |  |
 | 배열 결합 | - | hash | V1 | 구분자를 이용하여 배열의 요소를 하나의 문자열로 합칩니다. |  |
 | 필드 병합 | - | hash | V1 | 두 필드를 합칩니다. |  |
@@ -1987,7 +1987,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 | 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
 | --- | --- | --- | --- | --- | --- |
-| 대상 필드 | - | array | V2 | 공백을 제거할 대상 필드들을 입력합니다. |  |
+| 대상 필드 | - | array of strings | V2 | 공백을 제거할 대상 필드들을 입력합니다. |  |
 
 ### 기본값 설정 예제
 
@@ -2249,24 +2249,24 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 ### 속성 설명
 | 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
 | --- | --- | --- | --- | --- | --- |
-| 리전 | - | enum | V1, V2 | S3 상품의 리전을 입력합니다. | [s3 region](https://docs.aws.amazon.com/general/latest/gr/s3.html) |
+| 리전 | * V1: `us-east-1`<br/> * V2: - | enum | V1, V2 | S3 상품의 리전을 입력합니다. | [s3 region](https://docs.aws.amazon.com/general/latest/gr/s3.html) |
 | 버킷 | - | string | V1, V2 | 버킷 이름을 입력합니다. |  |
 | 액세스 키 | - | string | V1, V2 | S3 API 자격 증명 액세스 키를 입력합니다. |  |
 | 비밀 키 | - | string | V1, V2 | S3 API 자격 증명 비밀 키를 입력합니다. |  |
-| 서명 버전 | - | enum | V1 | AWS 요청을 서명할 때 사용할 버전을 입력합니다. |  |
+| 서명 버전 | v4 | enum | V1 | AWS 요청을 서명할 때 사용할 버전을 입력합니다. |  |
 | 세션 토큰 | - | string | V1 | AWS 임시 자격 증명을 위한 세션 토큰을 입력합니다. | [세션 토큰 가이드](https://docs.aws.amazon.com/ko_kr/IAM/latest/UserGuide/id_credentials_temp_use-resources.html) |
 | Prefix | - | string | V1, V2 | 오브젝트 업로드 시 이름 앞에 붙일 접두사를 입력합니다.<br/>필드 또는 시간 형식을 입력할 수 있습니다. | [사용 가능한 시간 형식](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html) |
-| Prefix 시간 필드 | @timestamp | string | V1, V2 | Prefix에 적용할 시간 필드를 입력합니다. |  |
+| Prefix 시간 필드 | * V1: `@timestamp`<br>* v2: - | string | V1, V2 | Prefix에 적용할 시간 필드를 입력합니다. |  |
 | Prefix 시간 필드 타입 | DATE_FILTER_RESULT | enum | V1, V2 | Prefix에 적용할 시간 필드의 타입을 입력합니다. | 엔진 타입 V2는 DATE_FILTER_RESULT 타입만 가능 (추후 다른 타입 지원 예정) |
 | Prefix 시간대 | UTC | string | V1, V2 | Prefix에 적용할 시간 필드의 타임 존을 입력합니다. |  |
 | Prefix 시간 적용 fallback  | _prefix_datetime_parse_failure | string | V1, V2 | Prefix 시간 적용에 실패한 경우 대체할 Prefix를 입력합니다. |  |
 | 스토리지 클래스 | STANDARD | enum | V1 | 오브젝트를 업로드할 때 사용할 스토리지 클래스를 설정합니다. | [스토리지 클래스 가이드](https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html) |
 | 인코딩 | none | enum | V1 | 인코딩 여부를 입력합니다. gzip 인코딩을 사용할 수 있습니다. |  |
 | 오브젝트 로테이션 정책 | size\_and\_time | enum | V1 | 오브젝트의 생성 규칙을 결정합니다. | size\_and\_time: 오브젝트의 크기와 시간을 이용하여 결정<br/>size: 오브젝트의 크기를 이용하여 결정<br/>time: 시간을 이용하여 결정<br/>엔진 타입 V2는 size\_and\_time만 지원 |
-| 기준 시각 | 15 | number | V1, V2 | 오브젝트를 분할할 기준이 될 시간을 설정합니다. | 오브젝트 로테이션 정책이 size\_and\_time 또는 time인 경우 설정 |
+| 기준 시각 | 1 | number | V1, V2 | 오브젝트를 분할할 기준이 될 시간을 설정합니다. | 오브젝트 로테이션 정책이 size\_and\_time 또는 time인 경우 설정 |
 | 기준 오브젝트 크기 | 5242880 | number | V1, V2 | 오브젝트를 분할할 기준이 될 크기를 설정합니다. | 오브젝트 로테이션 정책이 size\_and\_time 또는 size인 경우 설정 |
 | ACL | private | enum | V1 | 오브젝트를 업로드했을 때 설정할 ACL 정책을 입력합니다. |  |
-| 추가 설정 | { } | hash | V1 | S3에 연결하기 위한 추가 설정을 입력합니다. | [가이드](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
+| 추가 설정 | - | hash | V1 | S3에 연결하기 위한 추가 설정을 입력합니다. | [가이드](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
 | 경로 방식 요청 | false | boolean | V2 | 경로 방식 요청을 사용할지 여부를 결정합니다. |  |
 
 ### 출력 예제
@@ -2333,8 +2333,9 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 클라이언트 아이디 | dataflow | string | V1 | Kafka Producer를 식별하는 ID를 입력합니다. | [client.id](https://kafka.apache.org/documentation/#producerconfigs_client.id) |
 | 메시지 직렬화 유형    | org.apache.kafka.common.serialization.StringSerializer | string | V1 | 전송하는 메시지의 값을 직렬화할 방법을 입력합니다. | [value.serializer](https://kafka.apache.org/documentation/#producerconfigs_value.serializer) |
 | 압축 유형 | none | enum   | V1 | 전송하는 데이터를 압축할 방법을 입력합니다. | [compression.type](https://kafka.apache.org/documentation/#topicconfigs_compression.type)<br/>none, gzip, snappy, lz4 중 선택 |
+| 메시지 키 | - | string   | V1 | 메시지 키로 사용할 필드를 입력합니다. 형태는 다음과 같습니다.예: %{FIELD} |  |
 | 키 직렬화 유형 | org.apache.kafka.common.serialization.StringSerializer | string | V1 | 전송하는 메시지의 키를 직렬화할 방법을 입력합니다. | [key.serializer](https://kafka.apache.org/documentation/#producerconfigs_key.serializer) |
-| 메타데이터 갱신 주기   | 300000 | number | V1 | 파티션, 브로커 서버 상태 등을 갱신할 주기(ms)를 입력합니다. | [metadata.max.age.ms](https://kafka.apache.org/documentation/#producerconfigs_metadata.max.age.ms) |
+| 메타데이터 갱신 주기 | 300000 | number | V1 | 파티션, 브로커 서버 상태 등을 갱신할 주기(ms)를 입력합니다. | [metadata.max.age.ms](https://kafka.apache.org/documentation/#producerconfigs_metadata.max.age.ms) |
 | 최대 요청 크기 | 1048576 | number | V1 | 전송 요청당 최대 크기(byte)를 입력합니다. | [max.request.size](https://kafka.apache.org/documentation/#producerconfigs_max.request.size) |
 | 서버 재연결 주기     | 50 | number | V1 | 브로커 서버에 연결이 실패했을 때 재시도할 주기를 입력합니다. | [reconnect.backoff.ms](https://kafka.apache.org/documentation/#producerconfigs_reconnect.backoff.ms) |
 | 배치 크기 | 16384 | number | V1 | 배치 요청으로 전송할 크기(byte)를 입력합니다. | [batch.size](https://kafka.apache.org/documentation/#producerconfigs_batch.size) |
@@ -2345,7 +2346,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 메타데이터 조회 타임아웃 | | number | V1 | | [https://kafka.apache.org/documentation/#upgrade\_1100\_notable](https://kafka.apache.org/documentation/#upgrade_1100_notable) |
 | 전송 버퍼 크기 | 131072 | number | V1 | 데이터를 전송하는 데 사용하는 TCP send 버퍼의 크기(byte)를 입력합니다. | [send.buffer.bytes](https://kafka.apache.org/documentation/#producerconfigs_send.buffer.bytes) |
 | ack 속성 | 1 | enum   | V1 | 브로커 서버에서 메시지를 받았는지 확인하는 설정을 입력합니다. | [acks](https://kafka.apache.org/documentation/#producerconfigs_acks)<br/>0 - 메시지 수신 여부를 확인하지 않습니다.<br/>1 - 토픽의 leader가 follower가 데이터를 복사하는 것을 기다리지 않고 메시지를 수신했다는 응답을 합니다.<br/>all - 토픽의 leader가 follower가 데이터를 복사하는 것을 기다린 뒤 메시지를 수신했다는 응답을 합니다. |
-| 요청 재연결 주기 | 100 | number | V1 | 전송 요청이 실패했을 때 재시도할 주기(ms)를 입력합니다. | [retry.backoff.ms](https://kafka.apache.org/documentation/#producerconfigs_retry.backoff.ms) |
+| 재시도 요청 주기 | 100 | number | V1 | 전송 요청이 실패했을 때 재시도할 주기(ms)를 입력합니다. | [retry.backoff.ms](https://kafka.apache.org/documentation/#producerconfigs_retry.backoff.ms) |
 | 재시도 횟수 | - | number | V1 | 전송 요청이 실패했을 때 재시도할 최대 횟수를 입력합니다. | [retries](https://kafka.apache.org/documentation/#producerconfigs_retries)<br/>설정값을 초과하여 재시도하는 경우 데이터 유실이 발생할 수 있습니다. |
 
 ### json 코덱 출력 예제

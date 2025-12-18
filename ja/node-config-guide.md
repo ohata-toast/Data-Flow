@@ -1393,11 +1393,11 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | フィールド値更新 | - | hash | V1 | フィールド値を新しい値に置き換えます。フィールドがなければ何の動作もしません。 |  |
 | 値置換 | - | hash | V1 | フィールド値を新しい値に置き換えます。フィールドがなければ新しく生成します。  |  |
 | タイプ変換 | - | hash | V1 | フィールド値を他のタイプに変換します。 | サポートするタイプはinteger、interger_eu、float、float_eu、string、booleanです。 |
-| 文字列置換 | - | array | V1 | 正規表現で文字列の一部を置き換えます。 |  |
-| 大文字変換 | - | array | V1 | フィールドの文字列を大文字に変更します。 |  |
-| 最初の文字を大文字化 | - | array | V1 | フィールドの最初の文字を大文字に変換し、残りは小文字に変換します。 |  |
-| 小文字変換 | - | array | V1 | 対象フィールドの文字列を小文字に変更します。 |  |
-| 空白削除 | - | array | V1 | フィールドの文字列の前後の空白を削除します。 |  |
+| 文字列置換 | - | array of strings | V1 | 正規表現で文字列の一部を置き換えます。 |  |
+| 大文字変換 | - | array of strings | V1 | フィールドの文字列を大文字に変更します。 |  |
+| 最初の文字を大文字化 | - | array of strings | V1 | フィールドの最初の文字を大文字に変換し、残りは小文字に変換します。 |  |
+| 小文字変換 | - | array of strings | V1 | 対象フィールドの文字列を小文字に変更します。 |  |
+| 空白削除 | - | array of strings | V1 | フィールドの文字列の前後の空白を削除します。 |  |
 | 文字列分割 | - | hash | V1 | 区切り文字を利用して文字列を配列に分割します。 |  |
 | 配列結合 | - | hash | V1 | 区切り文字を利用して配列の要素を1つの文字列に結合します。 |  |
 | フィールド結合 | - | hash | V1 | 二つのフィールドを結合します。 |  |
@@ -1982,7 +1982,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 | プロパティ名 | デフォルト値 | データ型 | サポートエンジンタイプ | 説明 | 備考 |
 | --- | --- | --- | --- | --- | --- |
-| 対象フィールド | - | array | V2 | 空白を削除する対象フィールドを入力します。 |  |
+| 対象フィールド | - | array of strings | V2 | 空白を削除する対象フィールドを入力します。 |  |
 
 ### デフォルト値設定例
 
@@ -2020,7 +2020,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | --- | --- | --- | --- | --- |
 | ID | - | string | ノードのIDを設定します。<br/>このプロパティに定義された値でチャートボードにノード名を表記します。 |  |
 
-## (NHN Cloud) Object Storage
+## Sink > (NHN Cloud) Object Storage
 
 ### ノードの説明
 
@@ -2227,7 +2227,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 /obs-test-container/_failure/ls.s3.d53c090b-9718-4833-926a-725b20c85974.2022-11-21T00.47.part0.txt
 ```
 
-## (Amazon) S3
+## Sink > (Amazon) S3
 
 ### ノードの説明
 
@@ -2244,24 +2244,24 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 ### プロパティの説明
 | プロパティ名 | デフォルト値 | データ型 | サポートエンジンタイプ | 説明 | 備考 |
 | --- | --- | --- | --- | --- | --- |
-| リージョン | - | enum | V1, V2 | S3商品のリージョンを入力します。 | [s3 region](https://docs.aws.amazon.com/general/latest/gr/s3.html) |
+| リージョン | * V1: `us-east-1`<br/> * V2: - | enum | V1, V2 | S3商品のリージョンを入力します。 | [s3 region](https://docs.aws.amazon.com/general/latest/gr/s3.html) |
 | バケット | - | string | V1, V2 | バケット名を入力します。 |  |
 | アクセスキー | - | string | V1, V2 | S3 API認証情報アクセスキーを入力します。 |  |
 | シークレットキー | - | string | V1, V2 | S3 API認証情報シークレットキーを入力します。 |  |
-| 署名バージョン | - | enum | V1 | AWSリクエストに署名する際に使用するバージョンを入力します。 |  |
+| 署名バージョン | v4 | enum | V1 | AWSリクエストに署名する際に使用するバージョンを入力します。 |  |
 | セッショントークン | - | string | V1 | AWS一時認証情報のためのセッショントークンを入力します。 | [セッショントークンガイド](https://docs.aws.amazon.com/ko_kr/IAM/latest/UserGuide/id_credentials_temp_use-resources.html) |
 | Prefix | - | string | V1, V2 | オブジェクトアップロード時に名前の前に付けるプレフィックスを入力します。<br/>フィールドまたは時間形式を入力できます。 | [使用可能な時間形式](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html) |
-| Prefix時間フィールド | @timestamp | string | V1, V2 | Prefixに適用する時間フィールドを入力します。 |  |
+| Prefix時間フィールド | * V1: `@timestamp`<br>* v2: - | string | V1, V2 | Prefixに適用する時間フィールドを入力します。 |  |
 | Prefix時間フィールドタイプ | DATE_FILTER_RESULT | enum | V1, V2 | Prefixに適用する時間フィールドのタイプを入力します。 | エンジンタイプV2はDATE_FILTER_RESULTタイプのみ可能 (今後他のタイプサポート予定) |
 | Prefixタイムゾーン | UTC | string | V1, V2 | Prefixに適用する時間フィールドのタイムゾーンを入力します。 |  |
 | Prefix時間適用fallback  | _prefix_datetime_parse_failure | string | V1, V2 | Prefix時間適用に失敗した場合に代替するPrefixを入力します。 |  |
 | ストレージクラス | STANDARD | enum | V1 | オブジェクトをアップロードする際に使用するストレージクラスを設定します。 | [ストレージクラスガイド](https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html) |
 | エンコーディング | none | enum | V1 | エンコーディング可否を入力します。gzipエンコーディングを使用できます。 |  |
 | オブジェクトローテーションポリシー | size\_and\_time | enum | V1 | オブジェクトの生成ルールを決定します。 | size\_and\_time: オブジェクトのサイズと時間を利用して決定<br/>size: オブジェクトのサイズを利用して決定<br/>time: 時間を利用して決定<br/>エンジンタイプV2はsize\_and\_timeのみサポート |
-| 基準時刻 | 15 | number | V1, V2 | オブジェクトを分割する基準となる時間を設定します。 | オブジェクトローテーションポリシーがsize\_and\_timeまたはtimeの場合設定 |
+| 基準時刻 | 1 | number | V1, V2 | オブジェクトを分割する基準となる時間を設定します。 | オブジェクトローテーションポリシーがsize\_and\_timeまたはtimeの場合設定 |
 | 基準オブジェクトサイズ | 5242880 | number | V1, V2 | オブジェクトを分割する基準となるサイズを設定します。 | オブジェクトローテーションポリシーがsize\_and\_timeまたはsizeの場合設定 |
 | ACL | private | enum | V1 | オブジェクトをアップロードした際に設定するACLポリシーを入力します。 |  |
-| 追加設定 | { } | hash | V1 | S3に接続するための追加設定を入力します。 | [ガイド](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
+| 追加設定 | - | hash | V1 | S3に接続するための追加設定を入力します。 | [ガイド](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
 
 ### 出力例
 
@@ -2327,6 +2327,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | クライアントID | dataflow | string | V1 | Kafka Producerを識別するIDを入力します。 | [client.id](https://kafka.apache.org/documentation/#producerconfigs_client.id) |
 | メッセージシリアライズタイプ    | org.apache.kafka.common.serialization.StringSerializer | string | V1 | 送信するメッセージの値をシリアライズする方法を入力します。 | [value.serializer](https://kafka.apache.org/documentation/#producerconfigs_value.serializer) |
 | 圧縮タイプ | none | enum   | V1 | 送信するデータを圧縮する方法を入力します。 | [compression.type](https://kafka.apache.org/documentation/#topicconfigs_compression.type)<br/>none、gzip、snappy、lz4の中から選択 |
+| メッセージキー | - | string   | V1 | メッセージキーとして使用するフィールドを入力します。形式は次のとおりです。例: %{FIELD} |  |
 | キーシリアライズタイプ | org.apache.kafka.common.serialization.StringSerializer | string | V1 | 送信するメッセージのキーをシリアライズする方法を入力します。 | [key.serializer](https://kafka.apache.org/documentation/#producerconfigs_key.serializer) |
 | メタデータ更新周期   | 300000 | number | V1 | パーティション、ブローカーサーバーの状態などを更新する周期(ms)を入力します。 | [metadata.max.age.ms](https://kafka.apache.org/documentation/#producerconfigs_metadata.max.age.ms) |
 | 最大リクエストサイズ | 1048576 | number | V1 | 送信リクエストごとの最大サイズ(byte)を入力します。 | [max.request.size](https://kafka.apache.org/documentation/#producerconfigs_max.request.size) |
@@ -2339,7 +2340,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | メタデータ照会タイムアウト | | number | V1 | | [https://kafka.apache.org/documentation/#upgrade\_1100\_notable](https://kafka.apache.org/documentation/#upgrade\_1100\_notable) |
 | 送信バッファサイズ | 131072 | number | V1 | データを送信するのに使用するTCP sendバッファのサイズ(byte)を入力します。 | [send.buffer.bytes](https://kafka.apache.org/documentation/#producerconfigs_send.buffer.bytes) |
 | ackプロパティ | 1 | enum   | V1 | ブローカーサーバーでメッセージを受け取ったか確認する設定を入力します。 | [acks](https://kafka.apache.org/documentation/#producerconfigs_acks)<br/>0 - メッセージ受信可否を確認しません。<br/>1 - トピックのleaderがfollowerがデータをコピーするのを待たずにメッセージを受信したという応答をします。<br/>all - トピックのleaderがfollowerがデータをコピーするのを待った後、メッセージを受信したという応答をします。 |
-| リクエスト再接続周期 | 100 | number | V1 | 送信リクエストが失敗した際に再試行する周期(ms)を入力します。 | [retry.backoff.ms](https://kafka.apache.org/documentation/#producerconfigs_retry.backoff.ms) |
+| 再試行リクエスト周期 | 100 | number | V1 | 送信リクエストが失敗した際に再試行する周期(ms)を入力します。 | [retry.backoff.ms](https://kafka.apache.org/documentation/#producerconfigs_retry.backoff.ms) |
 | 再試行回数 | - | number | V1 | 送信リクエストが失敗した際に再試行する最大回数を入力します。 | [retries](https://kafka.apache.org/documentation/#producerconfigs_retries)<br/>設定値を超過して再試行する場合、データ損失が発生する可能性があります。 |
 
 ### jsonコーデックの出力例
