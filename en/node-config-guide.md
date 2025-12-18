@@ -1861,7 +1861,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 ### Default Setting Example
 
-### Condition
+#### Condition
 * Target field → `fieldname`
 * Default value → `default_value`
 
@@ -1904,7 +1904,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 ### Default Setting Example
 
-### Condition
+#### Condition
 * Source field → `source_field`
 * Field to be saved → `dest_field`
 
@@ -1949,7 +1949,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 ### Default Setting Example
 
-### Condition
+#### Condition
 * Source field → `fieldname`
 * Target field → `changed_fieldname`
 
@@ -1990,7 +1990,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 ### Example of Setting Default Values
 
-### Condition
+#### Condition
 * Target field → `["field1", "field2"]`
 
 #### Input Message
