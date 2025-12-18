@@ -2041,20 +2041,20 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 ### プロパティの説明
 
-| プロパティ名 | デフォルト値                                             | データ型 | サポートエンジンタイプ | 説明 | 備考 |
-| --- |----------------------------------------------------| --- | --- | --- | --- |
-| リージョン | -                                                  | enum | V1, V2 | Object Storage商品のリージョンを入力します。 |  |
-| バケット | -                                                  | string | V1, V2 | バケット名を入力します。 |  |
-| シークレットキー | -                                                  | string | V1, V2 | S3 API認証情報シークレットキーを入力します。 |  |
-| アクセスキー | -                                                  | string | V1, V2 | S3 API認証情報アクセスキーを入力します。 |  |
+| プロパティ名 | デフォルト値                                               | データ型 | サポートエンジンタイプ | 説明 | 備考 |
+| --- |------------------------------------------------------| --- | --- | --- | --- |
+| リージョン | -                                                    | enum | V1, V2 | Object Storage商品のリージョンを入力します。 |  |
+| バケット | -                                                    | string | V1, V2 | バケット名を入力します。 |  |
+| シークレットキー | -                                                    | string | V1, V2 | S3 API認証情報シークレットキーを入力します。 |  |
+| アクセスキー | -                                                    | string | V1, V2 | S3 API認証情報アクセスキーを入力します。 |  |
 | Prefix | `/year=%{+YYYY}/month=%{+MM}/day=%{+dd}/hour=%{+HH}` | string | V1, V2 | オブジェクトアップロード時に名前の前に付けるプレフィックスを入力します。<br/>フィールドまたは時間形式を入力できます。 | [使用可能な時間形式](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html) |
-| Prefix時間フィールド | * V1: `@timestamp` <br/> * V2: -                   | string | V1, V2 | Prefixに適用する時間フィールドを入力します。 |  |
+| Prefix時間フィールド | * V1: `@timestamp` <br/> * V2: -                     | string | V1, V2 | Prefixに適用する時間フィールドを入力します。 |  |
 | Prefix時間フィールドタイプ | `DATE_FILTER_RESULT`                                 | enum | V1, V2 | Prefixに適用する時間フィールドのタイプを入力します。 | エンジンタイプV2はDATE_FILTER_RESULTタイプのみ可能(今後他のタイプサポート予定) |
 | Prefixタイムゾーン | `UTC`                                                | string | V1, V2 | Prefixに適用する時間フィールドのタイムゾーンを入力します。 |  |
 | Prefix時間適用fallback  | `_prefix_datetime_parse_failure`                     | string | V1, V2 | Prefix時間適用に失敗した場合に代替するPrefixを入力します。 |  |
 | エンコーディング | `none`                                               | enum | V1 | エンコーディング可否を入力します。gzipエンコーディングを使用できます。 |  |
-| オブジェクトローテーションポリシー | `size_and_time`                                    | enum | V1 | オブジェクトの生成ルールを決定します。 | size\_and\_time: オブジェクトのサイズと時間を利用して決定<br/>size: オブジェクトのサイズを利用して決定<br/>time: 時間を利用して決定<br/>エンジンタイプV2はsize\_and\_timeのみサポート |
-| 基準時刻 | `15`                                                 | number | V1, V2 | オブジェクトを分割する基準となる時間を設定します。 | オブジェクトローテーションポリシーがsize\_and\_timeまたはtimeの場合設定 |
+| オブジェクトローテーションポリシー | `size_and_time`                                      | enum | V1 | オブジェクトの生成ルールを決定します。 | size\_and\_time: オブジェクトのサイズと時間を利用して決定<br/>size: オブジェクトのサイズを利用して決定<br/>time: 時間を利用して決定<br/>エンジンタイプV2はsize\_and\_timeのみサポート |
+| 基準時刻 | `1`                                                  | number | V1, V2 | オブジェクトを分割する基準となる時間を設定します。 | オブジェクトローテーションポリシーがsize\_and\_timeまたはtimeの場合設定 |
 | 基準オブジェクトサイズ | `5242880`                                            | number | V1, V2 | オブジェクトを分割する基準となるサイズ(単位： byte)を設定します。 | オブジェクトローテーションポリシーがsize\_and\_timeまたはsizeの場合設定 |
 
 ### jsonコーデックの出力例
