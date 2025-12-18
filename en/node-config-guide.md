@@ -2042,21 +2042,21 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 ### Property Description 
 
-| Property name | Default value | Data type | Supported engine type | Description | Others |
-| --- | --- | --- | --- | --- | --- |
-| region | - | enum | V1, V2 | Enter the region of Object Storage product |  |
-| Bucket | - | string | V1, V2 | Enter bucket name |  |
-| Secret Key | - | string | V1, V2 | Enter S3 API Credential Secret Key. |  |
-| Access Key | - | string | V1, V2 | Enter S3 API Credential Access Key. |  |
+| Property name | Default value                                      | Data type | Supported engine type | Description | Others |
+| --- |----------------------------------------------------| --- | --- | --- | --- |
+| region | -                                                  | enum | V1, V2 | Enter the region of Object Storage product |  |
+| Bucket | -                                                  | string | V1, V2 | Enter bucket name |  |
+| Secret Key | -                                                  | string | V1, V2 | Enter S3 API Credential Secret Key. |  |
+| Access Key | -                                                  | string | V1, V2 | Enter S3 API Credential Access Key. |  |
 | Prefix | /year=%{+YYYY}/month=%{+MM}/day=%{+dd}/hour=%{+HH} | string | V1, V2 | Enter a prefix to prefix the name when uploading the object.<br/>You can enter a field or time format. | [Available Time Format](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html) |
-| Prefix Time Field | @timestamp | string | V1, V2 | Enter a time field to apply to the prefix. |  |
-| Prefix Time Field Type | DATE_FILTER_RESULT | enum | V1, V2 | Enter a time field type to apply to the prefix. | Engine type V2 supports DATE_FILTER_RESULT type only (other types will be supported later) |
-| Prefix Time Zone | UTC | string | V1, V2 | Enter a time zone for the Time field to apply to the prefix. |  |
-| Prefix Time Application fallback  | _prefix_datetime_parse_failure | string | V1, V2 | Enter a prefix to replace if the prefix time application fails. |  |
-| Encoding | none | enum | V1 | Enter whether to encode or not . gzip encoding is available. |  |
-| Object Rotation Policy | size_and_time | enum | V1 | Determines object creation rules. | size_and_time – Use object size and time to decide<br/>size – Use object size to decide <br/>Time – Use time to decide<br/>Engine type V2 supports size\_and\_time only |
-| Reference Time | 15 | number | V1, V2 | Set the time to be the basis for object splitting.   | Set if object rotation policy is size_and_time or time |
-| Object size | 5242880 | number | V1, V2 | Set the size (unit: byte) to be the basis for object splitting.   | Set when object rotation policy is size_and_time or size |
+| Prefix Time Field | * V1: `@timestamp` <br> * V2: -                    | string | V1, V2 | Enter a time field to apply to the prefix. |  |
+| Prefix Time Field Type | DATE_FILTER_RESULT                                 | enum | V1, V2 | Enter a time field type to apply to the prefix. | Engine type V2 supports DATE_FILTER_RESULT type only (other types will be supported later) |
+| Prefix Time Zone | UTC                                                | string | V1, V2 | Enter a time zone for the Time field to apply to the prefix. |  |
+| Prefix Time Application fallback  | _prefix_datetime_parse_failure                     | string | V1, V2 | Enter a prefix to replace if the prefix time application fails. |  |
+| Encoding | none                                               | enum | V1 | Enter whether to encode or not . gzip encoding is available. |  |
+| Object Rotation Policy | size_and_time                                      | enum | V1 | Determines object creation rules. | size_and_time – Use object size and time to decide<br/>size – Use object size to decide <br/>Time – Use time to decide<br/>Engine type V2 supports size\_and\_time only |
+| Reference Time | 15                                                 | number | V1, V2 | Set the time to be the basis for object splitting.   | Set if object rotation policy is size_and_time or time |
+| Object size | 5242880                                            | number | V1, V2 | Set the size (unit: byte) to be the basis for object splitting.   | Set when object rotation policy is size_and_time or size |
 
 ### Json Codec Output example exercise
 
