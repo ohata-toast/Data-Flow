@@ -994,14 +994,14 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 속성명       | 기본값                      | 자료형              | 지원 엔진 타입 | 설명                                             | 비고                       |
 |-----------|--------------------------|------------------|----------|------------------------------------------------|--------------------------|
 | 저장할 필드    | -                        | string           | V1, V2   | CSV 파싱 결과를 저장할 필드명를 입력합니다.                     |                          |
-| Quote     | "                        | string           | V1, V2   | 컬럼 필드를 나누는 문자를 입력합니다.                          |                          |
-| 첫 행 무시 여부 | false                    | boolean          | V1, V2   | 속성값이 true일 경우 읽은 데이터 중 첫 행에 입력된 컬럼 이름을 무시합니다.  |                          |
+| Quote     | `"`                        | string           | V1, V2   | 컬럼 필드를 나누는 문자를 입력합니다.                          |                          |
+| 첫 행 무시 여부 | `false`                    | boolean          | V1, V2   | 속성값이 true일 경우 읽은 데이터 중 첫 행에 입력된 컬럼 이름을 무시합니다.  |                          |
 | 컬럼        | -                        | array of strings | V1       | 컬럼 이름을 입력합니다.                                  |                          |
 | 구분자       | ,                        | string           | V1, V2   | 컬럼을 구분할 문자열을 입력합니다.                            |                          |
-| 소스 필드     | * V1: message<br>* V2: - | string           | V1, V2   | CSV 파싱할 필드명을 입력합니다.                            |                          |
+| 소스 필드     | * V1:`message`<br>* V2: - | string           | V1, V2   | CSV 파싱할 필드명을 입력합니다.                            |                          |
 | 스키마       | -                        | hash             | V1, V2   | 각 컬럼의 이름과 자료형을 dictionary 형태로 입력합니다.           | `엔진 타입에 따른 스키마 입력 방법` 참고 |
-| 덮어쓰기      | false                    | boolean          | V2       | true일 경우 CSV 파싱 결과가 저장할 필드나 기존 필드와 겹치면 덮어씌웁니다. |                          |
-| 원본 필드 삭제  | false                    | boolean          | V2       | CSV 파싱이 완료되면 소스 필드를 삭제합니다. 파싱이 실패한다면 유지합니다.    |                          |
+| 덮어쓰기      | `false`                    | boolean          | V2       | true일 경우 CSV 파싱 결과가 저장할 필드나 기존 필드와 겹치면 덮어씌웁니다. |                          |
+| 원본 필드 삭제  | `false`                    | boolean          | V2       | CSV 파싱이 완료되면 소스 필드를 삭제합니다. 파싱이 실패한다면 유지합니다.    |                          |
 
 #### 엔진 타입에 따른 스키마 입력 방법
 * 엔진 타입이 V1인 경우
@@ -2095,16 +2095,16 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 버킷                    | -                                                  | string | V1, V2   | 버킷 이름을 입력합니다.                                                |                                                                                                                            |
 | 비밀 키                  | -                                                  | string | V1, V2   | S3 API 자격 증명 비밀 키를 입력합니다.                                    |                                                                                                                            |
 | 액세스 키                 | -                                                  | string | V1, V2   | S3 API 자격 증명 액세스 키를 입력합니다.                                   |                                                                                                                            |
-| Prefix                | /year=%{+YYYY}/month=%{+MM}/day=%{+dd}/hour=%{+HH} | string | V1, V2   | 오브젝트 업로드 시 이름 앞에 붙일 접두사를 입력합니다.<br/>필드 또는 시간 형식을 입력할 수 있습니다. | [사용 가능한 시간 형식](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html)                         |
-| Prefix 시간 필드          | @timestamp                                         | string | V1, V2   | Prefix에 적용할 시간 필드를 입력합니다.                                    |                                                                                                                            |
-| Prefix 시간 필드 타입       | DATE_FILTER_RESULT                                 | enum   | V1, V2   | Prefix에 적용할 시간 필드의 타입을 입력합니다.                                | 엔진 타입 V2는 DATE_FILTER_RESULT 타입만 가능(추후 다른 타입 지원 예정)                                                                        |
-| Prefix 시간대            | UTC                                                | string | V1, V2   | Prefix에 적용할 시간 필드의 타임 존을 입력합니다.                              |                                                                                                                            |
-| Prefix 시간 적용 fallback | _prefix_datetime_parse_failure                     | string | V1, V2   | Prefix 시간 적용에 실패한 경우 대체할 Prefix를 입력합니다.                      |                                                                                                                            |
-| 인코딩                   | none                                               | enum   | V1       | 인코딩 여부를 입력합니다. gzip 인코딩을 사용할 수 있습니다.                         |                                                                                                                            |
-| 오브젝트 로테이션 정책          | size\_and\_time                                    | enum   | V1       | 오브젝트의 생성 규칙을 결정합니다.                                          | size\_and\_time: 오브젝트의 크기와 시간을 이용하여 결정<br/>size: 오브젝트의 크기를 이용하여 결정<br/>time: 시간을 이용하여 결정<br/>엔진 타입 V2는 size\_and\_time만 지원 |
-| 기준 시각                 | 1                                                  | number | V1, V2   | 오브젝트를 분할할 기준이 될 시간을 설정합니다.                                   | 오브젝트 로테이션 정책이 size\_and\_time 또는 time인 경우 설정                                                                               |
-| 기준 오브젝트 크기            | 5242880                                            | number | V1, V2   | 오브젝트를 분할할 기준이 될 크기(단위: byte)를 설정합니다.                         | 오브젝트 로테이션 정책이 size\_and\_time 또는 size인 경우 설정                                                                               |
-| 비활성 간격                | 1                                                  | number | V2       | 데이터 인입이 없는 상태가 지속될 때 오브젝트를 분할하는 기준 시간을 설정합니다.                | 설정된 시간 동안 데이터 인입이 없으면 현재 오브젝트가 업로드되며, 이후 새로 인입되는 데이터는 새로운 오브젝트에 작성됩니다.                                                     |
+| Prefix                | `/year=%{+YYYY}/month=%{+MM}/day=%{+dd}/hour=%{+HH}` | string | V1, V2   | 오브젝트 업로드 시 이름 앞에 붙일 접두사를 입력합니다.<br/>필드 또는 시간 형식을 입력할 수 있습니다. | [사용 가능한 시간 형식](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html)                         |
+| Prefix 시간 필드          | * V1: `@timestamp` <br/> * V2: -                                        | string | V1, V2   | Prefix에 적용할 시간 필드를 입력합니다.                                    |                                                                                                                            |
+| Prefix 시간 필드 타입       | `DATE_FILTER_RESULT`                                | enum   | V1, V2   | Prefix에 적용할 시간 필드의 타입을 입력합니다.                                | 엔진 타입 V2는 DATE_FILTER_RESULT 타입만 가능(추후 다른 타입 지원 예정)                                                                        |
+| Prefix 시간대            | `UTC`                                               | string | V1, V2   | Prefix에 적용할 시간 필드의 타임 존을 입력합니다.                              |                                                                                                                            |
+| Prefix 시간 적용 fallback | `_prefix_datetime_parse_failure`                    | string | V1, V2   | Prefix 시간 적용에 실패한 경우 대체할 Prefix를 입력합니다.                      |                                                                                                                            |
+| 인코딩                   | `none`                                              | enum   | V1       | 인코딩 여부를 입력합니다. gzip 인코딩을 사용할 수 있습니다.                         |                                                                                                                            |
+| 오브젝트 로테이션 정책          | `size_and_time`                                    | enum   | V1       | 오브젝트의 생성 규칙을 결정합니다.                                          | size\_and\_time: 오브젝트의 크기와 시간을 이용하여 결정<br/>size: 오브젝트의 크기를 이용하여 결정<br/>time: 시간을 이용하여 결정<br/>엔진 타입 V2는 size\_and\_time만 지원 |
+| 기준 시각                 | `1`                                                  | number | V1, V2   | 오브젝트를 분할할 기준이 될 시간을 설정합니다.                                   | 오브젝트 로테이션 정책이 size\_and\_time 또는 time인 경우 설정                                                                               |
+| 기준 오브젝트 크기            | `5242880`                                            | number | V1, V2   | 오브젝트를 분할할 기준이 될 크기(단위: byte)를 설정합니다.                         | 오브젝트 로테이션 정책이 size\_and\_time 또는 size인 경우 설정                                                                               |
+| 비활성 간격                | `1`                                                  | number | V2       | 데이터 인입이 없는 상태가 지속될 때 오브젝트를 분할하는 기준 시간을 설정합니다.                | 설정된 시간 동안 데이터 인입이 없으면 현재 오브젝트가 업로드되며, 이후 새로 인입되는 데이터는 새로운 오브젝트에 작성됩니다.                                                     |
 
 ### json 코덱 출력 예제
 
