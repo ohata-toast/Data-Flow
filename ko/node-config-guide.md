@@ -2315,6 +2315,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | ACL | `private` | enum | V1 | 오브젝트를 업로드했을 때 설정할 ACL 정책을 입력합니다. |  |
 | 추가 설정 | - | hash | V1 | S3에 연결하기 위한 추가 설정을 입력합니다. | [가이드](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
 | 경로 방식 요청 | `false` | boolean | V2 | 경로 방식 요청을 사용할지 여부를 결정합니다. |  |
+| 비활성 간격 | `1`| number | V2 | 데이터 인입이 없는 상태가 지속될 때 오브젝트를 분할하는 기준 시간을 설정합니다.                | 설정된 시간 동안 데이터 인입이 없으면 현재 오브젝트가 업로드되며, 이후 새로 인입되는 데이터는 새로운 오브젝트에 작성됩니다. |
 
 ### 출력 예제
 

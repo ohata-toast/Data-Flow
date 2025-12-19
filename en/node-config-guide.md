@@ -2313,6 +2313,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Object size | `5242880` | number | V1, V2 |Set the size to be the basis for object splitting.   | Set when the object rotation policy is size_and_time or size |
 | ACL | `private` | enum | V1 | Enter ACL policy to set when object is uploaded. |  |
 | Additional Settings | - | Hash | V1 | Enter additional settings to connect to S3. | [Guide](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
+| Inactivity Interval                | `1`                                                  | number | V2       | Sets the reference time for splitting an object when there is no data inflow for a set period of time.               | If there is no data inflow for the set period of time, the current object will be uploaded, and any new data inflow will be written in a new object.                                                     |
 
 ### Output example exercise
 
