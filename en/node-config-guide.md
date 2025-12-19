@@ -1216,6 +1216,49 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 }
 ```
 
+## Filter > Convert
+
+### Node Description
+
+* A node to convert a data type in a certain field.
+
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+|-------|-------|----|
+| V1    | X     |    |
+| V2    | O     |    |
+
+### Property Description
+
+| Property name   | Default value | Data type    | Supported engine type | Description                                                                          | Note |
+|-------|-----|--------|----------|-----------------------------------------------------------------------------|----|
+| Target field | -   | string | V2       | Enter the target field to convert the data type.                                                   |    |
+| Conversion type | -   | enum   | V2       | Select the data type to convert. <br/> * Data type: `STRING, INTEGER, FLOAT, DOUBLE, BOOLEAN` |    |
+
+### Data Conversion Example
+
+#### Condition
+
+* Target field -> `message`
+* Conversion type -> `INTEGER`
+
+#### Input Message
+
+```js
+{
+    "message": "2025"
+}
+```
+
+#### Output Message
+
+```js
+{
+    "message": 2025
+}
+```
+
 ## Filter > Split
 
 ### Node Description
@@ -1226,9 +1269,9 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 ### Supported Engine Type
 
 | Engine Type | Support | Note |
-| --- | --- | --- |
-| V1 | O |  |
-| V2 | X |  |
+|-------|-------|----|
+| V1    | O     |    |
+| V2    | X     |    |
 
 ### Property Description
 
