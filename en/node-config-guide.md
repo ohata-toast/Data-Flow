@@ -1141,17 +1141,18 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Property name | Default value | Data type | Supported engine type | Description | Others |
 | --- | --- | --- | --- | --- | --- |
 | Source Field | - | string | V1, V2 | Enter a field name to get strings. |  |
-| Formats | - | array of strings | V1, V2 | Enter formats to get strings. | The pre-defined formats are as follows.<br/>ISO8601, UNIX, UNIX_MS, TAI64N (V2 미지원) | |
-| Locale | - | string | V1, V2 | Enter a locale to use for string analysis. | e.g. en, en-US, ko-kr |
-| Field to be stored | - | string | V1, V2 | Enter a field name to store the result of parsing data strings. |  |
-| Failure tag | - | array of strings | V1 | Enter the tag name to define if data string parsing fails. |  |
-| Time zone | - | string | V1, V2 | Enter the time zone for the date. |  |
+| Formats | - | array of strings | V1, V2 | Enter formats to get strings. | The pre-defined formats are as follows.<br/>ISO8601, UNIX, UNIX_MS, TAI64N (V2 unsupported) | |
+| Locale | * V1: - <br/> * V2: `ko_KR` | string | V1, V2 | Enter a locale to use for string analysis. | e.g. en, en-US, ko-kr |
+| Field to be stored | * V1: `@timestamp`<br/> * V2: - | string | V1, V2 | Enter a field name to store the result of parsing data strings. |  |
+| Failure tag | `_dateparsefailure` | array of strings | V1 | Enter the tag name to define if data string parsing fails. |  |
+| Time zone | * V1: - <br/> * V2: `Asia/Seoul` | string | V1, V2 | Enter the time zone for the date. | e.g. Asia/Seoul  |
 
 ### Examples of Date String Parsing
 
 #### Condition
 
-* Match → `["message" , "yyyy-MM-dd HH:mm:ssZ", "ISO8601"]`
+* Source field -> `message`
+* Format -> `["yyyy-MM-dd HH:mm:ssZ", "ISO8601"]`
 * Field to be stored → `time`
 * Time zone → `Asia/Seoul`
 
@@ -1215,6 +1216,49 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 }
 ```
 
+## Filter > Convert
+
+### Node Description
+
+* A node to convert a data type in a certain field.
+
+### Supported Engine Type
+
+| Engine Type | Support | Note |
+|-------|-------|----|
+| V1    | X     |    |
+| V2    | O     |    |
+
+### Property Description
+
+| Property name   | Default value | Data type    | Supported engine type | Description                                                                          | Note |
+|-------|-----|--------|----------|-----------------------------------------------------------------------------|----|
+| Target field | -   | string | V2       | Enter the target field to convert the data type.                                                   |    |
+| Conversion type | -   | enum   | V2       | Select the data type to convert. <br/> * Data type: `STRING, INTEGER, FLOAT, DOUBLE, BOOLEAN` |    |
+
+### Data Conversion Example
+
+#### Condition
+
+* Target field -> `message`
+* Conversion type -> `INTEGER`
+
+#### Input Message
+
+```js
+{
+    "message": "2025"
+}
+```
+
+#### Output Message
+
+```js
+{
+    "message": 2025
+}
+```
+
 ## Filter > Split
 
 ### Node Description
@@ -1225,9 +1269,9 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 ### Supported Engine Type
 
 | Engine Type | Support | Note |
-| --- | --- | --- |
-| V1 | O |  |
-| V2 | X |  |
+|-------|-------|----|
+| V1    | O     |    |
+| V2    | X     |    |
 
 ### Property Description
 
@@ -2057,8 +2101,9 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Prefix Time Application fallback  | `_prefix_datetime_parse_failure`                     | string | V1, V2 | Enter a prefix to replace if the prefix time application fails. |  |
 | Encoding | `none`                                               | enum | V1 | Enter whether to encode or not . gzip encoding is available. |  |
 | Object Rotation Policy | `size_and_time`                                      | enum | V1 | Determines object creation rules. | size_and_time – Use object size and time to decide<br/>size – Use object size to decide <br/>Time – Use time to decide<br/>Engine type V2 supports size\_and\_time only |
-| Reference Time | `15`                                                 | number | V1, V2 | Set the time to be the basis for object splitting.   | Set if object rotation policy is size_and_time or time |
+| Reference Time | `1`                                                 | number | V1, V2 | Set the time to be the basis for object splitting.   | Set if object rotation policy is size_and_time or time |
 | Object size | `5242880`                                            | number | V1, V2 | Set the size (unit: byte) to be the basis for object splitting.   | Set when object rotation policy is size_and_time or size |
+| Inactivity Interval                | `1`                                                  | number | V2       | Sets the reference time for splitting an object when there is no data inflow for a set period of time.                | If there is no data inflow for the set period of time, the current object will be uploaded, and any new data inflow will be written in a new object.                                                     |
 
 ### Json Codec Output example exercise
 
