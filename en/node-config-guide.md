@@ -2481,7 +2481,21 @@ Hello World! data-flow-01
 
 | Property name | Default value | Data type | Supported engine type | Description | Others |
 | --- | --- | --- | --- | --- | --- |
-| conditional sentence. | - | string | V1, V2 | Enter the conditions for message filtering. |Conditional syntax varies depending on the engine type. See the examples below.|
+| conditional sentence. | - | string | V1, V2 | Enter the conditions for message filtering. | Conditional syntax varies depending on the engine type. See the examples below.|
+
+#### Available operators
+* If the engine type is V1
+    * Comparison: ==, !=, <, >, <=, >=
+    * Regular expression: =~, !~ (tests the string on the left with the pattern given on the right)
+    * Inclusion: in, not in
+    * Logical operators: and, or, nand, xor
+    * Negation operators: !
+* If the engine type is V2
+    * Comparison: ==, !=, <, >, <=, >=
+    * Regular expression: =~ (tests the string on the left with the pattern given on the right)
+    * Inclusion: =~, !~, .contains()
+    * Logical operators: &&, ||, not
+    * Negation operators: !, not
 
 ### Filtering example exercise - first depth field reference
 
