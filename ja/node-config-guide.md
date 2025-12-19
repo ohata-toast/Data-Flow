@@ -1139,7 +1139,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 |-----------|---------------------------------|------------------|-------------|---------------------------------|---------------------------------------------------------|
 | ソースフィールド  | -                               | string           | V1, V2      | 文字列を取得するためのフィールド名を入力します。        |                                                         |
 | 形式        | -                               | array of strings | V1, V2      | 文字列を取得するための形式を入力します。            | 定義済みの形式は次のとおりです。<br/>ISO8601、UNIX、UNIX_MS、TAI64N(V2未対応) |
-| Locale    | * V1: - <br> * V2: `ko_KR`      | string           | V1, V2      | Date文字列分析のために使用するLocaleを入力します。  | 例: en、en-US、ko-kr                                       |
+| Locale    | * V1: - <br> * V2: `ko_KR`      | string           | V1, V2      | Date文字列分析のために使用するLocaleを入力します。  | 例: en、en-US、ko_KR                                       |
 | 保存するフィールド | * V1: `@timestamp`<br/> * V2: - | string           | V1, V2      | Date文字列解析結果を保存するフィールド名を入力します。   |                                                         |
 | 失敗タグ      | `_dateparsefailure`             | array of strings | V1          | Date文字列解析に失敗した場合に定義するタグ名を入力します。 |                                                         |
 | タイムゾーン    | * V1: - <br> * V2: `Asia/Seoul` | string           | V1, V2      | 日付のタイムゾーンを入力します。                | 例: Asia/Seoul                                           |
