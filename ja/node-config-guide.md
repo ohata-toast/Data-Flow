@@ -1002,7 +1002,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | ソースフィールド   | * V1: message<br>* V2: - | string           | V1, V2      | CSV解析するフィールド名を入力します。                            |                         |
 | スキーマ       | -                        | hash             | V1, V2      | 各カラムの名前とデータ型をdictionary形式で入力します。                | `エンジンタイプによるスキーマ入力方法` 参照 |
 | 上書き        | false                    | boolean          | V2          | trueの場合、CSV解析結果が保存するフィールドや既存フィールドと重複すれば上書きします。  |                         |
-| 元フィールド削除   | false                    | boolean          | V2          | CSV解析が完了すればソースフィールドを削除します。解析が失敗すれば維持します。        |                         |
+| 元フィールド削除   | false                    | boolean          | V2          | CSV解析が完了すればソースフィールドを削除します。解析が失敗すれば維持します。        |                         |                       |
 
 #### エンジンタイプによるスキーマ入力方法
 * エンジンタイプがV1の場合
@@ -1129,20 +1129,20 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 ### サポートエンジンタイプ
 
 | エンジンタイプ | サポート可否 | 備考 |
-| --- | --- | --- |
-| V1 | O |  |
-| V2 | O |  |
+|-------|-------|----|
+| V1    | O     |    |
+| V2    | O     |    |
 
 ### プロパティの説明
 
-| プロパティ名    | デフォルト値                          | データ型             | サポートエンジンタイプ | 説明                              | 備考                                                      |
-|-----------|---------------------------------|------------------|-------------|---------------------------------|---------------------------------------------------------|
-| ソースフィールド  | -                               | string           | V1, V2      | 文字列を取得するためのフィールド名を入力します。        |                                                         |
-| 形式        | -                               | array of strings | V1, V2      | 文字列を取得するための形式を入力します。            | 定義済みの形式は次のとおりです。<br/>ISO8601、UNIX、UNIX_MS、TAI64N(V2未対応) |
-| Locale    | * V1: - <br> * V2: `ko_KR`      | string           | V1, V2      | Date文字列分析のために使用するLocaleを入力します。  | 例: en、en-US、ko_KR                                       |
-| 保存するフィールド | * V1: `@timestamp`<br/> * V2: - | string           | V1, V2      | Date文字列解析結果を保存するフィールド名を入力します。   |                                                         |
-| 失敗タグ      | `_dateparsefailure`             | array of strings | V1          | Date文字列解析に失敗した場合に定義するタグ名を入力します。 |                                                         |
-| タイムゾーン    | * V1: - <br> * V2: `Asia/Seoul` | string           | V1, V2      | 日付のタイムゾーンを入力します。                | 例: Asia/Seoul                                           |
+| プロパティ名    | デフォルト値                            | データ型            | サポートエンジンタイプ | 説明                                   | 備考                                                              |
+|--------|----------------------------------|------------------|----------|--------------------------------------|-----------------------------------------------------------------|
+| ソースフィールド | -                                | string           | V1, V2   | 文字列を取得するためのフィールド名を入力します。                |                                                                 |
+| 形式     | -                                | array of strings | V1, V2   | 文字列を取得するための形式を入力します。                | 事前定義された形式は次のとおりです。<br/>ISO8601, UNIX, UNIX_MS, TAI64N(V2未対応) |
+| Locale | * V1: - <br/> * V2: `ko_KR`      | string           | V1, V2   | Date文字列の分析に使用するLocaleを入力します。        | 例: en, en-US, ko_KR                                             |
+| 保存するフィールド | * V1: `@timestamp`<br/> * V2: -  | string           | V1, V2   | Date文字列のパース結果を保存するフィールド名を入力します。      |                                                                 |
+| 失敗タグ  | `_dateparsefailure`              | array of strings | V1       | Date文字列のパースに失敗した場合に定義するタグ名を入力します。 |                                                                 |
+| タイムゾーン | * V1: - <br/> * V2: `Asia/Seoul` | string           | V1, V2   | 日付のタイムゾーンを入力します。                      | 例: Asia/Seoul                                                   |
 
 ### Date文字列の解析例
 
@@ -1213,6 +1213,49 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 }
 ```
 
+## Filter > Convert
+
+### ノードの説明
+
+* 特定フィールドのデータタイプを変換するノードです。
+
+### サポートエンジンタイプ
+
+| エンジンタイプ | サポート可否 | 備考 |
+|-------|-------|----|
+| V1    | X     |    |
+| V2    | O     |    |
+
+### プロパティの説明
+
+| プロパティ名   | デフォルト値 | データ型    | サポートエンジンタイプ | 説明                                                                          | 備考 |
+|-------|-----|--------|----------|-----------------------------------------------------------------------------|----|
+| 対象フィールド | -   | string | V2       | データタイプを変換する対象フィールドを入力します。                                             |    |
+| 変換タイプ | -   | enum   | V2       | 変換するデータタイプを選択します。 <br/> * 提供タイプ: `STRING, INTEGER, FLOAT, DOUBLE, BOOLEAN` |    |
+
+### データ変換例
+
+#### 条件
+
+* 対象フィールド -> `message`
+* 変換タイプ -> `INTEGER`
+
+#### 入力メッセージ
+
+```js
+{
+    "message": "2025"
+}
+```
+
+#### 出力メッセージ
+
+```js
+{
+    "message": 2025
+}
+```
+
 ## Filter > Split
 
 ### ノードの説明
@@ -1223,9 +1266,9 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 ### サポートエンジンタイプ
 
 | エンジンタイプ | サポート可否 | 備考 |
-| --- | --- | --- |
-| V1 | O |  |
-| V2 | X |  |
+|-------|-------|----|
+| V1    | O     |    |
+| V2    | X     |    |
 
 ### プロパティの説明
 
@@ -2049,13 +2092,14 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | アクセスキー | -                                                    | string | V1, V2 | S3 API認証情報アクセスキーを入力します。 |  |
 | Prefix | `/year=%{+YYYY}/month=%{+MM}/day=%{+dd}/hour=%{+HH}` | string | V1, V2 | オブジェクトアップロード時に名前の前に付けるプレフィックスを入力します。<br/>フィールドまたは時間形式を入力できます。 | [使用可能な時間形式](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html) |
 | Prefix時間フィールド | * V1: `@timestamp` <br/> * V2: -                     | string | V1, V2 | Prefixに適用する時間フィールドを入力します。 |  |
-| Prefix時間フィールドタイプ | `DATE_FILTER_RESULT`                                 | enum | V1, V2 | Prefixに適用する時間フィールドのタイプを入力します。 | エンジンタイプV2はDATE_FILTER_RESULTタイプのみ可能(今後他のタイプサポート予定) |
-| Prefixタイムゾーン | `UTC`                                                | string | V1, V2 | Prefixに適用する時間フィールドのタイムゾーンを入力します。 |  |
-| Prefix時間適用fallback  | `_prefix_datetime_parse_failure`                     | string | V1, V2 | Prefix時間適用に失敗した場合に代替するPrefixを入力します。 |  |
-| エンコーディング | `none`                                               | enum | V1 | エンコーディング可否を入力します。gzipエンコーディングを使用できます。 |  |
+| Prefix時間フィールドタイプ | `DATE_FILTER_RESULT`                                | enum | V1, V2 | Prefixに適用する時間フィールドのタイプを入力します。 | エンジンタイプV2はDATE_FILTER_RESULTタイプのみ可能(今後他のタイプサポート予定) |
+| Prefixタイムゾーン | `UTC`                                               | string | V1, V2 | Prefixに適用する時間フィールドのタイムゾーンを入力します。 |  |
+| Prefix時間適用fallback  | `_prefix_datetime_parse_failure`                    | string | V1, V2 | Prefix時間適用に失敗した場合に代替するPrefixを入力します。 |  |
+| エンコーディング | `none`                                              | enum | V1 | エンコーディング可否を入力します。gzipエンコーディングを使用できます。 |  |
 | オブジェクトローテーションポリシー | `size_and_time`                                      | enum | V1 | オブジェクトの生成ルールを決定します。 | size\_and\_time: オブジェクトのサイズと時間を利用して決定<br/>size: オブジェクトのサイズを利用して決定<br/>time: 時間を利用して決定<br/>エンジンタイプV2はsize\_and\_timeのみサポート |
 | 基準時刻 | `1`                                                  | number | V1, V2 | オブジェクトを分割する基準となる時間を設定します。 | オブジェクトローテーションポリシーがsize\_and\_timeまたはtimeの場合設定 |
 | 基準オブジェクトサイズ | `5242880`                                            | number | V1, V2 | オブジェクトを分割する基準となるサイズ(単位： byte)を設定します。 | オブジェクトローテーションポリシーがsize\_and\_timeまたはsizeの場合設定 |
+| 非アクティブ間隔            | `1`                                                  | number | V2       | データの流入がない状態が続いた際に、オブジェクトを分割する基準時間を設定します。                  | 設定された時間の間、データの流入がないと現在のオブジェクトがアップロードされ、その後新しく流入するデータは新しいオブジェクトに作成されます。                                                    |
 
 ### jsonコーデックの出力例
 
