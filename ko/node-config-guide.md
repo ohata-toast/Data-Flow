@@ -399,6 +399,15 @@
 | 추가 설정         | -                              | hash    | V1       | S3 서버와 연결할 때 사용할 추가적인 설정을 입력합니다.                                                                     | [가이드](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html)                                                                                                                                    |
 | 경로 방식 요청      | `false`                        | boolean | V2       | 경로 방식 요청을 사용할지 여부를 결정합니다.                                                                            |                                                                                                                                                                                                              |
 
+!!! danger "주의"
+    * (Amazon) S3 노드를 이용하여 NHN Cloud Object Storage에 연결할 경우 아래와 같이 속성 설정을 해야합니다.
+    * 엔진 타입이 V1인 경우
+        * **추가 설정**을 이용해 force_path_style 값을 true로 설정
+        * 입력 에시: `{"force_path_style" : true}`
+    * 엔진 타입이 V2인 경우
+        * **경로 방식 요청**을 `true`로 설정
+
+
 ### 메타데이터 필드 사용법
 
 * `메타데이터 포함 여부` 설정 활성화 시 메타데이터 필드가 생성되나, 별도로 일반 필드로 주입하는 작업을 거치지 않는다면 Sink 플러그인에서 노출하지 않습니다.
@@ -2171,6 +2180,15 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 추가 설정 | - | hash | V1 | S3에 연결하기 위한 추가 설정을 입력합니다. | [가이드](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
 | 경로 방식 요청 | `false` | boolean | V2 | 경로 방식 요청을 사용할지 여부를 결정합니다. |  |
 | 비활성 간격 | `1`| number | V2 | 데이터 인입이 없는 상태가 지속될 때 오브젝트를 분할하는 기준 시간을 설정합니다.                | 설정된 시간 동안 데이터 인입이 없으면 현재 오브젝트가 업로드되며, 이후 새로 인입되는 데이터는 새로운 오브젝트에 작성됩니다. |
+
+!!! danger "주의"
+    * (Amazon) S3 노드를 이용하여 NHN Cloud Object Storage에 연결할 경우 아래와 같이 속성 설정을 해야합니다.
+    * 엔진 타입이 V1인 경우
+        * **추가 설정**을 이용해 force_path_style 값을 true로 설정
+        * 입력 에시: `{"force_path_style" : true}`
+    * 엔진 타입이 V2인 경우
+        * **경로 방식 요청**을 `true`로 설정
+
 
 ### 코덱별 출력 예제
 
