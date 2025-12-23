@@ -192,23 +192,11 @@
 
 ### 코덱별 메시지 인입
 
-* Log & Crash Search는 기본적으로 ```JSON``` 형식의 데이터를 다룹니다.
-* 코덱을 선택하지 않거나 plain인 경우 Log & Crash Search 로그에 대한 JSON 문자열을 `message`라는 필드로 포함하게 됩니다.
+* Log & Crash Search는 기본적으로 JSON 형식의 데이터를 다룹니다.
 * Log & Crash Search 로그의 각 필드를 활용하고 싶다면 json 코덱을 사용하는 것이 좋습니다.
 
-#### 미선택 혹은 plain
-
-``` js
-{
-    "message":"{\\\"log\\\":\\\"&\\\", \\\"Crash\\\": \\\"Search\\\", \\\"Result\\\": \\\"Data\\\"}"
-}
-```
-
-#### json
-
-``` js
-{"log":"&", "Crash": "Search", "Result": "Data"}
-```
+**지원 코덱:**
+* [json 코덱](./codec-config-guide.md#json-코덱) - JSON 형식 데이터 파싱
 
 ## Source > (NHN Cloud) CloudTrail
 
@@ -246,23 +234,11 @@
 
 ### 코덱별 메시지 인입
 
-* CloudTrail은 기본적으로 ```JSON``` 형식의 데이터를 다루고 있습니다.
-* 코덱을 선택하지 않거나 plain인 경우 CloudTrail 데이터에 대한 JSON 문자열을 `message`라는 필드로 포함하게 됩니다.
+* CloudTrail은 기본적으로 JSON 형식의 데이터를 다룹니다.
 * CloudTrail 데이터의 각 필드를 활용하고 싶다면 json 코덱을 사용하는 것이 좋습니다.
 
-#### 미선택 혹은 plain
-
-``` js
-{
-    "message":"{\\\"log\\\":\\\"CloudTrail\\\", \\\"Result\\\": \\\"Data\\\", \\\"@timestamp\\\": \\\"2023-12-06T08:09:24.887Z\\\", \\\"@version\\\": \\\"1\\\"}"
-}
-```
-
-#### json
-
-``` js
-{"log":"CloudTrail", "Result": "Data", "@timestamp": "2023-12-06T08:09:24.887Z", "@version":"1"}
-```
+**지원 코덱:**
+* [json 코덱](./codec-config-guide.md#json-코덱) - JSON 형식 데이터 파싱
 
 ## Source > (NHN Cloud) Object Storage
 
@@ -358,19 +334,10 @@
 
 ### 코덱별 메시지 인입
 
-#### 미선택 혹은 plain
-
-``` js
-{
-    "message":"{\\\"S3\\\":\\\"Storage\\\", \\\"Read\\\": \\\"Object\\\", \\\"Result\\\": \\\"Data\\\"}"
-}
-```
-
-#### json
-
-``` js
-{"S3":"Storage", "Read": "Object", "Result": "Data"}
-```
+**지원 코덱:**
+* [plain 코덱](./codec-config-guide.md#plain-코덱) - 원본 데이터 문자열 저장
+* [json 코덱](./codec-config-guide.md#json-코덱) - JSON 형식 데이터 파싱
+* [line 코덱](./codec-config-guide.md#line-코덱) - 행 단위 메시지 처리 (엔진 V1만 지원)
 
 ## Source > (Amazon) S3
 
@@ -474,19 +441,10 @@
 
 ### 코덱별 메시지 인입
 
-#### 미선택 혹은 plain
-
-``` js
-{
-    "message":"{\\\"S3\\\":\\\"Storage\\\", \\\"Read\\\": \\\"Object\\\", \\\"Result\\\": \\\"Data\\\"}"
-}
-```
-
-#### json
-
-``` js
-{"S3":"Storage", "Read": "Object", "Result": "Data"}
-```
+**지원 코덱:**
+* [plain 코덱](./codec-config-guide.md#plain-코덱) - 원본 데이터 문자열 저장
+* [json 코덱](./codec-config-guide.md#json-코덱) - JSON 형식 데이터 파싱
+* [line 코덱](./codec-config-guide.md#line-코덱) - 행 단위 메시지 처리 (엔진 V1만 지원)
 
 ## Source > (Apache) Kafka
 
@@ -506,41 +464,41 @@
 
 !!! danger "주의"
     * Kafka 노드는 BATCH 모드를 지원하지 않습니다.
-    * V2 엔진 타입 Kafka 노드는 추후 지원 예정입니다.
 
 ### 속성 설명
 
-| 속성명              | 기본값                                                        | 자료형     | 지원 엔진 타입 | 설명                                                                                                       | 비고                                                                                                                                                                                                                                                                                                                                                   |
-|------------------|------------------------------------------------------------|---------|----------|----------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 브로커 서버 목록        | `localhost:9092`                                           | string  | V1       | Kafka 브로커 서버를 입력합니다. 서버가 여러 대일 경우 콤마(`,`)로 구분합니다.                                                        | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `bootstrap.servers` 속성 참고 <br/>예: 10.100.1.1:9092,10.100.1.2:9092                                                                                                                                                                                                        |
-| 컨슈머 그룹 아이디       | `dataflow`                                                 | string  | V1       | Kafka Consumer Group을 식별하는 ID를 입력합니다.                                                                    | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `group.id` 속성 참고                                                                                                                                                                                                                                                         |
-| 내부 토픽 제외 여부      | `true`                                                     | boolean | V1       | __consumer_offsets와 같은 내부 토픽을 제외합니다.                                                                     | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `exclude.internal.topics` 속성 참고 <br/>수신 대상에서 `__consumer_offsets`와 같은 내부 토픽을 제외합니다.                                                                                                                                                                                      |
-| 토픽 패턴            | -                                                          | string  | V1       | 메시지를 수신할 Kafka 토픽 패턴을 입력합니다.                                                                             | 예: `*-messages`                                                                                                                                                                                                                                                                                                                                      |
-| 클라이언트 아이디        | `dataflow`                                                 | string  | V1       | Kafka Consumer를 식별하는 ID를 입력합니다.                                                                          | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `client.id` 속성 참고                                                                                                                                                                                                                                                        |
-| 파티션 할당 정책        | -                                                          | string  | V1       | Kafka에서 메시지 수신 시 컨슈머 그룹에 어떻게 파티션을 할당할지 결정합니다.                                                            | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `partition.assignment.strategy` 속성 참고 <br/>org.apache.kafka.clients.consumer.RangeAssignor<br/>org.apache.kafka.clients.consumer.RoundRobinAssignor<br/>org.apache.kafka.clients.consumer.StickyAssignor<br/>org.apache.kafka.clients.consumer.CooperativeStickyAssignor |
-| 오프셋 설정           | `latest`                                                   | enum    | V1       | 컨슈머 그룹의 오프셋을 설정하는 기준을 입력합니다.                                                                             | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `auto.offset.reset` 속성 참고 <br/>아래 설정 모두 컨슈머 그룹이 이미 존재하는 경우 기존 오프셋을 유지합니다.<br/>none: 컨슈머 그룹이 없으면 오류를 반환합니다.<br/>earliest: 컨슈머 그룹이 없으면 파티션의 가장 오래된 오프셋으로 초기화합니다.<br/>latest: 컨슈머 그룹이 없으면 파티션의 가장 최근 오프셋으로 초기화합니다.                                                          |
-| 오프셋 커밋 주기        | `5000`                                                     | number  | V1       | 컨슈머 그룹의 오프셋을 갱신할 주기를 입력합니다.                                                                              | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `auto.commit.internal.ms` 속성 참고                                                                                                                                                                                                                                          |
-| 오프셋 자동 커밋 여부     | `true`                                                     | boolean | V1       | 컨슈머 오프셋을 자동으로 갱신할지를 결정합니다.                                                                               | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `enable.auto.commit` 속성 참고                                                                                                                                                                                                                                               |
-| 키 역직렬화 유형        | `org.apache.kafka.common.serialization.StringDeserializer` | string  | V1       | 수신하는 메시지의 키를 직렬화할 방법을 입력합니다.                                                                             | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `key.deserializer` 속성 참고                                                                                                                                                                                                                                                 |
-| 메시지 역직렬화 유형      | `org.apache.kafka.common.serialization.StringDeserializer` | string  | V1       | 수신하는 메시지의 값을 직렬화할 방법을 입력합니다.                                                                             | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `value.deserializer` 속성 참고                                                                                                                                                                                                                                               |
-| 메타데이터 생성 여부      | `false`                                                    | boolean | V1       | 속성값이 true일 경우 메시지에 대한 메타데이터 필드를 생성합니다. 메타데이터 필드를 Sink 플러그인에 노출하기 위해서는 filter 노드 유형을 조합해야 합니다(하단 가이드 참조). | 생성되는 필드는 다음과 같습니다.<br/>topic: 메시지를 수신한 토픽<br/>consumer\_group: 메시지를 수신하는 데 사용한 컨슈머 그룹 아이디<br/>partition: 메시지를 수신한 토픽의 파티션 번호<br/>offset: 메시지를 수신한 파티션의 오프셋<br/>key: 메시지 키를 포함하는 ByteBuffer                                                                                                                                                           |
-| Fetch 최소 크기      | -                                                          | number  | V1       | 한 번의 fetch 요청으로 가져올 데이터의 최소 크기를 입력합니다.                                                                   | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `fetch.min.bytes` 속성 참고                                                                                                                                                                                                                                                  |
-| 전송 버퍼 크기         | -                                                          | number  | V1       | 데이터를 전송하는 데 사용하는 TCP send 버퍼의 크기(byte)를 입력합니다.                                                           | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `send.buffer.bytes` 속성 참고                                                                                                                                                                                                                                                |
-| 재시도 요청 주기        | -                                                          | number  | V1       | 전송 요청이 실패했을 때 재시도할 주기(ms)를 입력합니다.                                                                        | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `retry.backoff.ms` 속성 참고                                                                                                                                                                                                                                                 |
-| 순환 중복 검사         | `true`                                                     | enum    | V1       | 메시지의 CRC를 검사합니다.                                                                                         | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `check.crcs` 속성 참고                                                                                                                                                                                                                                                       |
-| 서버 재연결 주기        | -                                                          | number  | V1       | 브로커 서버에 연결이 실패했을 때 재시도할 주기를 입력합니다.                                                                       | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `reconnect.backoff.ms` 속성 참고                                                                                                                                                                                                                                             |
-| Poll 타임아웃        | `100`                                                      | number  | V1       | 토픽에서 새로운 메시지를 가져오는 요청에 대한 타임아웃(ms)을 입력합니다.                                                               |                                                                                                                                                                                                                                                                                                                                                      |
-| 파티션당 Fetch 최대 크기 | -                                                          | number  | V1       | 파티션당 한 번의 fetch 요청으로 가져올 최대 크기를 입력합니다.                                                                   | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `max.partition.fetch.bytes` 속성 참고                                                                                                                                                                                                                                        |
-| 서버 요청 타임아웃       | -                                                          | number  | V1       | 전송 요청에 대한 타임아웃(ms)을 입력합니다.                                                                               | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `request.timeout.ms` 속성 참고                                                                                                                                                                                                                                               |
-| TCP 수신 버퍼 크기     | -                                                          | number  | V1       | 데이터를 읽는 데 사용하는 TCP receive 버퍼의 크기(byte)를 입력합니다.                                                          | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `receive.buffer.bytes` 속성 참고                                                                                                                                                                                                                                             |
-| 세션 타임아웃          | -                                                          | number  | V1       | 컨슈머의 세션 타임아웃(ms)을 입력합니다.<br/>컨슈머가 해당 시간 안에 heartbeat를 보내지 못할 경우 컨슈머 그룹에서 제외합니다.                          | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `session.timeout.ms` 속성 참고                                                                                                                                                                                                                                               |
-| 최대 poll 메시지 개수   | -                                                          | number  | V1       | 한 번의 poll 요청으로 가져올 최대 메시지 개수를 입력합니다.                                                                     | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `max.poll.records` 속성 참고                                                                                                                                                                                                                                                 |
-| 최대 poll 주기       | -                                                          | number  | V1       | poll 요청 간 최대 주기(ms)를 입력합니다.                                                                              | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `max.poll.interval.ms` 속성 참고                                                                                                                                                                                                                                             |
-| Fetch 최대 크기      | -                                                          | number  | V1       | 한 번의 fetch 요청으로 가져올 최대 크기를 입력합니다.                                                                        | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `fetch.max.bytes` 속성 참고                                                                                                                                                                                                                                                  |
-| Fetch 최대 대기 시간   | -                                                          | number  | V1       | `Fetch 최소 크기` 설정 만큼의 데이터가 모이지 않은 경우 fetch 요청을 보낼 대기 시간(ms)을 입력합니다.                                       | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `fetch.max.wait.ms` 속성 참고                                                                                                                                                                                                                                                |
-| 컨슈머 헬스체크 주기      | -                                                          | number  | V1       | 컨슈머가 heartbeat를 보내는 주기(ms)를 입력합니다.                                                                       | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `heartbeat.interval.ms` 속성 참고                                                                                                                                                                                                                                            |
-| 메타데이터 갱신 주기      | -                                                          | number  | V1       | 파티션, 브로커 서버 상태 등을 갱신할 주기(ms)를 입력합니다.                                                                     | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/producer-configs/)의 `metadata.max.age.ms` 속성 참고                                                                                                                                                                                                                                              |
-| IDLE 타임아웃        | -                                                          | number  | V1       | 데이터 전송이 없는 커넥션을 닫을 대기 시간(ms)을 입력합니다.                                                                     | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `connections.max.idle.ms` 속성 참고                                                                                                                                                                                                                                          |
+| 속성명              | 기본값                                                        | 자료형              | 지원 엔진 타입 | 설명                                                                                                       | 비고                                                                                                                                                                                                                                                                                                                                                   |
+|------------------|------------------------------------------------------------|------------------|----------|----------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 브로커 서버 목록        | `localhost:9092`                                           | string           | V1       | Kafka 브로커 서버를 입력합니다. 서버가 여러 대일 경우 콤마(`,`)로 구분합니다.                                                        | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `bootstrap.servers` 속성 참고 <br/>예: 10.100.1.1:9092,10.100.1.2:9092                                                                                                                                                                                                        |
+| 컨슈머 그룹 아이디       | `dataflow`                                                 | string           | V1       | Kafka Consumer Group을 식별하는 ID를 입력합니다.                                                                    | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `group.id` 속성 참고                                                                                                                                                                                                                                                         |
+| 토픽 목록            | `dataflow`                                                 | array of strings | V1       | 메시지를 수신할 Kafka 토픽 목록을 입력합니다.                                                                             |
+| 토픽 패턴            | -                                                          | string           | V1       | 메시지를 수신할 Kafka 토픽 패턴을 입력합니다.                                                                             | 예: `*-messages`                                                                                                                                                                                                                                                                                                                                      |
+| 내부 토픽 제외 여부      | `true`                                                     | boolean          | V1       | __consumer_offsets와 같은 내부 토픽을 제외합니다.                                                                     | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `exclude.internal.topics` 속성 참고 <br/>수신 대상에서 `__consumer_offsets`와 같은 내부 토픽을 제외합니다.                                                                                                                                                                                      |
+| 클라이언트 아이디        | `dataflow`                                                 | string           | V1       | Kafka Consumer를 식별하는 ID를 입력합니다.                                                                          | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `client.id` 속성 참고                                                                                                                                                                                                                                                        |
+| 파티션 할당 정책        | -                                                          | string           | V1       | Kafka에서 메시지 수신 시 컨슈머 그룹에 어떻게 파티션을 할당할지 결정합니다.                                                            | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `partition.assignment.strategy` 속성 참고 <br/>org.apache.kafka.clients.consumer.RangeAssignor<br/>org.apache.kafka.clients.consumer.RoundRobinAssignor<br/>org.apache.kafka.clients.consumer.StickyAssignor<br/>org.apache.kafka.clients.consumer.CooperativeStickyAssignor |
+| 오프셋 설정           | `latest`                                                   | enum             | V1       | 컨슈머 그룹의 오프셋을 설정하는 기준을 입력합니다.                                                                             | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `auto.offset.reset` 속성 참고 <br/>아래 설정 모두 컨슈머 그룹이 이미 존재하는 경우 기존 오프셋을 유지합니다.<br/>none: 컨슈머 그룹이 없으면 오류를 반환합니다.<br/>earliest: 컨슈머 그룹이 없으면 파티션의 가장 오래된 오프셋으로 초기화합니다.<br/>latest: 컨슈머 그룹이 없으면 파티션의 가장 최근 오프셋으로 초기화합니다.                                                          |
+| 오프셋 커밋 주기        | `5000`                                                     | number           | V1       | 컨슈머 그룹의 오프셋을 갱신할 주기를 입력합니다.                                                                              | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `auto.commit.internal.ms` 속성 참고                                                                                                                                                                                                                                          |
+| 오프셋 자동 커밋 여부     | `true`                                                     | boolean          | V1       | 컨슈머 오프셋을 자동으로 갱신할지를 결정합니다.                                                                               | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `enable.auto.commit` 속성 참고                                                                                                                                                                                                                                               |
+| 키 역직렬화 유형        | `org.apache.kafka.common.serialization.StringDeserializer` | string           | V1       | 수신하는 메시지의 키를 직렬화할 방법을 입력합니다.                                                                             | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `key.deserializer` 속성 참고                                                                                                                                                                                                                                                 |
+| 메시지 역직렬화 유형      | `org.apache.kafka.common.serialization.StringDeserializer` | string           | V1       | 수신하는 메시지의 값을 직렬화할 방법을 입력합니다.                                                                             | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `value.deserializer` 속성 참고                                                                                                                                                                                                                                               |
+| 메타데이터 생성 여부      | `false`                                                    | boolean          | V1       | 속성값이 true일 경우 메시지에 대한 메타데이터 필드를 생성합니다. 메타데이터 필드를 Sink 플러그인에 노출하기 위해서는 filter 노드 유형을 조합해야 합니다(하단 가이드 참조). | 생성되는 필드는 다음과 같습니다.<br/>topic: 메시지를 수신한 토픽<br/>consumer\_group: 메시지를 수신하는 데 사용한 컨슈머 그룹 아이디<br/>partition: 메시지를 수신한 토픽의 파티션 번호<br/>offset: 메시지를 수신한 파티션의 오프셋<br/>key: 메시지 키를 포함하는 ByteBuffer                                                                                                                                                           |
+| Fetch 최소 크기      | -                                                          | number           | V1       | 한 번의 fetch 요청으로 가져올 데이터의 최소 크기를 입력합니다.                                                                   | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `fetch.min.bytes` 속성 참고                                                                                                                                                                                                                                                  |
+| 전송 버퍼 크기         | -                                                          | number           | V1       | 데이터를 전송하는 데 사용하는 TCP send 버퍼의 크기(byte)를 입력합니다.                                                           | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `send.buffer.bytes` 속성 참고                                                                                                                                                                                                                                                |
+| 재시도 요청 주기        | -                                                          | number           | V1       | 전송 요청이 실패했을 때 재시도할 주기(ms)를 입력합니다.                                                                        | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `retry.backoff.ms` 속성 참고                                                                                                                                                                                                                                                 |
+| 순환 중복 검사         | `true`                                                     | enum             | V1       | 메시지의 CRC를 검사합니다.                                                                                         | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `check.crcs` 속성 참고                                                                                                                                                                                                                                                       |
+| 서버 재연결 주기        | -                                                          | number           | V1       | 브로커 서버에 연결이 실패했을 때 재시도할 주기를 입력합니다.                                                                       | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `reconnect.backoff.ms` 속성 참고                                                                                                                                                                                                                                             |
+| Poll 타임아웃        | `100`                                                      | number           | V1       | 토픽에서 새로운 메시지를 가져오는 요청에 대한 타임아웃(ms)을 입력합니다.                                                               |                                                                                                                                                                                                                                                                                                                                                      |
+| 파티션당 Fetch 최대 크기 | -                                                          | number           | V1       | 파티션당 한 번의 fetch 요청으로 가져올 최대 크기를 입력합니다.                                                                   | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `max.partition.fetch.bytes` 속성 참고                                                                                                                                                                                                                                        |
+| 서버 요청 타임아웃       | -                                                          | number           | V1       | 전송 요청에 대한 타임아웃(ms)을 입력합니다.                                                                               | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `request.timeout.ms` 속성 참고                                                                                                                                                                                                                                               |
+| TCP 수신 버퍼 크기     | -                                                          | number           | V1       | 데이터를 읽는 데 사용하는 TCP receive 버퍼의 크기(byte)를 입력합니다.                                                          | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `receive.buffer.bytes` 속성 참고                                                                                                                                                                                                                                             |
+| 세션 타임아웃          | -                                                          | number           | V1       | 컨슈머의 세션 타임아웃(ms)을 입력합니다.<br/>컨슈머가 해당 시간 안에 heartbeat를 보내지 못할 경우 컨슈머 그룹에서 제외합니다.                          | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `session.timeout.ms` 속성 참고                                                                                                                                                                                                                                               |
+| 최대 poll 메시지 개수   | -                                                          | number           | V1       | 한 번의 poll 요청으로 가져올 최대 메시지 개수를 입력합니다.                                                                     | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `max.poll.records` 속성 참고                                                                                                                                                                                                                                                 |
+| 최대 poll 주기       | -                                                          | number           | V1       | poll 요청 간 최대 주기(ms)를 입력합니다.                                                                              | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `max.poll.interval.ms` 속성 참고                                                                                                                                                                                                                                             |
+| Fetch 최대 크기      | -                                                          | number           | V1       | 한 번의 fetch 요청으로 가져올 최대 크기를 입력합니다.                                                                        | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `fetch.max.bytes` 속성 참고                                                                                                                                                                                                                                                  |
+| Fetch 최대 대기 시간   | -                                                          | number           | V1       | `Fetch 최소 크기` 설정 만큼의 데이터가 모이지 않은 경우 fetch 요청을 보낼 대기 시간(ms)을 입력합니다.                                       | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `fetch.max.wait.ms` 속성 참고                                                                                                                                                                                                                                                |
+| 컨슈머 헬스체크 주기      | -                                                          | number           | V1       | 컨슈머가 heartbeat를 보내는 주기(ms)를 입력합니다.                                                                       | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `heartbeat.interval.ms` 속성 참고                                                                                                                                                                                                                                            |
+| 메타데이터 갱신 주기      | -                                                          | number           | V1       | 파티션, 브로커 서버 상태 등을 갱신할 주기(ms)를 입력합니다.                                                                     | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/producer-configs/)의 `metadata.max.age.ms` 속성 참고                                                                                                                                                                                                                                              |
+| IDLE 타임아웃        | -                                                          | number           | V1       | 데이터 전송이 없는 커넥션을 닫을 대기 시간(ms)을 입력합니다.                                                                     | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/consumer-configs/)의 `connections.max.idle.ms` 속성 참고                                                                                                                                                                                                                                          |
 
 ### 메타데이터 필드 사용법
 
@@ -600,45 +558,13 @@
     // "[@metadata][kafka][timestamp]": "-1"
 }
 ```
-        
-### plain 코덱 예제
 
-#### 입력 메시지
+### 코덱별 메시지 인입
 
-```js
-{
-    "hello": "world!",
-    "hey": "foo"
-}
-```
-
-#### 출력 메시지
-
-```js
-{
-    "message": "{\"hello\":\"world\",\"hey\":\"foo\"}"
-}
-```
-
-### json 코덱 예제
-
-#### 입력 메시지
-
-```js
-{
-    "hello": "world!",
-    "hey": "foo"
-}
-```
-
-#### 출력 메시지
-
-```js
-{
-    "hello": "world!",
-    "hey": "foo"
-}
-```
+**지원 코덱:**
+* [plain 코덱](./codec-config-guide.md#plain-코덱) - 원본 데이터 문자열 저장
+* [json 코덱](./codec-config-guide.md#json-코덱) - JSON 형식 데이터 파싱
+* [line 코덱](./codec-config-guide.md#line-코덱) - 행 단위 메시지 처리
 
 ## Source > JDBC
 
@@ -690,15 +616,8 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 ### 코덱별 메시지 인입
 
-#### 미선택 혹은 plain
-
-``` js
-{
-    "id": 1,
-    "name": "dataflow",
-    "deleted": false
-}
-```
+**지원 코덱:**
+* [plain 코덱](./codec-config-guide.md#plain-코덱) - 원본 데이터 문자열 저장
 
 ## Filter
 
@@ -2076,9 +1995,13 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 ### 노드 설명
 
 * NHN Cloud의 Object Storage에 데이터를 업로드하는 노드입니다.
-* OBS에 작성되는 오브젝트는 기본적으로 다음 경로 포맷에 맞게 출력됩니다.
-    * `/{container_name}/year={yyyy}/month={MM}/day={dd}/hour={HH}/ls.s3.{uuid}.{yyyy}-{MM}-{dd}T{HH}.{mm}.part{seq_id}.txt`
+* 다른 설정 없이 기본 설정만으로 생성하면 오브젝트는 다음 경로 포맷에 맞게 출력됩니다.
+    * 엔진 V1: `/{bucket_name}/year={yyyy}/month={MM}/day={dd}/hour={HH}/ls.s3.{uuid}.{yyyy}-{MM}-{dd}T{HH}.{mm}.part{seq_id}.txt`
+    * 엔진 V2: `/{bucket_name}/year={yyyy}/month={MM}/day={dd}/hour={HH}/part-{uuid}-{file_counter}`   
 * 엔진 타입이 V2인 경우 제공하는 코덱은 json, line입니다. 추후 plain, parquet 코덱 등을 지원할 예정입니다.
+
+!!! tip "참고"
+    * 아래 `Prefix 입력 조건에 따른 출력 경로 예시`는 엔진 V1을 기준으로 작성되었습니다.
 
 ### 지원 엔진 타입
 
@@ -2089,122 +2012,30 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 ### 속성 설명
 
-| 속성명                   | 기본값                                                | 자료형    | 지원 엔진 타입 | 설명                                                           | 비고                                                                                                                         |
-|-----------------------|----------------------------------------------------|--------|----------|--------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
-| 리전                    | -                                                  | enum   | V1, V2   | Object Storage 상품의 리전을 입력합니다.                                |                                                                                                                            |
-| 버킷                    | -                                                  | string | V1, V2   | 버킷 이름을 입력합니다.                                                |                                                                                                                            |
-| 비밀 키                  | -                                                  | string | V1, V2   | S3 API 자격 증명 비밀 키를 입력합니다.                                    |                                                                                                                            |
-| 액세스 키                 | -                                                  | string | V1, V2   | S3 API 자격 증명 액세스 키를 입력합니다.                                   |                                                                                                                            |
+| 속성명                   | 기본값                                                  | 자료형    | 지원 엔진 타입 | 설명                                                           | 비고                                                                                                                         |
+|-----------------------|------------------------------------------------------|--------|----------|--------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
+| 리전                    | -                                                    | enum   | V1, V2   | Object Storage 상품의 리전을 입력합니다.                                |                                                                                                                            |
+| 버킷                    | -                                                    | string | V1, V2   | 버킷 이름을 입력합니다.                                                |                                                                                                                            |
+| 비밀 키                  | -                                                    | string | V1, V2   | S3 API 자격 증명 비밀 키를 입력합니다.                                    |                                                                                                                            |
+| 액세스 키                 | -                                                    | string | V1, V2   | S3 API 자격 증명 액세스 키를 입력합니다.                                   |                                                                                                                            |
 | Prefix                | `/year=%{+YYYY}/month=%{+MM}/day=%{+dd}/hour=%{+HH}` | string | V1, V2   | 오브젝트 업로드 시 이름 앞에 붙일 접두사를 입력합니다.<br/>필드 또는 시간 형식을 입력할 수 있습니다. | [사용 가능한 시간 형식](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html)                         |
-| Prefix 시간 필드          | * V1: `@timestamp` <br/> * V2: -                                        | string | V1, V2   | Prefix에 적용할 시간 필드를 입력합니다.                                    |                                                                                                                            |
-| Prefix 시간 필드 타입       | `DATE_FILTER_RESULT`                                | enum   | V1, V2   | Prefix에 적용할 시간 필드의 타입을 입력합니다.                                | 엔진 타입 V2는 DATE_FILTER_RESULT 타입만 가능(추후 다른 타입 지원 예정)                                                                        |
-| Prefix 시간대            | `UTC`                                               | string | V1, V2   | Prefix에 적용할 시간 필드의 타임 존을 입력합니다.                              |                                                                                                                            |
-| Prefix 시간 적용 fallback | `_prefix_datetime_parse_failure`                    | string | V1, V2   | Prefix 시간 적용에 실패한 경우 대체할 Prefix를 입력합니다.                      |                                                                                                                            |
-| 인코딩                   | `none`                                              | enum   | V1       | 인코딩 여부를 입력합니다. gzip 인코딩을 사용할 수 있습니다.                         |                                                                                                                            |
-| 오브젝트 로테이션 정책          | `size_and_time`                                    | enum   | V1       | 오브젝트의 생성 규칙을 결정합니다.                                          | size\_and\_time: 오브젝트의 크기와 시간을 이용하여 결정<br/>size: 오브젝트의 크기를 이용하여 결정<br/>time: 시간을 이용하여 결정<br/>엔진 타입 V2는 size\_and\_time만 지원 |
+| Prefix 시간 필드          | * V1: `@timestamp` <br/> * V2: -                     | string | V1, V2   | Prefix에 적용할 시간 필드를 입력합니다.                                    |                                                                                                                            |
+| Prefix 시간 필드 타입       | `DATE_FILTER_RESULT`                                 | enum   | V1, V2   | Prefix에 적용할 시간 필드의 타입을 입력합니다.                                | 엔진 타입 V2는 DATE_FILTER_RESULT 타입만 가능(추후 다른 타입 지원 예정)                                                                        |
+| Prefix 시간대            | `UTC`                                                | string | V1, V2   | Prefix에 적용할 시간 필드의 타임 존을 입력합니다.                              |                                                                                                                            |
+| Prefix 시간 적용 fallback | `_prefix_datetime_parse_failure`                     | string | V1, V2   | Prefix 시간 적용에 실패한 경우 대체할 Prefix를 입력합니다.                      |                                                                                                                            |
+| 인코딩                   | `none`                                               | enum   | V1       | 인코딩 여부를 입력합니다. gzip 인코딩을 사용할 수 있습니다.                         |                                                                                                                            |
+| 오브젝트 로테이션 정책          | `size_and_time`                                      | enum   | V1       | 오브젝트의 생성 규칙을 결정합니다.                                          | size\_and\_time: 오브젝트의 크기와 시간을 이용하여 결정<br/>size: 오브젝트의 크기를 이용하여 결정<br/>time: 시간을 이용하여 결정<br/>엔진 타입 V2는 size\_and\_time만 지원 |
 | 기준 시각                 | `1`                                                  | number | V1, V2   | 오브젝트를 분할할 기준이 될 시간을 설정합니다.                                   | 오브젝트 로테이션 정책이 size\_and\_time 또는 time인 경우 설정                                                                               |
 | 기준 오브젝트 크기            | `5242880`                                            | number | V1, V2   | 오브젝트를 분할할 기준이 될 크기(단위: byte)를 설정합니다.                         | 오브젝트 로테이션 정책이 size\_and\_time 또는 size인 경우 설정                                                                               |
 | 비활성 간격                | `1`                                                  | number | V2       | 데이터 인입이 없는 상태가 지속될 때 오브젝트를 분할하는 기준 시간을 설정합니다.                | 설정된 시간 동안 데이터 인입이 없으면 현재 오브젝트가 업로드되며, 이후 새로 인입되는 데이터는 새로운 오브젝트에 작성됩니다.                                                     |
 
-### json 코덱 출력 예제
+### 코덱별 출력 예제
 
-#### 조건
-
-* 리전 → `KR1`
-* 버킷 → `obs-test-container`
-* 액세스 키 → `******`
-* 비밀 키 → `******`
-
-#### 입력 메시지
-
-``` json
-{"hidden":"Hello DataFlow!","message":"Hello World", "@timestamp": "2022-11-21T07:49:20Z"}
-```
-
-#### 출력값
-
-* 경로
-
-```
-/obs-test-container/year=2022/month=11/day=21/hour=07/ls.s3.d53c090b-9718-4833-926a-725b20c85974.2022-11-21T07.49.part0.txt
-```
-
-* 출력 메시지
-
-``` json
-{"@timestamp":"2022-11-21T07:49:20.000Z","host":"755b65d82bd0","hidden":"Hello DataFlow!","@version":"1","sequence":0,"message":"Hello World"}
-```
-
-### plain 코덱 출력 예제 - message 필드 존재할 경우
-
-#### 조건
-
-* 리전 → `KR1`
-* 버킷 → `obs-test-container`
-* 액세스 키 → `******`
-* 비밀 키 → `******`
-
-#### 입력 메시지
-
-``` json
-{
-    "message": "Hello World!",
-    "hidden": "Hello DataFlow!",
-    "@timestamp": "2022-11-21T07:49:20Z"
-}
-```
-
-#### 출력값
-
-* 경로
-
-```
-/obs-test-container/year=2022/month=11/day=21/hour=07/ls.s3.d53c090b-9718-4833-926a-725b20c85974.2022-11-21T07.49.part0.txt
-```
-
-* 출력 메시지
-
-```
-2022-11-21T07:49:20.000Z e0e40e03dd94 Hello World
-```
-
-### plain 코덱 출력 예제 - message 필드 존재하지 않을 경우
-
-#### 조건
-
-* 리전 → `KR1`
-* 버킷 → `obs-test-container`
-* 액세스 키 → `******`
-* 비밀키 → `******`
-
-#### 입력 메시지
-
-``` json
-{
-    "hidden": "Hello DataFlow!",
-    "@timestamp": "2022-11-21T07:49:20Z"
-}
-```
-
-#### 출력값
-
-* 경로
-
-```
-/obs-test-container/year=2022/month=11/day=21/hour=07/ls.s3.d53c090b-9718-4833-926a-725b20c85974.2022-11-21T00.47.part0.txt
-```
-
-* 출력 메시지
-
-```
-2022-11-21T07:49:20.000Z f207c24a122e %{message}
-```
-
-### Parquet 코덱 속성 설명
-
-| 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
-| --- | --- | --- | --- | --- | --- |
-| parquet 압축 코덱 | `SNAPPY` | enum | V1 | parquet 파일 변환 시 사용할 압축 코덱을 입력합니다. | * [참조](https://parquet.apache.org/docs/file-format/data-pages/compression/) </br>* 엔진 타입 V2는 추후 지원 예정 |
+**지원 코덱:**
+* [plain 코덱](./codec-config-guide.md#plain-코덱) - 원본 데이터 문자열 저장 (엔진 V1만 지원) 
+* [json 코덱](./codec-config-guide.md#json-코덱) - JSON 형식 데이터 파싱
+* [line 코덱](./codec-config-guide.md#line-코덱) - 행 단위 메시지 처리
+* [parquet 코덱](./codec-config-guide.md#parquet-코덱) - 압축된 컬럼형 저장 형식 (엔진 V1만 지원)
 
 ### Prefix 예시 - 필드
 
@@ -2317,15 +2148,13 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 경로 방식 요청 | `false` | boolean | V2 | 경로 방식 요청을 사용할지 여부를 결정합니다. |  |
 | 비활성 간격 | `1`| number | V2 | 데이터 인입이 없는 상태가 지속될 때 오브젝트를 분할하는 기준 시간을 설정합니다.                | 설정된 시간 동안 데이터 인입이 없으면 현재 오브젝트가 업로드되며, 이후 새로 인입되는 데이터는 새로운 오브젝트에 작성됩니다. |
 
-### 출력 예제
+### 코덱별 출력 예제
 
-* OBS와 동일합니다.
-
-### Parquet 코덱 속성 설명
-
-| 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
-| --- | --- | --- | --- | --- | --- |
-| parquet 압축 코덱 | `SNAPPY` | enum | V1 | parquet 파일 변환 시 사용할 압축 코덱을 입력합니다. | * [참조](https://parquet.apache.org/docs/file-format/data-pages/compression/) </br>* 엔진 타입 V2는 추후 지원 예정 |
+**지원 코덱:**
+* [plain 코덱](./codec-config-guide.md#plain-코덱) - 원본 데이터 문자열 저장 (엔진 V1만 지원)
+* [json 코덱](./codec-config-guide.md#json-코덱) - JSON 형식 데이터 파싱
+* [line 코덱](./codec-config-guide.md#line-코덱) - 행 단위 메시지 처리
+* [parquet 코덱](./codec-config-guide.md#parquet-코덱) - 압축된 컬럼형 저장 형식 (엔진 V1만 지원)
 
 ### 추가 설정 예시
 
@@ -2396,58 +2225,12 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 재시도 요청 주기     | `100`                                                    | number | V1       | 전송 요청이 실패했을 때 재시도할 주기(ms)를 입력합니다.                  | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/producer-configs/)의 `retry.backoff.ms` 속성 참고                                                                                                                                                                 |
 | 재시도 횟수        | -                                                        | number | V1       | 전송 요청이 실패했을 때 재시도할 최대 횟수를 입력합니다.                   | [Kafka 공식 문서](https://kafka.apache.org/23/configuration/producer-configs/)의 `retries` 속성 참고<br/>설정값을 초과하여 재시도하는 경우 데이터 유실이 발생할 수 있습니다.                                                                                                                               |
 
-### json 코덱 출력 예제
+### 코덱별 출력 예제
 
-#### 입력 메시지
-
-``` json
-{
-    "message": "Hello World!",
-    "hidden": "Hello DataFlow!",
-    "@timestamp": "2022-11-21T07:49:20Z"
-}
-```
-
-#### 출력 메시지
-
-``` json
-{"host":"0bc501d89f8c","message":"Hello World","hidden":"Hello DataFlow!","sequence":0,"@timestamp":"2022-11-21T07:49:20.000Z","@version":"1"}
-```
-
-### plain 코덱 출력 예제
-
-#### 입력 메시지
-
-``` json
-{
-    "message": "Hello World!",
-    "hidden": "Hello DataFlow!",
-    "@timestamp": "2022-11-21T07:49:20Z"
-}
-```
-
-#### 출력 메시지
-
-```
-2022-11-21T07:49:20.000Z 2898d492114d Hello World
-```
-
-### plain 코덱 출력 예제 - message 필드 존재하지 않을 경우
-
-#### 입력 메시지
-
-``` json
-{
-    "hidden": "Hello DataFlow!",
-    "@timestamp": "2022-11-21T07:49:20Z"
-}
-```
-
-#### 출력 메시지
-
-```
-2022-11-21T07:49:20.000Z e5ef7ece9bb0 %{message}
-```
+**지원 코덱:**
+* [plain 코덱](./codec-config-guide.md#plain-코덱) - 원본 데이터 문자열 출력
+* [json 코덱](./codec-config-guide.md#json-코덱) - JSON 형식 데이터 출력
+* [line 코덱](./codec-config-guide.md#line-코덱) - 행 단위 메시지 출력  
 
 ## Sink > Stdout
 
@@ -2461,50 +2244,15 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 엔진 타입 | 지원 여부 | 비고 |
 | --- | --- | --- |
 | V1 | O |  |
-| V2 | O | debug는 지원하지 않음 |
+| V2 | O |  |
 
 ### 코덱별 출력 예제
 
-#### 입력 메시지
-
-``` json
-{
-    "host": "data-flow-01",
-    "message": "Hello World!",
-    "@timestamp": "2022-11-21T07:49:20Z"
-}
-```
-
-#### plain 코덱 출력 메시지
-
-```
-2022-11-21T07:49:20Z data-flow-01 Hello World!
-```
-
-#### json 코덱 출력 예제
-
-```
-{"host": "data-flow-01", "message": "Hello World!", "@timestamp": "2022-11-21T07:49:20Z"}
-```
-
-#### line 코덱 출력 예제
-
-* format은 다음과 같이 설정
-    * `%{message} %{host}`
-
-```
-Hello World! data-flow-01
-```
-
-#### debug 코덱 출력 예제
-
-```
-{
-        "host" => "data-flow-01",
-     "message" => "Hello World!",
-  "@timestamp" => 2022-11-21T07:49:20Z
-}
-```
+**지원 코덱:**
+* [json 코덱](./codec-config-guide.md#json-코덱) - JSON 형식 데이터 출력
+* [plain 코덱](./codec-config-guide.md#plain-코덱) - 원본 데이터 문자열 출력
+* [line 코덱](./codec-config-guide.md#line-코덱) - 행 단위 메시지 출력
+* [debug 코덱](./codec-config-guide.md#debug-코덱) - 디버깅용 상세 출력 (엔진 V1만 지원)
 
 ## Branch
 
