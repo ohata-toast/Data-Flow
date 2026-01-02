@@ -278,7 +278,7 @@ V2는 리전 또는 프로젝트가 서로 다른 Object Storage이지만 버킷
 | 엔진 타입 | 지원 여부 | 비고 |
 | --- | --- | --- |
 | V1 | O |  |
-| V2 | O | [V2 엔진 타입에서 Object Storage 연결 시 주의점](node-config-guide/#v2) 참고 |
+| V2 | O | [V2 엔진 타입에서 Object Storage 연결 시 주의점](node-config-guide/#v2-object-storage) 참고 |
 
 ### 실행 모드
 * STREAMING: `리스트 갱신 주기`마다 오브젝트 리스트를 갱신하며, 새롭게 추가된 오브젝트들을 읽어 데이터를 처리합니다.
@@ -377,7 +377,7 @@ V2는 리전 또는 프로젝트가 서로 다른 Object Storage이지만 버킷
 | 엔진 타입 | 지원 여부 | 비고 |
 | --- | --- | --- |
 | V1 | O |  |
-| V2 | O | [V2 엔진 타입에서 Object Storage 연결 시 주의점](node-config-guide/#v2) 참고 |
+| V2 | O | [V2 엔진 타입에서 Object Storage 연결 시 주의점](node-config-guide/#v2-object-storage) 참고 |
 
 ### 실행 모드
 * STREAMING: `리스트 갱신 주기`마다 오브젝트 리스트를 갱신하며, 새롭게 추가된 오브젝트들을 읽어 데이터를 처리합니다.
@@ -2043,7 +2043,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 엔진 타입 | 지원 여부 | 비고 |
 | --- | --- | --- |
 | V1 | O |  |
-| V2 | O | [V2 엔진 타입에서 Object Storage 연결 시 주의점](node-config-guide/#v2) 참고 |
+| V2 | O | [V2 엔진 타입에서 Object Storage 연결 시 주의점](node-config-guide/#v2-object-storage) 참고 |
 
 ### 속성 설명
 
@@ -2157,7 +2157,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 엔진 타입 | 지원 여부 | 비고 |
 | --- | --- | --- |
 | V1 | O |  |
-| V2 | O | [V2 엔진 타입에서 Object Storage 연결 시 주의점](node-config-guide/#v2) 참고 |
+| V2 | O | [V2 엔진 타입에서 Object Storage 연결 시 주의점](node-config-guide/#v2-object-storage) 참고 |
 
 ### 속성 설명
 | 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
