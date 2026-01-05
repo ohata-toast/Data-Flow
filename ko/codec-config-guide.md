@@ -190,13 +190,12 @@
 ##### 출력 메시지
 ```text
 {
-    "name": "DataFlow",
-    "type": "pipeline",
-    "status": "running",
-    "level": "info"
+    "name" => "DataFlow",
+    "type" => "pipeline",
+    "status" => "running",
+    "level" => "info"
     "@timestamp" => 2022-11-21T07:49:20.000Z,
     "@version" => "1",
     "host" => "b3e7b1b35c26",
-    "sequence" => 0
 }
 ```
