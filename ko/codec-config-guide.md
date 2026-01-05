@@ -11,8 +11,7 @@
 ### json 코덱
 
 * JSON 형식의 데이터를 파싱하여 각 필드를 개별적으로 처리합니다.
-* JSON의 모든 필드가 그대로 유지되어 필터링이나 가공에 유리합니다.
-* 각 필드를 개별적으로 활용하고자 할 때 사용합니다.
+* Source 및 Sink 노드 모두 JSON의 모든 필드가 그대로 유지되기 때문에 필터링이나 가공에 유리합니다.
 
 #### 조건
 
@@ -36,7 +35,7 @@
 
 ```
 
-#### 출력 데이터
+#### 전달 & 출력 데이터
 
 ```json
 {"name": "DataFlow","type": "pipeline","status": "running","level": "info"}
@@ -65,27 +64,6 @@
 ##### 전달 데이터
 ```json
 {"message":"{\"name\":\"DataFlow\",\"type\":\"pipeline\",\"status\":\"running\",\"level\":\"info\"}"}
-```
-
-#### plain 코덱 예제 - Sink 노드
-
-##### 조건
-* 입력 메시지
-  ```json
-  {
-    "message": "{\"name\":\"DataFlow\",\"type\":\"pipeline\",\"status\":\"running\",\"level\":\"info\"}"
-  }
-  ```
-* charset -> `UTF-8`
-
-##### 처리 결과
-```text
-{"name":"DataFlow","type":"pipeline","status":"running","level":"info"}
-```
-
-##### 출력 데이터
-```text
-{"name":"DataFlow","type":"pipeline","status":"running","level":"info"}
 ```
 
 ##### plain 코덱 예제 - Sink 노드
