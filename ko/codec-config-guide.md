@@ -62,7 +62,7 @@
 {\"name\":\"DataFlow\",\"type\":\"pipeline\",\"status\":\"running\",\"level\":\"info\"}
 ```
 
-##### 출력 데이터
+##### 전달 데이터
 ```json
 {"message":"{\"name\":\"DataFlow\",\"type\":\"pipeline\",\"status\":\"running\",\"level\":\"info\"}"}
 ```
@@ -88,7 +88,7 @@
 {"name":"DataFlow","type":"pipeline","status":"running","level":"info"}
 ```
 
-##### plain 코덱 예제 - Sink 노드 (format 기능 활용)
+##### plain 코덱 예제 - Sink 노드
 
 !!! tip "참고"
     엔진 V1의 경우, `format`이라는 추가 항목을 입력할 수 있습니다.<br>
@@ -140,7 +140,7 @@
 {\"name\":\"DataFlow\",\"type\":\"pipeline\",\"status\":\"running\",\"level\":\"info\"}
 ```
 
-##### 출력 데이터
+##### 전달 데이터
 ```json
 {"message":"{\"name\":\"DataFlow\",\"type\":\"pipeline\",\"status\":\"running\",\"level\":\"info\"}"}
 ```
