@@ -405,7 +405,7 @@ V2는 리전 또는 프로젝트가 서로 다른 Object Storage이지만 버킷
     * (Amazon) S3 노드를 이용하여 NHN Cloud Object Storage에 연결할 경우 아래와 같이 속성 설정을 해야합니다.
     * 엔진 타입이 V1인 경우
         * **추가 설정**을 이용해 force_path_style 값을 true로 설정
-        * 입력 에시: `{"force_path_style" : true}`
+        * 입력 예시: `{"force_path_style" : true}`
     * 엔진 타입이 V2인 경우
         * **경로 방식 요청**을 `true`로 설정
 
@@ -2187,7 +2187,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
     * (Amazon) S3 노드를 이용하여 NHN Cloud Object Storage에 연결할 경우 아래와 같이 속성 설정을 해야합니다.
     * 엔진 타입이 V1인 경우
         * **추가 설정**을 이용해 force_path_style 값을 true로 설정
-        * 입력 에시: `{"force_path_style" : true}`
+        * 입력 예시: `{"force_path_style" : true}`
     * 엔진 타입이 V2인 경우
         * **경로 방식 요청**을 `true`로 설정
 
