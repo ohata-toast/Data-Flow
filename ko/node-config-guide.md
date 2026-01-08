@@ -28,6 +28,32 @@
 
 엔진 타입에 따라 호환 여부가 갈리는 노드는 항상 `### 지원 엔진 타입` 표와 `비고`/`주의` 블록에 최신 상태가 기재됩니다. 새 플로우를 설계할 때는 위 요약으로 대략적인 범위를 파악한 뒤, 실제 사용할 노드 섹션에서 세부 지원 현황과 제한 사항을 다시 확인하세요.
 
+### V2 엔진 타입에서 Object Storage 연결 시 주의점
+V2는 리전 또는 프로젝트가 서로 다른 Object Storage이지만 버킷명은 동일한 경우, 하나의 플로우에서 함께 사용이 불가능합니다.
+
+!!! tip "불가능한 연결 설정 예제"
+    * 예제 1
+        * 첫번째 연결 대상 Object Storage 정보
+            * 리전: KR1
+            * 버킷명: Data
+            * 프로젝트: TEST
+        * 두번째 연결 대상 Object Storage 정보
+            * 리전: JP1
+            * 버킷명: Data
+            * 프로젝트: TEST
+        * **리전이 다르므로** 두 버킷은 서로 다른 버킷이지만 DataFlow의 플로우에서는 함께 사용 불가
+    * 예제 2
+        * 첫번째 연결 대상 Object Storage 정보
+            * 리전: KR1
+            * 버킷명: Data
+            * 프로젝트: TEST_1
+        * 두번째 연결 대상 Object Storage 정보
+            * 리전: KR1
+            * 버킷명: Data
+            * 프로젝트: TEST_2
+        * **프로젝트가 다르므로** 두 버킷은 서로 다른 버킷이지만 DataFlow의 플로우에서는 함께 사용 불가
+
+
 ## Domain Specific Language(DSL) 정의
 
 * 플로우 실행에 필요한 DSL 정의입니다.
@@ -252,7 +278,7 @@
 | 엔진 타입 | 지원 여부 | 비고 |
 | --- | --- | --- |
 | V1 | O |  |
-| V2 | O |  |
+| V2 | O | [V2 엔진 타입에서 Object Storage 연결 시 주의점](node-config-guide/#v2-object-storage) 참고 |
 
 ### 실행 모드
 * STREAMING: `리스트 갱신 주기`마다 오브젝트 리스트를 갱신하며, 새롭게 추가된 오브젝트들을 읽어 데이터를 처리합니다.
@@ -351,7 +377,7 @@
 | 엔진 타입 | 지원 여부 | 비고 |
 | --- | --- | --- |
 | V1 | O |  |
-| V2 | O |  |
+| V2 | O | [V2 엔진 타입에서 Object Storage 연결 시 주의점](node-config-guide/#v2-object-storage) 참고 |
 
 ### 실행 모드
 * STREAMING: `리스트 갱신 주기`마다 오브젝트 리스트를 갱신하며, 새롭게 추가된 오브젝트들을 읽어 데이터를 처리합니다.
@@ -374,6 +400,15 @@
 | 처리 완료 오브젝트 삭제 | `false`                        | boolean | V1       | 속성값이 true일 경우 읽기 완료한 오브젝트를 삭제합니다.                                                                    |                                                                                                                                                                                                              |
 | 추가 설정         | -                              | hash    | V1       | S3 서버와 연결할 때 사용할 추가적인 설정을 입력합니다.                                                                     | [가이드](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html)                                                                                                                                    |
 | 경로 방식 요청      | `false`                        | boolean | V2       | 경로 방식 요청을 사용할지 여부를 결정합니다.                                                                            |                                                                                                                                                                                                              |
+
+!!! danger "주의"
+    * (Amazon) S3 노드를 이용하여 NHN Cloud Object Storage에 연결할 경우 아래와 같이 속성 설정을 해야합니다.
+    * 엔진 타입이 V1인 경우
+        * **추가 설정**을 이용해 force_path_style 값을 true로 설정
+        * 입력 예시: `{"force_path_style" : true}`
+    * 엔진 타입이 V2인 경우
+        * **경로 방식 요청**을 `true`로 설정
+
 
 ### 메타데이터 필드 사용법
 
@@ -2008,7 +2043,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 엔진 타입 | 지원 여부 | 비고 |
 | --- | --- | --- |
 | V1 | O |  |
-| V2 | O |  |
+| V2 | O | [V2 엔진 타입에서 Object Storage 연결 시 주의점](node-config-guide/#v2-object-storage) 참고 |
 
 ### 속성 설명
 
@@ -2122,7 +2157,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 엔진 타입 | 지원 여부 | 비고 |
 | --- | --- | --- |
 | V1 | O |  |
-| V2 | O |  |
+| V2 | O | [V2 엔진 타입에서 Object Storage 연결 시 주의점](node-config-guide/#v2-object-storage) 참고 |
 
 ### 속성 설명
 | 속성명 | 기본값 | 자료형 | 지원 엔진 타입 | 설명 | 비고 |
@@ -2147,6 +2182,15 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 추가 설정 | - | hash | V1 | S3에 연결하기 위한 추가 설정을 입력합니다. | [가이드](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
 | 경로 방식 요청 | `false` | boolean | V2 | 경로 방식 요청을 사용할지 여부를 결정합니다. |  |
 | 비활성 간격 | `1`| number | V2 | 데이터 인입이 없는 상태가 지속될 때 오브젝트를 분할하는 기준 시간을 설정합니다.                | 설정된 시간 동안 데이터 인입이 없으면 현재 오브젝트가 업로드되며, 이후 새로 인입되는 데이터는 새로운 오브젝트에 작성됩니다. |
+
+!!! danger "주의"
+    * (Amazon) S3 노드를 이용하여 NHN Cloud Object Storage에 연결할 경우 아래와 같이 속성 설정을 해야합니다.
+    * 엔진 타입이 V1인 경우
+        * **추가 설정**을 이용해 force_path_style 값을 true로 설정
+        * 입력 예시: `{"force_path_style" : true}`
+    * 엔진 타입이 V2인 경우
+        * **경로 방식 요청**을 `true`로 설정
+
 
 ### 코덱별 출력 예제
 
