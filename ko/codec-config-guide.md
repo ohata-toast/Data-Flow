@@ -1,4 +1,4 @@
-# Data & Analytics > DataFlow > 코덱(Codec) 설정 가이드
+## Data & Analytics > DataFlow > 코덱 설정 가이드
 
 ## 개요
 
@@ -8,7 +8,7 @@
 
 ## 지원 코덱 타입
 
-### json 코덱
+### JSON 코덱
 
 * JSON 형식의 데이터를 파싱하여 각 필드를 개별적으로 처리합니다.
 * Source 및 Sink 노드 모두 JSON의 모든 필드가 그대로 유지되기 때문에 필터링이나 가공에 유리합니다.
@@ -21,7 +21,7 @@
 {"name": "DataFlow","type": "pipeline","status": "running","level": "info"}
 
 ```
-* charset -> `UTF-8`
+* charset → `UTF-8`
 
 #### 처리 결과 
 
@@ -54,7 +54,7 @@
   ```json
   {"name": "DataFlow","type": "pipeline","status": "running","level": "info"} 
   ```
-* charset -> `UTF-8`
+* charset → `UTF-8`
 
 ##### 처리 결과
 ```text
@@ -83,8 +83,8 @@
     "level": "info"
   } 
   ```
-* charset -> `UTF-8`
-* format -> `[%{level}] %{name} %{status}`
+* charset → `UTF-8`
+* format → `[%{level}] %{name} %{status}`
 
 ###### 처리 결과
 ```text
@@ -102,7 +102,7 @@
 * Source 노드에서는 입력된 각 행을 `message` 필드에 문자열로 저장하고, Sink 노드에서는 데이터를 format에 따라 텍스트 행으로 출력합니다.
 * 행 단위 처리가 필요할 때 사용합니다.
 * line 코덱의 경우 delimiter를 통해 출력되는 메시지들의 구분자를 정의할 수 있습니다. 
-  * 기본 값은 줄바꿈(`\n`) 입니다.
+  * 기본 값은 줄바꿈(`\n`)입니다.
 
 #### line 코덱 예제 - Source 노드
 
@@ -111,7 +111,7 @@
   ```text
   {"name":"DataFlow","type":"pipeline","status":"running","level":"info"}
   ```
-* charset -> `UTF-8`
+* charset → `UTF-8`
 
 ##### 처리 결과
 ```text
@@ -139,9 +139,9 @@
     "level": "info"
   } 
   ```
-* delimiter -> `\n`
-* format -> `[%{level}] %{name} %{status}`
-* charset -> `UTF-8`
+* delimiter → `\n`
+* format → `[%{level}] %{name} %{status}`
+* charset → `UTF-8`
 
 ##### 처리 결과
 ```text

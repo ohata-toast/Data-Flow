@@ -33,25 +33,25 @@ V2는 리전 또는 프로젝트가 서로 다른 Object Storage이지만 버킷
 
 !!! tip "불가능한 연결 설정 예제"
     * 예제 1
-        * 첫번째 연결 대상 Object Storage 정보
+        * 첫 번째 연결 대상 Object Storage 정보
             * 리전: KR1
             * 버킷명: Data
             * 프로젝트: TEST
-        * 두번째 연결 대상 Object Storage 정보
+        * 두 번째 연결 대상 Object Storage 정보
             * 리전: JP1
             * 버킷명: Data
             * 프로젝트: TEST
-        * **리전이 다르므로** 두 버킷은 서로 다른 버킷이지만 DataFlow의 플로우에서는 함께 사용 불가
+        * 리전이 다르므로 두 버킷은 서로 다른 버킷이지만 DataFlow의 플로우에서는 함께 사용 불가
     * 예제 2
-        * 첫번째 연결 대상 Object Storage 정보
+        * 첫 번째 연결 대상 Object Storage 정보
             * 리전: KR1
             * 버킷명: Data
             * 프로젝트: TEST_1
-        * 두번째 연결 대상 Object Storage 정보
+        * 두 번째 연결 대상 Object Storage 정보
             * 리전: KR1
             * 버킷명: Data
             * 프로젝트: TEST_2
-        * **프로젝트가 다르므로** 두 버킷은 서로 다른 버킷이지만 DataFlow의 플로우에서는 함께 사용 불가
+        * 프로젝트가 다르므로 두 버킷은 서로 다른 버킷이지만 DataFlow의 플로우에서는 함께 사용 불가
 
 
 ## Domain Specific Language(DSL) 정의
@@ -363,7 +363,7 @@ V2는 리전 또는 프로젝트가 서로 다른 Object Storage이지만 버킷
 **지원 코덱:**
 * [plain 코덱](./codec-config-guide.md#plain-코덱) - 원본 데이터 문자열 저장
 * [json 코덱](./codec-config-guide.md#json-코덱) - JSON 형식 데이터 파싱
-* [line 코덱](./codec-config-guide.md#line-코덱) - 행 단위 메시지 처리 (엔진 V1만 지원)
+* [line 코덱](./codec-config-guide.md#line-코덱) - 행 단위 메시지 처리(엔진 V1만 지원)
 
 ## Source > (Amazon) S3
 
@@ -402,7 +402,7 @@ V2는 리전 또는 프로젝트가 서로 다른 Object Storage이지만 버킷
 | 경로 방식 요청      | `false`                        | boolean | V2       | 경로 방식 요청을 사용할지 여부를 결정합니다.                                                                            |                                                                                                                                                                                                              |
 
 !!! danger "주의"
-    * (Amazon) S3 노드를 이용하여 NHN Cloud Object Storage에 연결할 경우 아래와 같이 속성 설정을 해야합니다.
+    * (Amazon) S3 노드를 이용하여 NHN Cloud Object Storage에 연결할 경우 아래와 같이 속성 설정을 해야 합니다.
     * 엔진 타입이 V1인 경우
         * **추가 설정**을 이용해 force_path_style 값을 true로 설정
         * 입력 예시: `{"force_path_style" : true}`
@@ -479,7 +479,7 @@ V2는 리전 또는 프로젝트가 서로 다른 Object Storage이지만 버킷
 **지원 코덱:**
 * [plain 코덱](./codec-config-guide.md#plain-코덱) - 원본 데이터 문자열 저장
 * [json 코덱](./codec-config-guide.md#json-코덱) - JSON 형식 데이터 파싱
-* [line 코덱](./codec-config-guide.md#line-코덱) - 행 단위 메시지 처리 (엔진 V1만 지원)
+* [line 코덱](./codec-config-guide.md#line-코덱) - 행 단위 메시지 처리(엔진 V1만 지원)
 
 ## Source > (Apache) Kafka
 
@@ -2067,10 +2067,10 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 ### 코덱별 출력 예제
 
 **지원 코덱:**
-* [plain 코덱](./codec-config-guide.md#plain-코덱) - 원본 데이터 문자열 저장 (엔진 V1만 지원) 
+* [plain 코덱](./codec-config-guide.md#plain-코덱) - 원본 데이터 문자열 저장(엔진 V1만 지원) 
 * [json 코덱](./codec-config-guide.md#json-코덱) - JSON 형식 데이터 파싱
 * [line 코덱](./codec-config-guide.md#line-코덱) - 행 단위 메시지 처리
-* [parquet 코덱](./codec-config-guide.md#parquet-코덱) - 압축된 컬럼형 저장 형식 (엔진 V1만 지원)
+* [parquet 코덱](./codec-config-guide.md#parquet-코덱) - 압축된 컬럼형 저장 형식(엔진 V1만 지원)
 
 ### Prefix 예시 - 필드
 
@@ -2184,7 +2184,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | 비활성 간격 | `1`| number | V2 | 데이터 인입이 없는 상태가 지속될 때 오브젝트를 분할하는 기준 시간을 설정합니다.                | 설정된 시간 동안 데이터 인입이 없으면 현재 오브젝트가 업로드되며, 이후 새로 인입되는 데이터는 새로운 오브젝트에 작성됩니다. |
 
 !!! danger "주의"
-    * (Amazon) S3 노드를 이용하여 NHN Cloud Object Storage에 연결할 경우 아래와 같이 속성 설정을 해야합니다.
+    * (Amazon) S3 노드를 이용하여 NHN Cloud Object Storage에 연결할 경우 아래와 같이 속성 설정을 해야 합니다.
     * 엔진 타입이 V1인 경우
         * **추가 설정**을 이용해 force_path_style 값을 true로 설정
         * 입력 예시: `{"force_path_style" : true}`
@@ -2195,10 +2195,10 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 ### 코덱별 출력 예제
 
 **지원 코덱:**
-* [plain 코덱](./codec-config-guide.md#plain-코덱) - 원본 데이터 문자열 저장 (엔진 V1만 지원)
+* [plain 코덱](./codec-config-guide.md#plain-코덱) - 원본 데이터 문자열 저장(엔진 V1만 지원)
 * [json 코덱](./codec-config-guide.md#json-코덱) - JSON 형식 데이터 파싱
 * [line 코덱](./codec-config-guide.md#line-코덱) - 행 단위 메시지 처리
-* [parquet 코덱](./codec-config-guide.md#parquet-코덱) - 압축된 컬럼형 저장 형식 (엔진 V1만 지원)
+* [parquet 코덱](./codec-config-guide.md#parquet-코덱) - 압축된 컬럼형 저장 형식(엔진 V1만 지원)
 
 ### 추가 설정 예시
 
@@ -2296,7 +2296,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 * [json 코덱](./codec-config-guide.md#json-코덱) - JSON 형식 데이터 출력
 * [plain 코덱](./codec-config-guide.md#plain-코덱) - 원본 데이터 문자열 출력
 * [line 코덱](./codec-config-guide.md#line-코덱) - 행 단위 메시지 출력
-* [debug 코덱](./codec-config-guide.md#debug-코덱) - 디버깅용 상세 출력 (엔진 V1만 지원)
+* [debug 코덱](./codec-config-guide.md#debug-코덱) - 디버깅용 상세 출력(엔진 V1만 지원)
 
 ## Branch
 
