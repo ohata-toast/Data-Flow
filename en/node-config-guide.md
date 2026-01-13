@@ -28,9 +28,35 @@
 
 Nodes whose compatibility varies depending on engine type are always updated in the `### Supported Engine Types` table and `Note`/`Caution` blocks. When designing a new flow, first get a general idea of ​​the scope from the summary above, then review the detailed support status and limitations in the actual node section.
 
+### Important Notes on Object Storage Connectivity (Engine V2)
+For V2, multiple Object Storage instances cannot be used within the same flow if they share the same bucket name, even if they belong to different regions or projects.
+
+!!! tip "Unsupported Configuration Examples"
+    * Example 1
+        * First Object Storage connection details
+            * Region: KR1
+            * Bucket name: Data
+            * Project: TEST
+        * Second Object Storage connection details
+            * Region: JP1
+            * Bucket name: Data
+            * Project: TEST
+        * Although the buckets are distinct due to being in different regions, they cannot be used together in a single DataFlow if they share the same name.
+    * Example 2
+        * First Object Storage connection details
+            * Region: KR1
+            * Bucket name: Data
+            * Project: TEST_1
+        * Second Object Storage connection details
+            * Region: KR1
+            * Bucket name: Data
+            * Project: TEST_2
+        * Although the buckets are distinct due to being in different projects, they cannot be used together in a single DataFlow if they share the same name.
+
+
 ## Domain Specific Language(DSL) Definition 
 
-* DSL definition is required to execute flow.
+* DSL definition is required to execute the flow.
 
 ### Variable
 
@@ -192,23 +218,11 @@ Nodes whose compatibility varies depending on engine type are always updated in 
 
 ### Message imported by codec
 
-* Log&Crash Search covers data in format **JSON** by default.
-* If no codec is selected or Plain, JSON string for the Log&Crash Search Log will be included in the field `message`.
-* If you want to use each field in Log&Crash Search log, we recommend using json Codec.
+* Log & Crash Search is designed to process data in JSON format by default.
+* If you want to use each field in the Log&Crash Search log, we recommend using the JSON codec.
 
-#### Not selected or plain
-
-``` js
-{ 
-    "message":"{\\\"log\\\":\\\"&\\\", \\\"Crash\\\": \\\"Search\\\", \\\"Result\\\": \\\"Data\\\"}" 
-}
-```
-
-#### json
-
-``` js
-{"log":"&", "Crash": "Search", "Result": "Data"}
-```
+**Supported codec:**
+* [json codec](./codec-config-guide.md#json-codec) - JSON data parsing
 
 ## Source > (NHN Cloud) CloudTrail
 
@@ -246,23 +260,11 @@ Nodes whose compatibility varies depending on engine type are always updated in 
 
 ### Message imported by codec
 
-* CloudTrail covers data in the format **JSON** by default.
-* If no codec is selected or Plain, JSON string for CloudTrail data will be included as field called `message`.
+* CloudTrail is designed to process data in JSON format by default.
 * If you want to use each field in CloudTrail data, we recommend using json Codec.
 
-#### Not selected or Plain
-
-``` js
-{ 
-    "message":"{\\\"log\\\":\\\"CloudTrail\\\", \\\"Result\\\": \\\"Data\\\", \\\"@timestamp\\\": \\\"2023-12-06T08:09:24.887Z\\\", \\\"@version\\\": \\\"1\\\"}" 
-}
-```
-
-#### json
-
-``` js
-{"log":"CloudTrail", "Result": "Data", "@timestamp": "2023-12-06T08:09:24.887Z", "@version":"1"}
-```
+**Supported codec:**
+* [json codec](./codec-config-guide.md#json-codec) - JSON data parsing
 
 ## Source > (NHN Cloud) Object Storage
 
@@ -276,7 +278,7 @@ Nodes whose compatibility varies depending on engine type are always updated in 
 | Engine Type | Support | Note |
 | --- | --- | --- |
 | V1 | O |  |
-| V2 | O |  |
+| V2 | O | [Important Notes on Object Storage Connectivity (Engine V2)]refer to (node-config-guide/#v2-object-storage) |
 
 ### Execution Mode
 * STREAMING: Updates the object list on each `list update cycle`and processes data by reading newly added objects.
@@ -358,19 +360,10 @@ Nodes whose compatibility varies depending on engine type are always updated in 
 
 ### Message imported by codec
 
-#### Unselected or plain
-
-``` js
-{
-    "message":"{\\\"S3\\\":\\\"Storage\\\", \\\"Read\\\": \\\"Object\\\", \\\"Result\\\": \\\"Data\\\"}"
-}
-```
-
-#### json
-
-``` js
-{"S3":"Storage", "Read": "Object", "Result": "Data"}
-```
+**Supported codec:**
+* [plain codec](./codec-config-guide.md#plain-codec) - Raw data string storage
+* [json codec](./codec-config-guide.md#json-codec) - JSON data parsing
+* [line codec](./codec-config-guide.md#line-codec) - Line-by-line message processing (Engine V1 only)
 
 ## Source > (Amazon) S3
 
@@ -384,7 +377,7 @@ Nodes whose compatibility varies depending on engine type are always updated in 
 | Engine Type | Support | Note |
 | --- | --- | --- |
 | V1 | O |  |
-| V2 | O |  |
+| V2 | O | [V2 Important Notes on Object Storage Connectivity (Engine V2)]refer to (node-config-guide/#v2-object-storage) |
 
 ### Execution Mode
 * STREAMING: Updates the object list on each `list update cycle`and processes data by reading newly added objects.
@@ -406,6 +399,14 @@ Nodes whose compatibility varies depending on engine type are always updated in 
 | Key pattern to exclude   | * V1: `nil` <br/> * V2: -      | string    | V1, V2                | Enter the pattern of an object not to be read.                                                                                                                                     |                                                                                                                                                                                                                        |
 | Delete                   | `false`                        | boolean   | V1                    | If the property value is true, delete the object read.                                                                                                                             |                                                                                                                                                                                                                        |
 | Additional settings      | -                              | hash      | V1                    | Enter additional settings to use when connecting to the S3 server.                                                                                                                 | [Guide](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html)                                                                                                                                            |
+
+!!! danger "Caution"
+    * When connecting to NHN Cloud Object Storage using an (Amazon) S3 node, you must configure the properties as follows:
+    * If the engine type is V1
+        * Set the force_path_style value to true using the **Additional Settings**
+        * Input example: `{"force_path_style" : true}`
+    * If the engine type is V2
+        * Enable **Path-Style Requests** by setting it to `true`
 
 ### Metadata Field Usage
 
@@ -451,7 +452,7 @@ Nodes whose compatibility varies depending on engine type are always updated in 
     // General field
     "@version": "1",
     "@timestamp": "2022-04-11T00:01:23Z"
-    "message": "파일 내용..."
+    "message": "file contents..."
     "server_side_encryption": "AES256"
     "etag": "\"56ad65461e0abb907465bacf6e4f96cf\""
     "content_type": "text/plain"
@@ -473,19 +474,10 @@ Nodes whose compatibility varies depending on engine type are always updated in 
 
 ### Message imported by codec
 
-#### Unselected or plain
-
-``` js
-{
-    "message":"{\\\"S3\\\":\\\"Storage\\\", \\\"Read\\\": \\\"Object\\\", \\\"Result\\\": \\\"Data\\\"}"
-}
-```
-
-#### json
-
-``` js
-{"S3":"Storage", "Read": "Object", "Result": "Data"}
-```
+**Supported codec:**
+* [plain codec](./codec-config-guide.md#plain-codec) - Raw data string storage
+* [json codec](./codec-config-guide.md#json-codec) - JSON data parsing
+* [line codec](./codec-config-guide.md#line-codec) - Line-by-line message processing (Engine V1 only)
 
 ## Source > (Apache) Kafka
 
@@ -505,41 +497,41 @@ Nodes whose compatibility varies depending on engine type are always updated in 
 
 !!! danger "Caution"
     * Kafka nodes do not support BATCH mode.
-    * V2 engine type - Kafka node will be supported later.
 
 ### Property Description 
 
-| Property name                    | Default value                                              | Data type | Supported engine type | Description                                                                                                                                                                        | Note                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-|----------------------------------|------------------------------------------------------------|-----------|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Broker server list               | `localhost:9092`                                           | string    | V1                    | Enter the Kafka broker server. Separate multiple servers with commas ( , ).                                                                                                        | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `bootstrap.servers` property<br/>ex: 10.100.1.1:9092,10.100.1.2:9092                                                                                                                                                                                                                                                                                                          |
-| Consumer group ID                | `dataflow`                                                 | string    | V1                    | Enter an ID that identifies the Kafka Consumer Group.                                                                                                                              | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `group.id` property                                                                                                                                                                                                                                                                                                                                                           |
-| Internal topic excluded or not   | `true`                                                     | boolean   | V1                    |                                                                                                                                                                                    | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `exclude.internal.topics` property<br/>Exclude internal topics such as `__consumer_offsets` from recipients.                                                                                                                                                                                                                                                                  |
-| Topic pattern                    | -                                                          | string    | V1                    | Enter a Kafka topic patter to receive messages.                                                                                                                                    | ex: `*-messages`                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| Client ID                        | `dataflow`                                                 | string    | V1                    | Enter an ID to identify Kafka Consumer.                                                                                                                                            | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `client.id` property                                                                                                                                                                                                                                                                                                                                                          |
-| Partition allocation policy      | -                                                          | string    | V1                    | Determines how Kafka assigns partitions to consumer groups when receiving messages.                                                                                                | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `partition.assignment.strategy` property<br/>org.apache.kafka.clients.consumer.RangeAssignor<br/>org.apache.kafka.clients.consumer.RoundRobinAssignor<br/>org.apache.kafka.clients.consumer.StickyAssignor<br/>org.apache.kafka.clients.consumer.CooperativeStickyAssignor                                                                                                    |
-| Offset settings                  | `latest`                                                   | enum      | V1                    | Enter                                                                                                                                                                              | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `auto.offset.reset` property<br/>All of the settings below preserve the existing offset if the consumer group already exists.<br/>none: Return an error when there is no consumer group.<br/>earliest: Initialize to the partition’s oldest offset if there is no consumer group.<br/>latest: Initialize to the partition’s most recent offset if there is no consumer group. |
-| Offset commit cycle              | `5000`                                                     | number    | V1                    | Enter a cycle to update the consumer group offset.                                                                                                                                 | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `auto.commit.internal.ms` property                                                                                                                                                                                                                                                                                                                                            |
-| Offset auto commit or not        | `true`                                                     | boolean   | V1                    |                                                                                                                                                                                    | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `enable.auto.commit` property                                                                                                                                                                                                                                                                                                                                                 |
-| Key deserialization type         | `org.apache.kafka.common.serialization.StringDeserializer` | string    | V1                    | Enter how to serialize the keys of incoming messages.                                                                                                                              | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `key.deserializer` property                                                                                                                                                                                                                                                                                                                                                   |
-| Message deserialization type     | `org.apache.kafka.common.serialization.StringDeserializer` | string    | V1                    | Enter how to serialize the values of incoming messages.                                                                                                                            | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `value.deserializer` property                                                                                                                                                                                                                                                                                                                                                 |
-| Metadata created or not          | `false`                                                    | boolean   | V1                    | If the property value is true, creates a metadata field for the message. You need to combine filter node types to expose metadata fields to the Sink plugin (see the guide below). | fields to be created are as follows.<br/>topic: Topic that receives message<br/>consumer_group: Consumer group ID used to receive messages<br/>partition: Topic partition number that receives messages<br/>offset: Partition offset that receives messages<br/>key: ByteBuffer that includes message keys                                                                                                                                                                      |
-| Minimum Fetch size               | -                                                          | number    | V1                    | Enter the minimum size of data to be imported in one fetch request.                                                                                                                | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `fetch.min.bytes` property                                                                                                                                                                                                                                                                                                                                                    |
-| Transfer buffer size             | -                                                          | number    | V1                    | Enter size (byte) of TCP send buffer used to transfer data.                                                                                                                        | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `send.buffer.bytes` property                                                                                                                                                                                                                                                                                                                                                  |
-| Retry request cycle              | -                                                          | number    | V1                    | Enter the retry cycle (ms) when a transfer request fails.                                                                                                                          | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `retry.backoff.ms` property                                                                                                                                                                                                                                                                                                                                                   |
-| Cyclic redundancy check          | `true`                                                     | boolean   | V1                    | Check the message CRC.                                                                                                                                                             | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `check.crcs` property                                                                                                                                                                                                                                                                                                                                                         |
-| Server reconnection cycle        | -                                                          | number    | V1                    | Enter a retry cycle when connecting to broker server fails.                                                                                                                        | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `reconnect.backoff.ms` property                                                                                                                                                                                                                                                                                                                                               |
-| Poll timeout                     | `100`                                                      | number    | V1                    | Enter the timeout (ms) for requests to fetch new messages from the topic.                                                                                                          |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| Maximum fetch size per partition | -                                                          | number    | V1                    | Enter the maximum size to be imported in one fetch request per partition.                                                                                                          | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `max.partition.fetch.bytes` property                                                                                                                                                                                                                                                                                                                                          |
-| Server request timeout           | -                                                          | number    | V1                    | Enter the timeout (ms) for sent request.                                                                                                                                           | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `request.timeout.ms` property                                                                                                                                                                                                                                                                                                                                                 |
-| TCP receive buffer size          | -                                                          | number    | V1                    | Enter the size in bytes of the TCP receive buffer used to read data.                                                                                                               | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `receive.buffer.bytes` property                                                                                                                                                                                                                                                                                                                                               |
-| Session Timeout                  | -                                                          | number    | V1                    | Enter a session timeout (ms) of consumer.<br/>If a consumer fails to send a heartbeat within that time, it is excluded from the consumer group.                                    | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `session.timeout.ms` property                                                                                                                                                                                                                                                                                                                                                 |
-| Maximum poll message count       | -                                                          | number    | V1                    | Enter the maximum number of messages to retrieve in one poll request.                                                                                                              | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `max.poll.records` property                                                                                                                                                                                                                                                                                                                                                   |
-| Maximum poll cycle               | -                                                          | number    | V1                    | Enter the maximum cycle (ms) between poll requests.                                                                                                                                | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `max.poll.interval.ms` property                                                                                                                                                                                                                                                                                                                                               |
-| Maximum Fetch size               | -                                                          | number    | V1                    | Enter the maximum size to be imported in one fetch request.                                                                                                                        | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `fetch.max.bytes` property                                                                                                                                                                                                                                                                                                                                                    |
-| Maximum Fetch wait time          | -                                                          | number    | V1                    | Enter the wait time (ms) to send a fetch request when data is not gathered as much as the minimum fetch size setting.                                                              | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `fetch.max.wait.ms` property                                                                                                                                                                                                                                                                                                                                                  |
-| Consumer health check cycle      | -                                                          | number    | V1                    | Enter a cycle of consumer sending heartbeat.                                                                                                                                       | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `heartbeat.interval.ms` property                                                                                                                                                                                                                                                                                                                                              |
-| Metadata update cycle            | -                                                          | number    | V1                    | Enter the cycle (ms) to update the partition, broker server status, etc.                                                                                                           | [Kafka official documentation](https://kafka.apache.org/23/configuration/producer-configs/) - See `metadata.max.age.ms` property                                                                                                                                                                                                                                                                                                                                                |
-| IDLE timeout                     | -                                                          | number    | V1                    | Enter the wait time (ms) to close a connection without data transmission.                                                                                                          | [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) - See `connections.max.idle.ms` property                                                                                                                                                                                                                                                                                                                                            |
+| Property Name | Default Value | Data Type | Supported Engine Type | Description | Note |
+|---------------------------------|----------------------------------------------------------------------------|------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Broker Server List | `localhost:9092` | string | V1 | Enter the Kafka broker server. Separate multiple servers with commas (`,`). | Refer to the `bootstrap.servers` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) <br/>Example: 10.100.1.1:9092,10.100.1.2:9092 |
+| Consumer Group ID | `dataflow` | string | V1 | Enter the ID that identifies the Kafka Consumer Group. | See the `group.id` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
+| Topic list | `dataflow` | array of strings | V1 | Enter a list of Kafka topics to receive messages from. |
+| Topic pattern | - | string | V1 | Enter the Kafka topic pattern to receive messages from. | Example: `*-messages`|
+| Exclude internal topics | `true` | boolean | V1 | Exclude internal topics such as __consumer_offsets. | See the `exclude.internal.topics` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) <br/>Exclude internal topics such as `__consumer_offsets` from the receiving destination. |
+| Client ID | `dataflow` | string | V1 | Enter the ID that identifies the Kafka Consumer. | See the `client.id` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
+| Partition assignment policy | - | string | V1 | Determines how Kafka assigns partitions to consumer groups when receiving messages. | See the `partition.assignment.strategy` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) <br/>org.apache.kafka.clients.consumer.RangeAssignor<br/>org.apache.kafka.clients.consumer.RoundRobinAssignor<br/>org.apache.kafka.clients.consumer.StickyAssignor<br/>org.apache.kafka.clients.consumer.CooperativeStickyAssignor |
+| Offset setting | `latest` | enum | V1 | Enter the criteria for setting the offset of the consumer group. | See the `auto.offset.reset` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) <br/>All of the settings below will keep the existing offset if the consumer group already exists.<br/>none: If there is no consumer group, return an error.<br/>earliest: If there is no consumer group, initialize to the oldest offset in the partition.<br/>latest: If there is no consumer group, initialize to the most recent offset in the partition. |
+| Offset Commit Cycle | `5000` | number | V1 | Enter the frequency at which the consumer group's offsets are updated. | See the `auto.commit.internal.ms` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
+| Whether to automatically commit offsets | `true` | boolean | V1 | Determines whether to automatically update consumer offsets. | See the `enable.auto.commit` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
+| Key Deserialization Type | `org.apache.kafka.common.serialization.StringDeserializer` | string | V1 | Enter the method to serialize the keys of incoming messages. | See the `key.deserializer` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
+| Message deserialization type | `org.apache.kafka.common.serialization.StringDeserializer` | string | V1 | Enter how to serialize the values ​​of the incoming message. | See the `value.deserializer` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
+| Whether to generate metadata | `false` | boolean | V1 | If the property value is true, metadata fields for the message will be generated. To expose metadata fields to the Sink plugin, you must combine the filter node type (see the guide below). | The fields generated are as follows: <br/>topic: The topic that received the message <br/>consumer\_group: The consumer group ID used to receive the message <br/>partition: The partition number of the topic that received the message <br/>offset: The offset of the partition that received the message <br/>key: A ByteBuffer containing the message key |
+| Fetch minimum size | - | number | V1 | Enter the minimum amount of data to retrieve in a single fetch request. | See the `fetch.min.bytes` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
+| Send buffer size | - | number | V1 | Enter the size (in bytes) of the TCP send buffer used to transmit data. | See the `send.buffer.bytes` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
+| Retry request interval | - | number | V1 | Enter the interval (ms) to retry when a send request fails. | See the `retry.backoff.ms` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
+| Cyclic redundancy check | `true` | boolean | V1 | Check the CRC of the message. | See the `check.crcs` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
+| Server Reconnection Interval | - | number | V1 | Enter the interval to retry when a connection to the broker server fails. | See the `reconnect.backoff.ms` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
+| Poll Timeout | `100` | number | V1 | Enter the timeout (in milliseconds) for requests to fetch new messages from the topic. | |
+| Fetch Max Size Per Partition | - | number | V1 | Enter the maximum size to fetch in a single fetch request per partition. | See the `max.partition.fetch.bytes` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
+| Server Request Timeout | - | number | V1 | Enter the timeout (in milliseconds) for send requests. | See the `request.timeout.ms` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
+| TCP Receive Buffer Size | - | number | V1 | Enter the size (in bytes) of the TCP receive buffer used to read data. | See the `receive.buffer.bytes` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
+| Session Timeout | - | number | V1 | Enter the session timeout (in milliseconds) for the consumer.<br/>If a consumer fails to send a heartbeat within this time, it will be excluded from the consumer group. | See the `session.timeout.ms` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
+| Maximum number of poll messages | - | number | V1 | Enter the maximum number of messages to retrieve in a single poll request. | See the `max.poll.records` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
+| Maximum poll interval | - | number | V1 | Enter the maximum interval (ms) between poll requests. | See the `max.poll.interval.ms` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
+| Maximum fetch size | - | number | V1 | Enter the maximum size to retrieve in a single fetch request. | See the `fetch.max.bytes` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
+| Maximum fetch wait time | - | number | V1 | Enter the wait time (ms) to send a fetch request if the amount of data equal to the `Fetch Minimum Size` setting has not been collected. | See the `fetch.max.wait.ms` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
+| Consumer Health Check Interval | - | number | V1 | Enter the interval (ms) at which the consumer sends a heartbeat. | See the `heartbeat.interval.ms` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
+| Metadata Update Interval | - | number | V1 | Enter the interval (ms) at which to update partitions, broker server status, etc. | See the `metadata.max.age.ms` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/producer-configs/) |
+| IDLE Timeout | - | number | V1 | Enter the number of milliseconds to wait before closing a connection with no data transfer. | See the `connections.max.idle.ms` property in the [Kafka official documentation](https://kafka.apache.org/23/configuration/consumer-configs/) |
 
 ### Metadata Field Usage
 
@@ -600,44 +592,12 @@ Nodes whose compatibility varies depending on engine type are always updated in 
 }
 ```
         
-### plain codec examples
+### Message ingestion by codec type
 
-#### Input message
-
-```js
-{
-    "hello": "world!",
-    "hey": "foo"
-}
-```
-
-#### Output message
-
-```js
-{
-    "message": "{\"hello\":\"world\",\"hey\":\"foo\"}"
-}
-```
-
-### json codec examples
-
-#### Input messages
-
-```js
-{
-    "hello": "world!",
-    "hey": "foo"
-}
-```
-
-#### Output message
-
-```js
-{
-    "hello": "world!",
-    "hey": "foo"
-}
-```
+**Supported codec:**
+* [plain codec](./codec-config-guide.md#plain-codec) - Raw data string storage
+* [json codec](./codec-config-guide.md#json-codec) - JSON data parsing
+* [line codec](./codec-config-guide.md#line-codec) - Line-by-line message processing
 
 ## Source > JDBC
 
@@ -689,15 +649,8 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 
 ### Message imported by codec
 
-#### Unselected or plain
-
-``` js
-{
-    "id": 1,
-    "name": "dataflow",
-    "deleted": false
-}
-```
+**Supported codec:**
+* [plain codec](./codec-config-guide.md#plain-codec) - Raw data string storage
 
 ## Filter
 
@@ -1141,7 +1094,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Property name      | Default value                   | Data type        | Supported engine type | Description                                                     | Others                                                                              |
 |--------------------|---------------------------------|------------------|-----------------------|-----------------------------------------------------------------|-------------------------------------------------------------------------------------|
 | Source Field       | -                               | string           | V1, V2                | Enter a field name to get strings.                              |                                                                                     |
-| Formats            | -                               | array of strings | V1, V2                | Enter formats to get strings.                                   | The pre-defined formats are as follows.<br/>ISO8601, UNIX, UNIX_MS, TAI64N (V2 미지원) | |
+| Formats            | -                               | array of strings | V1, V2                | Enter formats to get strings.                                   | The pre-defined formats are as follows.<br/>ISO8601, UNIX, UNIX_MS, TAI64N (V2 unsupported) | |
 | Locale             | * V1: - <br> * V2: `ko_KR`      | string           | V1, V2                | Enter a locale to use for string analysis.                      | e.g. en, en-US, ko-KR                                                               |
 | Field to be stored | * V1: `@timestamp`<br/> * V2: - | string           | V1, V2                | Enter a field name to store the result of parsing data strings. |                                                                                     |
 | Failure tag        | `_dateparsefailure`             | array of strings | V1                    | Enter the tag name to define if data string parsing fails.      |                                                                                     |
@@ -2075,135 +2028,47 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 ### Node Description
 
 * Node for uploading data to Object Storage in NHN Cloud.
-* Object created on OBS is output in the following path format by default. 
-    * `/{container_name}/year={yyyy}/month={MM}/day={dd}/hour={HH}/ls.s3.{uuid}.{yyyy}-{MM}-{dd}T{HH}.{mm}.part{seq_id}.txt`
+* When created using default settings without additional configuration, objects are output according to the following path format.
+    * Engine V1: `/{bucket_name}/year={yyyy}/month={MM}/day={dd}/hour={HH}/ls.s3.{uuid}.{yyyy}-{MM}-{dd}T{HH}.{mm}.part{seq_id}.txt`
+    * Engine V2: `/{bucket_name}/year={yyyy}/month={MM}/day={dd}/hour={HH}/part-{uuid}-{file_counter}`   
 * If the engine type is V2, the provided codecs are JSON and LINE. Plain and parquet codecs will be supported later.
+
+!!! tip "Note"
+    * The following `Output Path Examples by Prefix Input Condition` are based on Engine V1.
 
 ### Supported Engine Type
 
 | Engine Type | Support | Note |
 | --- | --- | --- |
 | V1 | O |  |
-| V2 | O |  |
+| V2 | O | [V2 Important Notes on Object Storage Connectivity (Engine V2)](node-config-guide/#v2-object-storage) 참고 |
 
 ### Property Description 
 
 | Property name                    | Default value                                        | Data type | Supported engine type | Description                                                                                            | Others                                                                                                                                                                  |
-|----------------------------------|------------------------------------------------------|-----------|-----------------------|--------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| region                           | -                                                    | enum      | V1, V2                | Enter the region of Object Storage product                                                             |                                                                                                                                                                         |
-| Bucket                           | -                                                    | string    | V1, V2                | Enter bucket name                                                                                      |                                                                                                                                                                         |
-| Secret Key                       | -                                                    | string    | V1, V2                | Enter S3 API Credential Secret Key.                                                                    |                                                                                                                                                                         |
-| Access Key                       | -                                                    | string    | V1, V2                | Enter S3 API Credential Access Key.                                                                    |                                                                                                                                                                         |
+|----------------------------------|-------------------------------------------------------|-----------|-----------------------|--------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| region                           | -                                                      | enum      | V1, V2                | Enter the region of Object Storage product                                                             |                                                                                                                                                                         |
+| Bucket                           | -                                                      | string    | V1, V2                | Enter bucket name                                                                                      |                                                                                                                                                                         |
+| Secret Key                       | -                                                      | string    | V1, V2                | Enter S3 API Credential Secret Key.                                                                    |                                                                                                                                                                         |
+| Access Key                       | -                                                      | string    | V1, V2                | Enter S3 API Credential Access Key.                                                                    |                                                                                                                                                                         |
 | Prefix                           | `/year=%{+YYYY}/month=%{+MM}/day=%{+dd}/hour=%{+HH}` | string    | V1, V2                | Enter a prefix to prefix the name when uploading the object.<br/>You can enter a field or time format. | [Available Time Format](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html)                                                             |
-| Prefix Time Field                | * V1: `@timestamp` <br> * V2: -                      | string    | V1, V2                | Enter a time field to apply to the prefix.                                                             |                                                                                                                                                                         |
-| Prefix Time Field Type           | `DATE_FILTER_RESULT`                                 | enum      | V1, V2                | Enter a time field type to apply to the prefix.                                                        | Engine type V2 supports DATE_FILTER_RESULT type only (other types will be supported later)                                                                              |
-| Prefix Time Zone                 | `UTC`                                                | string    | V1, V2                | Enter a time zone for the Time field to apply to the prefix.                                           |                                                                                                                                                                         |
-| Prefix Time Application fallback | `_prefix_datetime_parse_failure`                     | string    | V1, V2                | Enter a prefix to replace if the prefix time application fails.                                        |                                                                                                                                                                         |
-| Encoding                         | `none`                                               | enum      | V1                    | Enter whether to encode or not . gzip encoding is available.                                           |                                                                                                                                                                         |
-| Object Rotation Policy           | `size_and_time`                                      | enum      | V1                    | Determines object creation rules.                                                                      | size_and_time – Use object size and time to decide<br/>size – Use object size to decide <br/>Time – Use time to decide<br/>Engine type V2 supports size\_and\_time only |
+| Prefix Time Field                | * V1: `@timestamp` <br> * V2: -            | string    | V1, V2                | Enter a time field to apply to the prefix.                                                             |                                                                                                                                                                         |
+| Prefix Time Field Type           | `DATE_FILTER_RESULT`                                  | enum      | V1, V2                | Enter a time field type to apply to the prefix.                                                        | Engine type V2 supports DATE_FILTER_RESULT type only (other types will be supported later)                                                                              |
+| Prefix Time Zone                 | `UTC`                                                 | string    | V1, V2                | Enter a time zone for the Time field to apply to the prefix.                                           |                                                                                                                                                                         |
+| Prefix Time Application fallback | `_prefix_datetime_parse_failure`                      | string    | V1, V2                | Enter a prefix to replace if the prefix time application fails.                                        |                                                                                                                                                                         |
+| Encoding                         | `none`                                                | enum      | V1                    | Enter whether to encode or not . gzip encoding is available.                                           |                                                                                                                                                                         |
+| Object Rotation Policy           | `size_and_time`                                       | enum      | V1                    | Determines object creation rules.                                                                      | size_and_time – Use object size and time to decide<br/>size – Use object size to decide <br/>Time – Use time to decide<br/>Engine type V2 supports size\_and\_time only |
 | Reference Time                   | `1`                                                  | number    | V1, V2                | Set the time to be the basis for object splitting.                                                     | Set if object rotation policy is size_and_time or time                                                                                                                  |
 | Object size                      | `5242880`                                            | number    | V1, V2                | Set the size (unit: byte) to be the basis for object splitting.                                        | Set when object rotation policy is size_and_time or size                                                                                                                |
 | Inactivity Interval                | `1`                                                  | number | V2       | Sets the reference time for splitting an object when there is no data inflow for a set period of time.               | If there is no data inflow for the set period of time, the current object will be uploaded, and any new data inflow will be written in a new object.                                                     |
 
-### Json Codec Output example exercise
+### Output examples by codec type
 
-#### condition
-
-* Region → `KR1`
-* Bucket → `obs-test-container`
-* Access Key → `******`
-* Secret Key → `******`
-
-#### Input message
-
-``` json
-{"hidden":"Hello Dataflow!","message":"Hello World", "@timestamp": "2022-11-21T07:49:20Z"}
-```
-
-#### Output Value
-
-* Path
-
-```
-/obs-test-container/year=2022/month=11/day=21/hour=07/ls.s3.d53c090b-9718-4833-926a-725b20c85974.2022-11-21T07.49.part0.txt
-```
-
-* Output message
-
-``` json
-{"@timestamp":"2022-11-21T07:49:20.000Z","host":"755b65d82bd0","hidden":"Hello Dataflow!","@version":"1","sequence":0,"message":"Hello World"}
-```
-
-### plain Codec Output example exercise – when message field exists
-
-#### condition
-
-* Region → `KR1`
-* Bucket → `obs-test-container`
-* Access Key → `******`
-* Secret Key → `******`
-
-#### Input message
-
-``` json
-{ 
-    "message": "Hello World!", 
-    "hidden": "Hello Dataflow!", 
-    "@timestamp": "2022-11-21T07:49:20Z" 
-}
-```
-
-#### Output Value
-
-* Path
-
-```
-/obs-test-container/year=2022/month=11/day=21/hour=07/ls.s3.d53c090b-9718-4833-926a-725b20c85974.2022-11-21T07.49.part0.txt
-```
-
-* Output message
-
-```
-2022-11-21T07:49:20.000Z e0e40e03dd94 Hello World
-```
-
-### plain Codec Output example exercise – when message field doesn’t exist
-
-#### condition
-
-* Region → `KR1`
-* Bucket → `obs-test-container`
-* Access Key → `******`
-* Secret Key → `******`
-
-#### Input message
-
-``` json
-{ 
-    "hidden": "Hello Dataflow!", 
-    "@timestamp": "2022-11-21T07:49:20Z" 
-}
-```
-
-#### Output Value
-
-* Path
-
-```
-/obs-test-container/year=2022/month=11/day=21/hour=07/ls.s3.d53c090b-9718-4833-926a-725b20c85974.2022-11-21T00.47.part0.txt
-```
-
-* Output message
-
-```
-2022-11-21T07:49:20.000Z f207c24a122e %{message}
-```
-
-### Parquet Codec Property Description
-
-| Property name | Default value | Data type | Supported engine type | Description | Note |
-| --- | --- | --- | --- | --- | --- |
-| parquet compression codec | `SNAPPY` | enum | V1 | Enter the compression codec to use when converting PARQUET files. | * [Reference](https://parquet.apache.org/docs/file-format/data-pages/compression/) </br>* Engine type V2 will be supported later |
+**Supported codec:**
+* [plain codec](./codec-config-guide.md#plain-codec) - Raw data string storage (Engine V1 only) 
+* [json codec](./codec-config-guide.md#json-codec) - JSON data parsing
+* [line codec](./codec-config-guide.md#line-codec) - Line-by-line message processing
+* [parquet codec](./codec-config-guide.md#parquet-codec) - Compressed columnar storage format (Engine V1 only)
 
 ### Prefix Example - Field
 
@@ -2290,7 +2155,7 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Engine Type | Support | Note |
 | --- | --- | --- |
 | V1 | O |  |
-| V2 | O |  |
+| V2 | O | [V2 Important Notes on Object Storage Connectivity (Engine V2)]refer to (node-config-guide/#v2-object-storage) |
 
 ### Property Description 
 | Property name | Default value | Data type | Supported engine type | Description | Others |
@@ -2315,15 +2180,21 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Additional Settings | - | Hash | V1 | Enter additional settings to connect to S3. | [Guide](https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html) |
 | Inactivity Interval                | `1`                                                  | number | V2       | Sets the reference time for splitting an object when there is no data inflow for a set period of time.               | If there is no data inflow for the set period of time, the current object will be uploaded, and any new data inflow will be written in a new object.                                                     |
 
-### Output example exercise
+!!! danger "Caution"
+    * When connecting to NHN Cloud Object Storage using an (Amazon) S3 node, you must configure the properties as follows:
+    * If the engine type is V1
+        * Set the force_path_style value to true using the **Additional Settings**
+        * Input example: `{"force_path_style" : true}`
+    * If the engine type is V2
+        * Enable **Path-Style Requests** by setting it to `true`
 
-* Same with OBS.
+### Output examples by codec type
 
-### Parquet Codec Property Description
-
-| Property name | Default value | Data type | Supported engine type | Description | Note |
-| --- | --- | --- | --- | --- | --- |
-| parquet compression codec | `SNAPPY` | enum | V1 | Enter the compression codec to use when converting PARQUET files. | * [Reference](https://parquet.apache.org/docs/file-format/data-pages/compression/) </br>* Engine type V2 will be supported later |
+**Supported codec:**
+* [plain codec](./codec-config-guide.md#plain-codec) - Raw data string storage (Engine V1 only) 
+* [json codec](./codec-config-guide.md#json-codec) - JSON data parsing
+* [line codec](./codec-config-guide.md#line-codec) - Line-by-line message processing
+* [parquet codec](./codec-config-guide.md#parquet-codec) - Compressed columnar storage format (Engine V1 only)
 
 ### Additional Settings example
 
@@ -2394,41 +2265,12 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Retry Request Cycle        | `100`                                                    | number    | V1                                                          | Enter the interval (ms) to retry when transfer request fails.                              | [Kafka official documentation](https://kafka.apache.org/23/configuration/producer-configs/) - See `retry.backoff.ms` property                                                                                                                                                                                                                                                                            |
 | Retry times                | -                                                        | number    | V1                                                          | Enter the maximum times (ms) to retry when transfer request fails.                         | [Kafka official documentation](https://kafka.apache.org/23/configuration/producer-configs/) - See `retries` property<br/>Retrying exceeding the set value may result in data loss.                                                                                                                                                                                                                       |
 
-### Json Codec Output example exercise
+#### Output examples by codec type
 
-#### Input message
-
-``` json
-{ 
-    "message": "Hello World!", 
-    "hidden": "Hello Dataflow!", 
-    "@timestamp": "2022-11-21T07:49:20Z" 
-}
-```
-
-#### Output message
-
-``` json
-{"host":"0bc501d89f8c","message":"Hello World","hidden":"Hello Dataflow!","sequence":0,"@timestamp":"2022-11-21T07:49:20.000Z","@version":"1"}
-```
-
-### plain Codec Output example exercise
-
-#### Input message
-
-``` json
-{ 
-    "message": "Hello World!", 
-    "hidden": "Hello Dataflow!", 
-    "@timestamp": "2022-11-21T07:49:20Z" 
-}
-```
-
-#### Output message
-
-```
-2022-11-21T07:49:20.000Z 2898d492114d Hello World
-```
+**Supported codec:**
+* [plain codec](./codec-config-guide.md#plain-codec) - Raw data string storage
+* [json codec](./codec-config-guide.md#json-codec) - JSON data parsing
+* [line codec](./codec-config-guide.md#line-codec) - Line-by-line message processing  
 
 ### plain Codec Output example exercise – when message field doesn’t exist
 
@@ -2459,50 +2301,15 @@ SELECT * FROM MY_TABLE WHERE id > :sql_last_value and id > custom_value order by
 | Engine Type | Support | Note |
 | --- | --- | --- |
 | V1 | O |  |
-| V2 | O | debug is not supported |
+| V2 | O |  |
 
 ### Example output by codec
 
-#### Input message
-
-``` json
-{
-    "host": "data-flow-01",
-    "message": "Hello World!",
-    "@timestamp": "2022-11-21T07:49:20Z"
-}
-```
-
-#### Plain codec output message
-
-```
-2022-11-21T07:49:20Z data-flow-01 Hello World!
-```
-
-#### JSON codec output example
-
-```
-{"host": "data-flow-01", "message": "Hello World!", "@timestamp": "2022-11-21T07:49:20Z"}
-```
-
-#### LINE codec output example
-
-* format is set to
-    * `%{message} %{host}`
-
-```
-Hello World! data-flow-01
-```
-
-#### Debug codec output example
-
-```
-{
-        "host" => "data-flow-01",
-     "message" => "Hello World!",
-  "@timestamp" => 2022-11-21T07:49:20Z
-}
-```
+**Supported codec:**
+* [plain codec](./codec-config-guide.md#plain-codec) - Raw data string storage
+* [json codec](./codec-config-guide.md#json-codec) - JSON data parsing
+* [line codec](./codec-config-guide.md#line-codec) - Line-by-line message processing  
+* [debug codec](./codec-config-guide.md#debug-codec) - Detailed output for debugging purposes (Engine V1 only)
 
 ## Branch
 
