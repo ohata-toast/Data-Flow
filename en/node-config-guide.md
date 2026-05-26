@@ -261,7 +261,7 @@ Supported codec:
 * Based on the object creation time, data is read from the object created the earliest.
 
 ### Execution Mode
-* STREAMING: Updates the object list on each `list update cycle`and processes data by reading newly added objects.
+* STREAMING: Updates the object list on each `list refresh interval`and processes data by reading newly added objects.
 * BATCH: Fetches the object list once at the beginning of the flow, reads the objects, processes the data, and ends the flow.
 
 ### Property Description 
@@ -288,7 +288,7 @@ Supported codec:
 * Node that receives data from Data Lake Storage of NHN Cloud.
 
 ### Execution Mode
-* STREAMING: Updates the object list on each `list update cycle` and processes data by reading newly added objects.
+* STREAMING: Updates the object list on each `list refresh interval` and processes data by reading newly added objects.
 * BATCH: Fetches the object list once at the beginning of the flow, reads the objects, processes the data, and ends the flow.
 
 ### Property Description
@@ -299,10 +299,10 @@ Supported codec:
 Enter region information configured in the storage. |  |
 | Secret key | -       | string | Enter your S3 credentials secret key. |  |
 | Access key | -       | string | Enter your S3 credentials access key. |  |
-| List update cycle | 60    | number | Enter the object list update cycle included in the bucket. |  |
+| list refresh interval | 60    | number | Enter the object list refresh interval included in the bucket. |  |
 | Prefix | -       | string | 	
 Enter a prefix of an object to read. |  |
-| Key pattern to exclude | -       | string | Enter a pattern of an object not to read. |  |
+| Exclude key pattern | -       | string | Enter a pattern of an object not to read. |  |
 
 ### Message Ingestion by Codec Type
 Supported codecs
@@ -317,7 +317,7 @@ Supported codecs
 * Based on the object creation time, data is read from the object created the earliest.
 
 ### Execution Mode
-* STREAMING: Updates the object list on each `list update cycle`and processes data by reading newly added objects.
+* STREAMING: Updates the object list on each `list refresh interval`and processes data by reading newly added objects.
 * BATCH: Updates the object list once at the start of the flow, then reads the objects, processes the data, and ends the flow.
 
 ### Property Description 
