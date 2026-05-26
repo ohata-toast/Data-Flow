@@ -282,6 +282,33 @@ Supported codec:
 * [PLAIN codec](./codec-config-guide.md#plain) - Raw data string storage
 * [JSON codec](./codec-config-guide.md#json) - JSON data parsing
 
+## Source > (NHN Cloud) Data Lake Storage
+
+### Node Description
+* Node that receives data from Data Lake Storage of NHN Cloud.
+
+### Execution Mode
+* STREAMING: Updates the object list on each `list update cycle` and processes data by reading newly added objects.
+* BATCH: Fetches the object list once at the beginning of the flow, reads the objects, processes the data, and ends the flow.
+
+### Property Description
+| Property name | Default value | Data type | Description | Others |
+| --- |---------| --- | --- | --- |
+| Bucket | -       | string | Enter a bucket name to read data. |  |
+| Region | -       | string | 	
+Enter region information configured in the storage. |  |
+| Secret key | -       | string | Enter your S3 credentials secret key. |  |
+| Access key | -       | string | Enter your S3 credentials access key. |  |
+| List update cycle | 60    | number | Enter the object list update cycle included in the bucket. |  |
+| Prefix | -       | string | 	
+Enter a prefix of an object to read. |  |
+| Key pattern to exclude | -       | string | Enter a pattern of an object not to read. |  |
+
+### Message Ingestion by Codec Type
+Supported codecs
+* [PLAIN codec](./codec-config-guide.md#plain) - Raw data string storage
+* [JSON codec](./codec-config-guide.md#json) - JSON data parsing
+
 ## Source > (Amazon) S3
 
 ### Node Description
@@ -317,6 +344,54 @@ Supported codec:
 * [PLAIN codec](./codec-config-guide.md#plain) - Raw data string storage
 * [JSON codec](./codec-config-guide.md#json) - JSON data parsing
 
+## Source > (NHN Cloud) EasyQueue
+
+### Node Decription
+Node that receives data from EasyQueue of NHN Cloud.
+
+### Execution Mode
+STREAMING: Processes data every time a new message arrives in a queue.
+
+### Property Description
+| Property name | Default value | Data type | Description | Others |
+| --- | --- | --- | --- | --- |
+| Appkey | - | string | Enter the appkey for EasyQueue. |  |
+| User Access Key ID | - | string | Enter the User Access Key ID for the user account. |  |
+| Secret Access Key | - | string | Enter the User Secret Key for the user account. |  |
+| Broker server list | - | string | Enter the Kafka broker servers. If there are multiple servers, separate them with a comma (`,`). | See `bootstrap.servers` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) <br/>Example: 10.100.1.1:9092,10.100.1.2:9092 |
+| Consumer group ID | dataflow | string | Enter the ID that identifies the Kafka Consumer Group. | See `group.id` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) |
+| Topic list | - | array of strings | Enter the list of Kafka topics to receive messages from. |  |
+| Topic pattern | - | string | Enter the Kafka topic pattern to receive messages from. | Example: `*-messages` |
+| Exclude internal topics | true | boolean | Excludes internal topics such as __consumer_offsets. | See `exclude.internal.topics` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) <br/>Excludes internal topics such as `__consumer_offsets` from the list of topics to receive. |
+| Client ID | dataflow | string | Enter the ID that identifies the Kafka Consumer. | See `client.id` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) |
+| Isolation level | read_committed | enum | Determines whether the consumer reads messages from uncommitted transactions or only committed messages. | See `isolation.level` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/)<br/>read_uncommitted: Reads all messages in offset order.<br/>read_committed: Reads only messages from committed transactions. |
+| Partition assignment strategy | ["RANGE", "COOPERATIVE_STICKY"] | array of strings | Determines how partitions are assigned to the consumer group when receiving messages from Kafka. | See `partition.assignment.strategy` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) <br/>org.apache.kafka.clients.consumer.RangeAssignor<br/>org.apache.kafka.clients.consumer.RoundRobinAssignor<br/>org.apache.kafka.clients.consumer.StickyAssignor<br/>org.apache.kafka.clients.consumer.CooperativeStickyAssignor |
+| Offset setting | latest | enum | Enter the criteria for setting the consumer group offset. | See `auto.offset.reset` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) <br/>All settings below retain the existing offset if the consumer group already exists.<br/>none: Returns an error if the consumer group does not exist.<br/>earliest: Initializes to the oldest offset of the partition if the consumer group does not exist.<br/>latest: Initializes to the most recent offset of the partition if the consumer group does not exist. |
+| Key deserializer type | STRING | enum | Enter the type of the key of the received message. | See `key.deserializer` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) |
+| Generate metadata | false | boolean | If the property value is true, metadata fields are generated for the message. Metadata is generated in the `kafka_metadata` field. | The following fields are generated:<br/>topic: The topic from which the message was received<br/>groupId: The consumer group ID used to receive the message<br/>partition: The partition number of the topic from which the message was received<br/>offset: The offset of the partition from which the message was received<br/>key: The message key |
+| Fetch minimum size | 1 | number | Enter the minimum size (in bytes) of data to retrieve in a single fetch request. | See `fetch.min.bytes` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) |
+| Send buffer size | 131072 | number | Enter the size (in bytes) of the TCP send buffer used to transmit data. | See `send.buffer.bytes` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) |
+| Retry request interval | 100 | number | Enter the interval (in ms) for retrying when a transmission request fails. | See `retry.backoff.ms` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) |
+| Cyclic redundancy check | true | boolean | Checks the CRC of messages. | See `check.crcs` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) |
+| Server reconnect interval | 50 | number | Enter the interval (in ms) for retrying when a connection to the broker server fails. | See `reconnect.backoff.ms` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) |
+| Max fetch size per partition | 1048576 | number | Enter the maximum size (in bytes) of data to retrieve per partition in a single fetch request. | See `max.partition.fetch.bytes` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) |
+| Server request timeout | 30000 | number | Enter the timeout (in ms) for transmission requests. | See `request.timeout.ms` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) |
+| TCP receive buffer size | 65536 | number | Enter the size (in bytes) of the TCP receive buffer used to read data. | See `receive.buffer.bytes` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) |
+| Session timeout | 45000 | number | Enter the session timeout (in ms) for the consumer.<br/>If the consumer fails to send a heartbeat within this time, it is removed from the consumer group. | See `session.timeout.ms` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) |
+| Max poll records | 500 | number | Enter the maximum number of messages to retrieve in a single poll request. | See `max.poll.records` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) |
+| Max poll interval | 300000 | number | Enter the maximum interval (in ms) between poll requests. | See `max.poll.interval.ms` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) |
+| Fetch maximum size | 52428800 | number | Enter the maximum size (in bytes) of data to retrieve in a single fetch request. | See `fetch.max.bytes` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) |
+| Fetch maximum wait time | 500 | number | Enter the wait time (in ms) before sending a fetch request when the amount of data has not reached the `Fetch minimum size` setting. | See `fetch.max.wait.ms` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) |
+| Consumer health check interval | 3000 | number | Enter the interval (in ms) at which the consumer sends heartbeats. | See `heartbeat.interval.ms` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) |
+| Metadata refresh interval | 300000 | number | Enter the interval (in ms) for refreshing partition and broker server status. | See `metadata.max.age.ms` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/producer-configs/) |
+| IDLE timeout | 540000 | number | Enter the wait time (in ms) before closing connections with no data transmission. | See `connections.max.idle.ms` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) |
+| Additional settings | - | hash | Enter additional Consumer settings to use for the Kafka connection. | See the [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/) |
+
+### Message Ingestion by Codec Type
+Supported codecs
+* [PLAIN codec](./codec-config-guide.md#plain) - Raw data string storage
+* [JSON codec](./codec-config-guide.md#json) - JSON data parsing
+
 ## Source > (Apache) Kafka
 
 ### Node Description
@@ -335,7 +410,7 @@ STREAMING: Processes data every time a new message arrives in a topic.
 |------------------|-----------------------------------|------------------|---------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Broker Server List | - | string | Enter the Kafka broker servers. Separate multiple servers with a comma (`,`). | Refer to the `bootstrap.servers` property in the [Kafka documentation](https://kafka.apache.org/39/configuration/consumer-configs/). <br/>e.g., 10.100.1.1:9092,10.100.1.2:9092 |
 | Consumer Group ID | dataflow | string | Enter the ID to identify the Kafka Consumer Group. | Refer to the `group.id` property in the [Kafka documentation](https://kafka.apache.org/39/configuration/consumer-configs/). |
-| Topic List | - | array of strings | Enter the list of Kafka topics to receive messages from. | |
+| Topic List | - | array of strings | Enter the list of Kafka topics to receive messages from. |                                                                                                                                                                                                                                                                                                                                                      |
 | Topic Pattern | - | string | Enter the Kafka topic pattern to receive messages from. | e.g., `*-messages` |
 | Exclude Internal Topics | true | boolean | Excludes internal topics such as __consumer_offsets. | Refer to the `exclude.internal.topics` property in the [Kafka documentation](https://kafka.apache.org/39/configuration/consumer-configs/). <br/>Excludes internal topics such as `__consumer_offsets` from the list of topics to receive messages from. |
 | Client ID | `dataflow` | string | Enter the ID to identify the Kafka Consumer. | Refer to the `client.id` property in the [Kafka documentation](https://kafka.apache.org/39/configuration/consumer-configs/). |
@@ -360,6 +435,7 @@ STREAMING: Processes data every time a new message arrives in a topic.
 | Consumer Health Check Interval | 3000 | number | Enter the interval (ms) at which the consumer sends heartbeats. | Refer to the `heartbeat.interval.ms` property in the [Kafka documentation](https://kafka.apache.org/39/configuration/consumer-configs/). |
 | Metadata Refresh Interval | 300000 | number | Enter the interval (ms) for refreshing partition and broker server status. | Refer to the `metadata.max.age.ms` property in the [Kafka documentation](https://kafka.apache.org/39/configuration/producer-configs/). |
 | IDLE Timeout | 540000 | number | Enter the wait time (ms) before closing a connection with no data transmission. | Refer to the `connections.max.idle.ms` property in the [Kafka documentation](https://kafka.apache.org/39/configuration/consumer-configs/). |
+| Isolation level | read_committed | enum | Determines whether the consumer reads messages from uncommitted transactions or only committed messages. | [Kafka official documentation](https://kafka.apache.org/39/configuration/consumer-configs/)'s `isolation.level` property<br/>read_uncommitted: Reads all messages in offset order.<br/>read_committed: Reads only messages from committed transactions. |
 | Additional Configuration | - | hash | Enter additional Consumer configuration to use for the Kafka connection. | Refer to the [Kafka documentation](https://kafka.apache.org/39/configuration/consumer-configs/). |
 
 ### Message imported by codec
@@ -1128,21 +1204,21 @@ Type of node that defines an endpoint to load data that has completed filter ope
 ### Property Description 
 
 | Property Name | Default Value | Data Type | Description | Notes |
-|-----------------------|------------------------------------------------------|--------|--------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
-| Region | - | enum | Enter the region of the Object Storage service. | |
-| Bucket | - | string | Enter the bucket name. | |
-| Secret Key | - | string | Enter the S3 API credentials secret key. | |
-| Access Key | - | string | Enter the S3 API credentials access key. | |
+|-----------------------|----------------------------------------------------|--------|--------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
+| Region                    | -                                                  | enum   | Enter a region of the Object Storage product.                                |                                                                                                                            |
+| Bucket                    | -                                                  | string | Enter a bucket name.                                                |                                                                                                                            |
+| Secret key                  | -                                                  | string | Enter an S3 API credentials secret key.                                    |                                                                                                                            |
+| Access key                 | -                                                  | string | Enter an S3 API credentials access key.                                   |                                                                                                                            |
 | Prefix | /year=%{+YYYY}/month=%{+MM}/day=%{+dd}/hour=%{+HH} | string | Enter the prefix to prepend to the object name when uploading.<br/>You can enter a field or time format. | [Available time formats](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html) |
-| Prefix Time Field | - | string | Enter the time field to apply to the Prefix. | |
+| Prefix Time Field | -                                                  | string | Enter the time field to apply to the Prefix. | |
 | Prefix Time Field Type | DATE_FILTER_RESULT | enum | Enter the type of the time field to apply to the Prefix. | Only DATE_FILTER_RESULT type is supported (other types to be supported in the future) |
 | Prefix Timezone | UTC | string | Enter the timezone of the time field to apply to the Prefix. | |
-| Prefix Time Fallback | _prefix_datetime_parse_failure | string | Enter the fallback Prefix to use if applying the Prefix time fails. | |
+| Prefix Time Fallback | _prefix_datetime_parse_failure                                    | string | Enter the fallback Prefix to use if applying the Prefix time fails. | |
 | Time Interval | 1 | number | Sets the time interval used as the criteria for splitting objects. | |
 | Object Size Threshold | 5242880 | number | Sets the size (unit: bytes) used as the criteria for splitting objects. | |
 | Inactivity Interval | 1 | number | Sets the time interval for splitting objects when there is no data ingestion. | If no data is ingested during the configured time, the current object is uploaded and subsequent data is written to a new object. |
 
-### Output examples by codec type
+### Output Examples by Codec Type
 
 Supported codec:
 * [JSON codec](./codec-config-guide.md#json) - JSON data parsing
@@ -1221,6 +1297,100 @@ Supported codec:
 ```
 /obs-test-container/_failure/part-378be4d8-2c59-4014-aaeb-a9bc75af2653-0
 ```
+## Sink > (NHN Cloud) Data Lake Storage
+
+### Node Description
+* Node that uploads data to Data Lake Storage of NHN Cloud.
+* When created using default settings without additional configuration, objects are output according to the following path format.
+    * `/{bucket_name}/year={yyyy}/month={MM}/day={dd}/hour={HH}/part-{uuid}-{file_counter}`   
+* JSON, LINE, and Parquet codec are provided.
+
+### Property Description
+| Property name | Default value | Data type | Description | Others |
+|-----------------------|----------------------------------------------------|--------|--------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
+| Region                    | -                                                  | enum   | Enter a region of the Object Storage product.                                |                                                                                                                            |
+| Bucket                    | -                                                  | string | Enter a bucket name.                                                |                                                                                                                            |
+| Secret key                  | -                                                  | string | Enter an S3 API credentials secret key.                                    |                                                                                                                            |
+| Access key                 | -                                                  | string | Enter an S3 API credentials access key.                                   |                                                                                                                            |
+| Prefix                | /year=%{+YYYY}/month=%{+MM}/day=%{+dd}/hour=%{+HH} | string | Enter the prefix to prepend to the object name when uploading.<br/>A field or time format can be entered. | [Available time formats](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html)                         |
+| Prefix time field          | -                                                  | string | Enter the time field to apply to the Prefix.                                    |                                                                                                                            |
+| Prefix time field type       | DATE_FILTER_RESULT                                 | enum   | Enter the type of the time field to apply to the Prefix.                                | Only DATE_FILTER_RESULT type is supported (other types will be supported in the future).                                                                        |
+| Prefix time zone            | UTC                                                | string | Enter the time zone of the time field to apply to the Prefix.                              |                                                                                                                            |
+| Prefix time application fallback | _prefix_datetime_parse_failure                                   | string | Enter the fallback Prefix to use when Prefix time application fails.                      |                                                                                                                            |
+| Reference time                 | 1                                                  | number | Set the time interval used as the criterion for splitting objects.                                   |                                                                                                                            |
+| Reference object size            | 5242880                                            | number | Set the size (in bytes) used as the criterion for splitting objects.                         |                                                                                                                            |
+| Inactivity interval                | 1                                                  | number | Set the time interval for splitting objects when no data ingestion occurs. | If no data is ingested during the set time, the current object is uploaded, and subsequently ingested data is written to a new object.                                                     |
+
+### Output Examples by Codec Type
+
+Supported codec:
+* [JSON codec](./codec-config-guide.md#json) - JSON data parsing
+* [LINE codec](./codec-config-guide.md#line) - Line-by-line message processing
+* [Parquet codec](./codec-config-guide.md#parquet) - Compressed in Parquet format
+
+### Prefix Example - Field
+#### Condition
+* Bucket → `dls-test-container`
+* Prefix → `/dataflow/%{deployment}`
+
+#### Input Message
+``` json
+{
+    "deployment": "production",
+    "message": "example",
+    "logTime": "2022-11-21T07:49:20Z"
+}
+```
+
+#### Output Path
+```
+/dls-test-container/dataflow/production/part-378be4d8-2c59-4014-aaeb-a9bc75af2653-0
+```
+
+### Prefix Example - Time
+#### Condition
+* Bucket → `dls-test-container`
+* Prefix → `/dataflow/year=%{+YYYY}/month=%{+MM}/day=%{+dd}/hour=%{+HH}`
+* Prefix time field → `logTime`
+* Prefix time field type → `ISO8601`
+* Prefix timezone → `Asia/Seoul`
+
+#### Input Message
+``` json
+{
+    "deployment": "production",
+    "message": "example",
+    "logTime": "2022-11-21T07:49:20Z"
+}
+```
+
+#### Output Path
+```
+/dls-test-container/dataflow/year=2022/month=11/day=21/hour=16/part-378be4d8-2c59-4014-aaeb-a9bc75af2653-0
+```
+
+### Prefix Example - When time application fails
+#### Condition
+* Bucket → `dls-test-container`
+* Prefix → `/dataflow/year=%{+YYYY}/month=%{+MM}/day=%{+dd}/hour=%{+HH}`
+* Prefix time field → `logTime`
+* Prefix time field type → `ISO8601`
+* Prefix timezone → `Asia/Seoul`
+* Prefix fallback for time application failure → `_failure`
+
+#### Input Message
+``` json
+{
+    "deployment": "production",
+    "message": "example",
+    "logTime": "2022-11-21T07:49:20Z"
+}
+```
+
+#### Output Path
+```
+/dls-test-container/_failure/part-378be4d8-2c59-4014-aaeb-a9bc75af2653-0
+```
 
 ## Sink > (Amazon) S3
 
@@ -1244,18 +1414,54 @@ Supported codec:
 | Time Interval | 1 | number | Sets the time interval used as the criteria for splitting objects. | |
 | Object Size Threshold | 5242880 | number | Sets the size used as the criteria for splitting objects. | |
 | Path-style Request | false | boolean | Determines whether to use path-style requests. | |
-| Inactivity Interval | `1` | number | Sets the time interval for splitting objects when there is no data ingestion. | If no data is ingested during the configured time, the current object is uploaded and subsequent data is written to a new object. |
+| Inactivity Interval | 1 | number | Sets the time interval for splitting objects when there is no data ingestion. | If no data is ingested during the configured time, the current object is uploaded and subsequent data is written to a new object. |
 
 !!! danger "Caution"
     * If you connect to NHN Cloud Object Storage using the (Amazon) S3 node, **Path-style Request** must be set to `true`.
 
 
-### Output examples by codec type
+### Output Examples by Codec Type
 
 Supported codec:
 * [JSON codec](./codec-config-guide.md#json) - JSON data parsing
 * [LINE codec](./codec-config-guide.md#line) - Line-by-line message processing
 * [Parquet codec](./codec-config-guide.md#parquet) - Compressed in Parquet format
+
+## Sink > (NHN Cloud) EasyQueue
+
+### Node Description
+Node that transfers data of EasyQueue in NHN Cloud.
+
+### Property Description
+| Property name | Default value | Data type | Description | Others |
+| --- | --- | --- | --- | --- |
+| Appkey | - | string | Enter an appkey of EasyQueue. |  |
+| User Access Key ID | - | string | Enter a User Access Key ID of user account. |  |
+| Secret Access Key | - | string | Enter a User Secret Key of user account. |  |
+| Topic | - | string | Enter the name of the Kafka topic to send messages to. |  |
+| Broker server list | - | string | Enter the Kafka broker servers. If there are multiple servers, separate them with a comma (`,`). | See `bootstrap.servers` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/producer-configs/)<br/>Example: 10.100.1.1:9092,10.100.1.2:9092 |
+| Client ID | dataflow | string | Enter the ID that identifies the Kafka Producer. | See `client.id` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/producer-configs/) |
+| Compression type | none | enum | Enter the method for compressing the data to be sent. | See `compression.type` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/topic-level-configs/)<br/>Select one of: none, gzip, snappy, lz4, zstd |
+| Message key | - | string | Enter the field to use as the message key. |  |
+| Metadata refresh interval | 300000 | number | Enter the interval (in ms) for refreshing partition and broker server status. | See `metadata.max.age.ms` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/producer-configs/) |
+| Max request size | 1048576 | number | Enter the maximum size (in bytes) per transmission request. | See `max.request.size` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/producer-configs/) |
+| Server reconnect interval | 50 | number | Enter the interval (in ms) for retrying when a connection to the broker server fails. | See `reconnect.backoff.ms` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/producer-configs/) |
+| Batch size | 16384 | number | Enter the size (in bytes) to send per batch request. | See `batch.size` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/producer-configs/) |
+| Buffer memory | 33554432 | number | Enter the size (in bytes) of the buffer used for Kafka transmission. | See `buffer.memory` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/producer-configs/) |
+| Receive buffer size | 32768 | number | Enter the size (in bytes) of the TCP receive buffer used to read data. | See `receive.buffer.bytes` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/producer-configs/) |
+| Transmission delay | 0 | number | Enter the time to delay message transmission. Delayed messages are sent at once as a batch request. | See `linger.ms` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/producer-configs/) |
+| Server request timeout | 30000 | number | Enter the timeout (in ms) for transmission requests. | See `request.timeout.ms` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/producer-configs/) |
+| Send buffer size | 131072 | number | Enter the size (in bytes) of the TCP send buffer used to transmit data. | See `send.buffer.bytes` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/producer-configs/) |
+| ack property | all | enum | Enter the setting for confirming whether the broker server has received the message. | See `acks` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/producer-configs/)<br/>0 - Does not confirm whether the message was received.<br/>1 - The topic leader responds that the message was received without waiting for the follower to replicate the data.<br/>all - The topic leader waits for the follower to replicate the data before responding that the message was received. |
+| Retry request interval | 100 | number | Enter the interval (in ms) for retrying when a transmission request fails. | See `retry.backoff.ms` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/producer-configs/) |
+| Retry count | 2147483647 | number | Enter the maximum number of retries when a transmission request fails. | See `retries` in the [Kafka official documentation](https://kafka.apache.org/39/configuration/producer-configs/)<br/>Data loss may occur if retries exceed the configured value. |
+| Delivery guarantee | EXACTLY_ONCE | enum | Select the message delivery guarantee method. | AT_LEAST_ONCE: Messages are delivered at least once, but duplicates may occur in the event of a failure. Suitable when duplicate processing can be managed by the application directly, or when duplicates are acceptable.<br/><br/>EXACTLY_ONCE: Messages are processed exactly once. Suitable for critical transactions such as payments and settlements where duplicates are not acceptable, but throughput may be slightly reduced as transactions are used internally. |
+| Additional settings | - | hash | Enter additional Producer settings to use for the Kafka connection. | See the [Kafka official documentation](https://kafka.apache.org/39/configuration/producer-configs/) |
+
+### Output Examples by Codec Type
+Supported codec:
+* [JSON codec](./codec-config-guide.md#json) - JSON data parsing
+* [LINE codec](./codec-config-guide.md#line) - Line-by-line message processing  
 
 ## Sink > (Apache) Kafka
 
@@ -1284,9 +1490,10 @@ Node for sending data to Kafka.
 | ack Property | all | enum | Enter the configuration for confirming whether the broker server has received the message. | Refer to the `acks` property in the [Kafka documentation](https://kafka.apache.org/39/configuration/producer-configs/).<br/>0 - Does not confirm whether the message was received.<br/>1 - The topic leader responds that the message was received without waiting for followers to replicate the data.<br/>all - The topic leader responds that the message was received after waiting for followers to replicate the data. |
 | Retry Request Interval | 100 | number | Enter the interval (ms) for retrying a failed transmission request. | Refer to the `retry.backoff.ms` property in the [Kafka documentation](https://kafka.apache.org/39/configuration/producer-configs/). |
 | Retry Count | 2147483647 | number | Enter the maximum number of retries for a failed transmission request. | Refer to the `retries` property in the [Kafka documentation](https://kafka.apache.org/39/configuration/producer-configs/).<br/>Data loss may occur if retries exceed the configured value. |
+| Delivery guarantee | EXACTLY_ONCE | enum | Select the message delivery guarantee method. | AT_LEAST_ONCE: Messages are delivered at least once, but duplicates may occur in the event of a failure. Suitable when duplicate processing can be managed by the application directly, or when duplicates are acceptable.<br/>EXACTLY_ONCE: Messages are processed exactly once. Suitable for critical transactions such as payments and settlements where duplicates are not acceptable, but throughput may be slightly reduced as transactions are used internally. |
 | Additional Configuration | - | hash | Enter additional Producer configuration to use for the Kafka connection. | Refer to the [Kafka documentation](https://kafka.apache.org/39/configuration/producer-configs/). |
 
-#### Output examples by codec type
+#### Output Examples by Codec Type
 
 Supported codec:
 * [JSON codec](./codec-config-guide.md#json) - JSON data parsing
@@ -1313,7 +1520,7 @@ Node type that defines flow Quarter in accordance with imported data value.
 
 ### Node Description
 
-Node for filtering messages through conditional sentence.
+Node for filtering messages with conditional sentence.
 
 ### Property Description 
 
