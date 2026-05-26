@@ -7,27 +7,27 @@
     * DataFlow IP 고정 기능을 사용하려면 **고객지원 > 문의하기**로 문의하세요.
 
 ### Object Storage 연결 시 주의점
-리전 또는 프로젝트가 서로 다른 Object Storage이지만 버킷명은 동일한 경우, 하나의 플로우에서 함께 사용할 수 없습니다.
+리전 또는 프로젝트가 서로 다른 Object Storage이지만 버킷 이름은 동일한 경우, 하나의 플로우에서 함께 사용할 수 없습니다.
 
 !!! tip "불가능한 연결 설정 예제"
     * 예제 1
         * 첫 번째 연결 대상 Object Storage 정보
             * 리전: KR1
-            * 버킷명: Data
+            * 버킷 이름: Data
             * 프로젝트: TEST
         * 두 번째 연결 대상 Object Storage 정보
             * 리전: JP1
-            * 버킷명: Data
+            * 버킷 이름: Data
             * 프로젝트: TEST
         * 리전이 다르므로 두 버킷은 서로 다른 버킷이지만 DataFlow의 플로우에서는 함께 사용할 수 없음
     * 예제 2
         * 첫 번째 연결 대상 Object Storage 정보
             * 리전: KR1
-            * 버킷명: Data
+            * 버킷 이름: Data
             * 프로젝트: TEST_1
         * 두 번째 연결 대상 Object Storage 정보
             * 리전: KR1
-            * 버킷명: Data
+            * 버킷 이름: Data
             * 프로젝트: TEST_2
         * 프로젝트가 다르므로 두 버킷은 서로 다른 버킷이지만 DataFlow의 플로우에서는 함께 사용할 수 없음
 
@@ -282,6 +282,31 @@ JSON 형식의 문자열을 입력합니다.
 * [PLAIN 코덱](./codec-config-guide.md#plain) - 원본 데이터 문자열 저장
 * [JSON 코덱](./codec-config-guide.md#json) - JSON 형식 데이터 파싱
 
+## Source > (NHN Cloud) Data Lake Storage
+
+### 노드 설명
+* NHN Cloud의 Data Lake Storage로부터 데이터를 입력받는 노드입니다.
+
+### 실행 모드
+* STREAMING: `리스트 갱신 주기`마다 오브젝트 리스트를 갱신하며, 새롭게 추가된 오브젝트들을 읽어 데이터를 처리합니다.
+* BATCH: 플로우 시작 시점에 오브젝트 리스트를 한 번 불러온 뒤, 오브젝트들을 읽어 데이터를 처리하고 플로우를 종료합니다.
+
+### 속성 설명
+| 속성명 | 기본값     | 자료형 | 설명 | 비고 |
+| --- |---------| --- | --- | --- |
+| 버킷 | -       | string | 데이터를 읽을 버킷 이름을 입력합니다. |  |
+| 리전 | -       | string | 저장소에 설정된 리전 정보를 입력합니다. |  |
+| 비밀 키 | -       | string | S3가 발급한 자격 증명 비밀 키를 입력합니다. |  |
+| 액세스 키 | -       | string | S3가 발급한 자격 증명 액세스 키를 입력합니다. |  |
+| 리스트 갱신 주기 | 60    | number | 버킷에 포함된 오브젝트 리스트 갱신 주기를 입력합니다. |  |
+| Prefix | -       | string | 읽어 올 오브젝트의 접두사를 입력합니다. |  |
+| 제외할 키 패턴 | -       | string | 읽지 않을 오브젝트의 패턴을 입력합니다. |  |
+
+### 코덱별 메시지 인입
+지원 코덱
+* [PLAIN 코덱](./codec-config-guide.md#plain) - 원본 데이터 문자열 저장
+* [JSON 코덱](./codec-config-guide.md#json) - JSON 형식 데이터 파싱
+
 ## Source > (Amazon) S3
 
 ### 노드 설명
@@ -317,6 +342,54 @@ JSON 형식의 문자열을 입력합니다.
 * [PLAIN 코덱](./codec-config-guide.md#plain) - 원본 데이터 문자열 저장
 * [JSON 코덱](./codec-config-guide.md#json) - JSON 형식 데이터 파싱
 
+## Source > (NHN Cloud) EasyQueue
+
+### 노드 설명
+NHN Cloud의 EasyQueue에서 데이터를 수신하는 노드입니다.
+
+### 실행 모드
+STREAMING: 큐에 새로운 메시지가 도착할 때마다 데이터를 처리합니다.
+
+### 속성 설명
+| 속성명 | 기본값 | 자료형 | 설명 | 비고 |
+| --- | --- | --- | --- | --- |
+| 앱키 | - | string | EasyQueue의 앱키를 입력합니다. |  |
+| User Access Key ID | - | string | 사용자 계정의 User Access Key ID를 입력합니다. |  |
+| Secret Access Key | - | string | 사용자 계정의 User Secret Key를 입력합니다. |  |
+| 브로커 서버 목록 | - | string | Kafka 브로커 서버를 입력합니다. 서버가 여러 대일 경우 콤마(`,`)로 구분합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `bootstrap.servers` 속성 참고 <br/>예: 10.100.1.1:9092,10.100.1.2:9092 |
+| 컨슈머 그룹 아이디 | dataflow | string | Kafka Consumer Group을 식별하는 ID를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `group.id` 속성 참고 |
+| 토픽 목록 | - | array of strings | 메시지를 수신할 Kafka 토픽 목록을 입력합니다. |  |
+| 토픽 패턴 | - | string | 메시지를 수신할 Kafka 토픽 패턴을 입력합니다. | 예: `*-messages` |
+| 내부 토픽 제외 여부 | true | boolean | __consumer_offsets와 같은 내부 토픽을 제외합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `exclude.internal.topics` 속성 참고 <br/>수신 대상에서 `__consumer_offsets`와 같은 내부 토픽을 제외합니다. |
+| 클라이언트 아이디 | dataflow | string | Kafka Consumer를 식별하는 ID를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `client.id` 속성 참고 |
+| 격리 수준 | read_committed | enum | 컨슈머가 트랜잭션이 커밋되지 않은 메시지까지 읽을지, 커밋된 메시지만 읽을지를 결정합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `isolation.level` 속성 참고<br/>read_uncommitted: 모든 메시지를 오프셋 순서대로 읽습니다.<br/>read_committed: 커밋된 트랜잭션의 메시지만 읽습니다. |
+| 파티션 할당 정책 | ["RANGE", "COOPERATIVE_STICKY"] | array of strings | Kafka에서 메시지 수신 시 컨슈머 그룹에 어떻게 파티션을 할당할지 결정합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `partition.assignment.strategy` 속성 참고 <br/>org.apache.kafka.clients.consumer.RangeAssignor<br/>org.apache.kafka.clients.consumer.RoundRobinAssignor<br/>org.apache.kafka.clients.consumer.StickyAssignor<br/>org.apache.kafka.clients.consumer.CooperativeStickyAssignor |
+| 오프셋 설정 | latest | enum | 컨슈머 그룹의 오프셋을 설정하는 기준을 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `auto.offset.reset` 속성 참고 <br/>아래 설정 모두 컨슈머 그룹이 이미 존재하는 경우 기존 오프셋을 유지합니다.<br/>none: 컨슈머 그룹이 없으면 오류를 반환합니다.<br/>earliest: 컨슈머 그룹이 없으면 파티션의 가장 오래된 오프셋으로 초기화합니다.<br/>latest: 컨슈머 그룹이 없으면 파티션의 가장 최근 오프셋으로 초기화합니다. |
+| 키 역직렬화 유형 | STRING | enum | 수신하는 메시지의 키의 타입을 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `key.deserializer` 속성 참고 |
+| 메타데이터 생성 여부 | false | boolean | 속성값이 true일 경우 메시지에 대한 메타데이터 필드를 생성합니다. 메타데이터는 `kafka_metadata` 필드에 생성됩니다. | 생성되는 필드는 다음과 같습니다.<br/>topic: 메시지를 수신한 토픽<br/>groupId: 메시지를 수신하는 데 사용한 컨슈머 그룹 아이디<br/>partition: 메시지를 수신한 토픽의 파티션 번호<br/>offset: 메시지를 수신한 파티션의 오프셋<br/>key: 메시지 키 |
+| Fetch 최소 크기 | 1 | number | 한 번의 fetch 요청으로 가져올 데이터의 최소 크기(byte)를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `fetch.min.bytes` 속성 참고 |
+| 전송 버퍼 크기 | 131072 | number | 데이터를 전송하는 데 사용하는 TCP send 버퍼의 크기(byte)를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `send.buffer.bytes` 속성 참고 |
+| 재시도 요청 주기 | 100 | number | 전송 요청이 실패했을 때 재시도할 주기(ms)를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `retry.backoff.ms` 속성 참고 |
+| 순환 중복 검사 | true | boolean | 메시지의 CRC를 검사합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `check.crcs` 속성 참고 |
+| 서버 재연결 주기 | 50 | number | 브로커 서버에 연결이 실패했을 때 재시도할 주기(ms)를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `reconnect.backoff.ms` 속성 참고 |
+| 파티션 당 Fetch 최대 크기 | 1048576 | number | 파티션 당 한 번의 fetch 요청으로 가져올 최대 크기(byte)를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `max.partition.fetch.bytes` 속성 참고 |
+| 서버 요청 타임아웃 | 30000 | number | 전송 요청에 대한 타임아웃(ms)을 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `request.timeout.ms` 속성 참고 |
+| TCP 수신 버퍼 크기 | 65536 | number | 데이터를 읽는 데 사용하는 TCP receive 버퍼의 크기(byte)를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `receive.buffer.bytes` 속성 참고 |
+| 세션 타임아웃 | 45000 | number | 컨슈머의 세션 타임아웃(ms)을 입력합니다.<br/>컨슈머가 해당 시간 안에 heartbeat를 보내지 못할 경우 컨슈머 그룹에서 제외합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `session.timeout.ms` 속성 참고 |
+| 최대 poll 메시지 개수 | 500 | number | 한 번의 poll 요청으로 가져올 최대 메시지 개수를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `max.poll.records` 속성 참고 |
+| 최대 poll 주기 | 300000 | number | poll 요청 간 최대 주기(ms)를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `max.poll.interval.ms` 속성 참고 |
+| Fetch 최대 크기 | 52428800 | number | 한 번의 fetch 요청으로 가져올 최대 크기(byte)를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `fetch.max.bytes` 속성 참고 |
+| Fetch 최대 대기 시간 | 500 | number | `Fetch 최소 크기` 설정 만큼의 데이터가 모이지 않은 경우 fetch 요청을 보낼 대기 시간(ms)을 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `fetch.max.wait.ms` 속성 참고 |
+| 컨슈머 헬스체크 주기 | 3000 | number | 컨슈머가 heartbeat를 보내는 주기(ms)를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `heartbeat.interval.ms` 속성 참고 |
+| 메타데이터 갱신 주기 | 300000 | number | 파티션, 브로커 서버 상태 등을 갱신할 주기(ms)를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/)의 `metadata.max.age.ms` 속성 참고 |
+| IDLE 타임아웃 | 540000 | number | 데이터 전송이 없는 커넥션을 닫을 대기 시간(ms)을 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `connections.max.idle.ms` 속성 참고 |
+| 추가 설정 | - | hash | Kafka 연결에 사용할 추가 Consumer 설정을 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/) 참고 |
+
+### 코덱별 메시지 인입
+지원 코덱
+* [PLAIN 코덱](./codec-config-guide.md#plain) - 원본 데이터 문자열 저장
+* [JSON 코덱](./codec-config-guide.md#json) - JSON 형식 데이터 파싱
+
 ## Source > (Apache) Kafka
 
 ### 노드 설명
@@ -335,7 +408,7 @@ STREAMING: 토픽에 새로운 메시지가 도착할 때마다 데이터를 처
 |-------------------|-----------------------------------|------------------|---------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 브로커 서버 목록         | -                                 | string           | Kafka 브로커 서버를 입력합니다. 서버가 여러 대일 경우 콤마(`,`)로 구분합니다.                               | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `bootstrap.servers` 속성 참고 <br/>예: 10.100.1.1:9092,10.100.1.2:9092                                                                                                                                                                                                        |
 | 컨슈머 그룹 아이디        | dataflow                        | string           | Kafka Consumer Group을 식별하는 ID를 입력합니다.                                           | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `group.id` 속성 참고                                                                                                                                                                                                                                                         |
-| 토픽 목록             | -                                 | array of strings | 메시지를 수신할 Kafka 토픽 목록을 입력합니다.                                                    |
+| 토픽 목록             | -                                 | array of strings | 메시지를 수신할 Kafka 토픽 목록을 입력합니다.                                                    |                                                                                                                                                                                                                                                                                                                                                      |
 | 토픽 패턴             | -                                 | string           | 메시지를 수신할 Kafka 토픽 패턴을 입력합니다.                                                    | 예: `*-messages`                                                                                                                                                                                                                                                                                                                                      |
 | 내부 토픽 제외 여부       | true                            | boolean          | __consumer_offsets와 같은 내부 토픽을 제외합니다.                                            | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `exclude.internal.topics` 속성 참고 <br/>수신 대상에서 `__consumer_offsets`와 같은 내부 토픽을 제외합니다.                                                                                                                                                                                      |
 | 클라이언트 아이디         | dataflow                        | string           | Kafka Consumer를 식별하는 ID를 입력합니다.                                                 | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `client.id` 속성 참고                                                                                                                                                                                                                                                        |
@@ -359,6 +432,7 @@ STREAMING: 토픽에 새로운 메시지가 도착할 때마다 데이터를 처
 | 컨슈머 헬스체크 주기       | 3000                            | number           | 컨슈머가 heartbeat를 보내는 주기(ms)를 입력합니다.                                              | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `heartbeat.interval.ms` 속성 참고                                                                                                                                                                                                                                            |
 | 메타데이터 갱신 주기       | 300000                          | number           | 파티션, 브로커 서버 상태 등을 갱신할 주기(ms)를 입력합니다.                                            | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/)의 `metadata.max.age.ms` 속성 참고                                                                                                                                                                                                                                              |
 | IDLE 타임아웃         | 540000                          | number           | 데이터 전송이 없는 커넥션을 닫을 대기 시간(ms)을 입력합니다.                                            | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `connections.max.idle.ms` 속성 참고                                                                                                                                                                                                                                          |
+| 격리 수준 | read_committed | enum | 컨슈머가 트랜잭션이 커밋되지 않은 메시지까지 읽을지, 커밋된 메시지만 읽을지를 결정합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/)의 `isolation.level` 속성 참고<br/>read_uncommitted: 모든 메시지를 오프셋 순서대로 읽습니다.<br/>read_committed: 커밋된 트랜잭션의 메시지만 읽습니다. |
 | 추가 설정             | -                                 | hash             | Kafka 연결에 사용할 추가 Consumer 설정을 입력합니다.                                            | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/consumer-configs/) 참고                                                                                                                                                                                                                                                                        |
 
 ### 코덱별 메시지 인입
@@ -1128,17 +1202,17 @@ Filter 작업을 마친 데이터를 적재할 엔드포인트를 정의하는 �
 
 ### 속성 설명
 
-| 속성명                   | 기본값                                                  | 자료형    | 설명                                                           | 비고                                                                                                                         |
-|-----------------------|------------------------------------------------------|--------|--------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
-| 리전                    | -                                                    | enum   | Object Storage 상품의 리전을 입력합니다.                                |                                                                                                                            |
-| 버킷                    | -                                                    | string | 버킷 이름을 입력합니다.                                                |                                                                                                                            |
-| 비밀 키                  | -                                                    | string | S3 API 자격 증명 비밀 키를 입력합니다.                                    |                                                                                                                            |
-| 액세스 키                 | -                                                    | string | S3 API 자격 증명 액세스 키를 입력합니다.                                   |                                                                                                                            |
+| 속성명                   | 기본값                                                | 자료형    | 설명                                                           | 비고                                                                                                                         |
+|-----------------------|----------------------------------------------------|--------|--------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
+| 리전                    | -                                                  | enum   | Object Storage 상품의 리전을 입력합니다.                                |                                                                                                                            |
+| 버킷                    | -                                                  | string | 버킷 이름을 입력합니다.                                                |                                                                                                                            |
+| 비밀 키                  | -                                                  | string | S3 API 자격 증명 비밀 키를 입력합니다.                                    |                                                                                                                            |
+| 액세스 키                 | -                                                  | string | S3 API 자격 증명 액세스 키를 입력합니다.                                   |                                                                                                                            |
 | Prefix                | /year=%{+YYYY}/month=%{+MM}/day=%{+dd}/hour=%{+HH} | string | 오브젝트 업로드 시 이름 앞에 붙일 접두사를 입력합니다.<br/>필드 또는 시간 형식을 입력할 수 있습니다. | [사용 가능한 시간 형식](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html)                         |
-| Prefix 시간 필드          | -                     | string | Prefix에 적용할 시간 필드를 입력합니다.                                    |                                                                                                                            |
+| Prefix 시간 필드          | -                                                  | string | Prefix에 적용할 시간 필드를 입력합니다.                                    |                                                                                                                            |
 | Prefix 시간 필드 타입       | DATE_FILTER_RESULT                                 | enum   | Prefix에 적용할 시간 필드의 타입을 입력합니다.                                | DATE_FILTER_RESULT 타입만 가능(추후 다른 타입 지원 예정)                                                                        |
 | Prefix 시간대            | UTC                                                | string | Prefix에 적용할 시간 필드의 타임 존을 입력합니다.                              |                                                                                                                            |
-| Prefix 시간 적용 fallback | _prefix_datetime_parse_failure                     | string | Prefix 시간 적용에 실패한 경우 대체할 Prefix를 입력합니다.                      |                                                                                                                            |
+| Prefix 시간 적용 fallback | _prefix_datetime_parse_failure                                   | string | Prefix 시간 적용에 실패한 경우 대체할 Prefix를 입력합니다.                      |                                                                                                                            |
 | 기준 시각                 | 1                                                  | number | 오브젝트를 분할할 기준이 될 시간을 설정합니다.                                   |                                                                                                                            |
 | 기준 오브젝트 크기            | 5242880                                            | number | 오브젝트를 분할할 기준이 될 크기(단위: byte)를 설정합니다.                         |                                                                                                                            |
 | 비활성 간격                | 1                                                  | number | 데이터 인입이 없는 상태가 지속될 때 오브젝트를 분할하는 기준 시간을 설정합니다.                | 설정된 시간 동안 데이터 인입이 없으면 현재 오브젝트가 업로드되며, 이후 새로 인입되는 데이터는 새로운 오브젝트에 작성됩니다.                                                     |
@@ -1223,6 +1297,100 @@ Filter 작업을 마친 데이터를 적재할 엔드포인트를 정의하는 �
 /obs-test-container/_failure/part-378be4d8-2c59-4014-aaeb-a9bc75af2653-0
 ```
 
+## Sink > (NHN Cloud) Data Lake Storage
+
+### 노드 설명
+* NHN Cloud의 Data Lake Storage에 데이터를 업로드하는 노드입니다.
+* 다른 설정 없이 기본 설정만으로 생성하면 오브젝트는 다음 경로 포맷에 맞게 출력됩니다.
+    * `/{bucket_name}/year={yyyy}/month={MM}/day={dd}/hour={HH}/part-{uuid}-{file_counter}`   
+* 제공 코덱은 JSON, LINE, Parquet입니다.
+
+### 속성 설명
+| 속성명                   | 기본값                                                | 자료형    | 설명                                                           | 비고                                                                                                                         |
+|-----------------------|----------------------------------------------------|--------|--------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
+| 리전                    | -                                                  | enum   | Data Lake Storage 상품의 리전을 입력합니다.                                |                                                                                                                            |
+| 버킷                    | -                                                  | string | 버킷 이름을 입력합니다.                                                |                                                                                                                            |
+| 비밀 키                  | -                                                  | string | S3 API 자격 증명 비밀 키를 입력합니다.                                    |                                                                                                                            |
+| 액세스 키                 | -                                                  | string | S3 API 자격 증명 액세스 키를 입력합니다.                                   |                                                                                                                            |
+| Prefix                | /year=%{+YYYY}/month=%{+MM}/day=%{+dd}/hour=%{+HH} | string | 오브젝트 업로드 시 이름 앞에 붙일 접두사를 입력합니다.<br/>필드 또는 시간 형식을 입력할 수 있습니다. | [사용 가능한 시간 형식](https://joda-time.sourceforge.net/apidocs/org/joda/time/format/DateTimeFormat.html)                         |
+| Prefix 시간 필드          | -                                                  | string | Prefix에 적용할 시간 필드를 입력합니다.                                    |                                                                                                                            |
+| Prefix 시간 필드 타입       | DATE_FILTER_RESULT                                 | enum   | Prefix에 적용할 시간 필드의 타입을 입력합니다.                                | DATE_FILTER_RESULT 타입만 가능(추후 다른 타입 지원 예정)                                                                        |
+| Prefix 시간대            | UTC                                                | string | Prefix에 적용할 시간 필드의 타임 존을 입력합니다.                              |                                                                                                                            |
+| Prefix 시간 적용 fallback | _prefix_datetime_parse_failure                                   | string | Prefix 시간 적용에 실패한 경우 대체할 Prefix를 입력합니다.                      |                                                                                                                            |
+| 기준 시각                 | 1                                                  | number | 오브젝트를 분할할 기준이 될 시간을 설정합니다.                                   |                                                                                                                            |
+| 기준 오브젝트 크기            | 5242880                                            | number | 오브젝트를 분할할 기준이 될 크기(단위: byte)를 설정합니다.                         |                                                                                                                            |
+| 비활성 간격                | 1                                                  | number | 데이터 인입이 없는 상태가 지속될 때 오브젝트를 분할하는 기준 시간을 설정합니다.                | 설정된 시간 동안 데이터 인입이 없으면 현재 오브젝트가 업로드되며, 이후 새로 인입되는 데이터는 새로운 오브젝트에 작성됩니다.                                                     |
+
+### 코덱별 출력 예제
+지원 코덱
+* [JSON 코덱](./codec-config-guide.md#json) - JSON 형식 데이터 파싱
+* [LINE 코덱](./codec-config-guide.md#line) - 행 단위 메시지 처리
+* [Parquet 코덱](./codec-config-guide.md#parquet) - 데이터를 Parquet 형식으로 압축 
+
+### Prefix 예시 - 필드
+#### 조건
+* 버킷 → `dls-test-container`
+* Prefix → `/dataflow/%{deployment}`
+
+#### 입력 메시지
+``` json
+{
+    "deployment": "production",
+    "message": "example",
+    "logTime": "2022-11-21T07:49:20Z"
+}
+```
+
+#### 출력 경로
+```
+/dls-test-container/dataflow/production/part-378be4d8-2c59-4014-aaeb-a9bc75af2653-0
+```
+
+### Prefix 예시 - 시간
+#### 조건
+* 버킷 → `dls-test-container`
+* Prefix → `/dataflow/year=%{+YYYY}/month=%{+MM}/day=%{+dd}/hour=%{+HH}`
+* Prefix 시간 필드 → `logTime`
+* Prefix 시간 필드 타입 → `ISO8601`
+* Prefix 시간대 → `Asia/Seoul`
+
+#### 입력 메시지
+``` json
+{
+    "deployment": "production",
+    "message": "example",
+    "logTime": "2022-11-21T07:49:20Z"
+}
+```
+
+#### 출력 경로
+```
+/dls-test-container/dataflow/year=2022/month=11/day=21/hour=16/part-378be4d8-2c59-4014-aaeb-a9bc75af2653-0
+```
+
+### Prefix 예시 - 시간 적용 실패한 경우
+#### 조건
+* 버킷 → `dls-test-container`
+* Prefix → `/dataflow/year=%{+YYYY}/month=%{+MM}/day=%{+dd}/hour=%{+HH}`
+* Prefix 시간 필드 → `logTime`
+* Prefix 시간 필드 타입 → `ISO8601`
+* Prefix 시간대 → `Asia/Seoul`
+* Prefix 시간 적용 fallback → `_failure`
+
+#### 입력 메시지
+``` json
+{
+    "deployment": "production",
+    "message": "example",
+    "logTime": "2022-11-21T07:49:20Z"
+}
+```
+
+#### 출력 경로
+```
+/dls-test-container/_failure/part-378be4d8-2c59-4014-aaeb-a9bc75af2653-0
+```
+
 ## Sink > (Amazon) S3
 
 ### 노드 설명
@@ -1245,7 +1413,7 @@ Filter 작업을 마친 데이터를 적재할 엔드포인트를 정의하는 �
 | 기준 시각 | 1 | number | 오브젝트를 분할할 기준이 될 시간을 설정합니다. |  |
 | 기준 오브젝트 크기 | 5242880 | number | 오브젝트를 분할할 기준이 될 크기를 설정합니다. |  |
 | 경로 방식 요청 | false | boolean | 경로 방식 요청을 사용할지 여부를 결정합니다. |  |
-| 비활성 간격 | `1`| number | 데이터 인입이 없는 상태가 지속될 때 오브젝트를 분할하는 기준 시간을 설정합니다.                | 설정된 시간 동안 데이터 인입이 없으면 현재 오브젝트가 업로드되며, 이후 새로 인입되는 데이터는 새로운 오브젝트에 작성됩니다. |
+| 비활성 간격 | 1 | number | 데이터 인입이 없는 상태가 지속될 때 오브젝트를 분할하는 기준 시간을 설정합니다.                | 설정된 시간 동안 데이터 인입이 없으면 현재 오브젝트가 업로드되며, 이후 새로 인입되는 데이터는 새로운 오브젝트에 작성됩니다. |
 
 !!! danger "주의"
     * (Amazon) S3 노드를 이용하여 NHN Cloud Object Storage에 연결할 경우 **경로 방식 요청**을 `true`로 설정해야 합니다.
@@ -1257,6 +1425,42 @@ Filter 작업을 마친 데이터를 적재할 엔드포인트를 정의하는 �
 * [JSON 코덱](./codec-config-guide.md#json) - JSON 형식 데이터 파싱
 * [LINE 코덱](./codec-config-guide.md#line) - 행 단위 메시지 처리
 * [Parquet 코덱](./codec-config-guide.md#parquet) - 데이터를 Parquet 형식으로 압축 
+
+## Sink > (NHN Cloud) EasyQueue
+
+### 노드 설명
+NHN Cloud의 EasyQueue에 데이터를 전송하는 노드입니다.
+
+### 속성 설명
+| 속성명 | 기본값 | 자료형 | 설명 | 비고 |
+| --- | --- | --- | --- | --- |
+| 앱키 | - | string | EasyQueue의 앱키를 입력합니다. |  |
+| User Access Key ID | - | string | 사용자 계정의 User Access Key ID를 입력합니다. |  |
+| Secret Access Key | - | string | 사용자 계정의 User Secret Key를 입력합니다. |  |
+| 토픽 | - | string | 메시지를 전송할 Kafka 토픽 이름을 입력합니다. |  |
+| 브로커 서버 목록 | - | string | Kafka 브로커 서버를 입력합니다. 서버가 여러 대일 경우 콤마(`,`)로 구분합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/)의 `bootstrap.servers` 속성 참고<br/>예: 10.100.1.1:9092,10.100.1.2:9092 |
+| 클라이언트 아이디 | dataflow | string | Kafka Producer를 식별하는 ID를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/)의 `client.id` 속성 참고 |
+| 압축 유형 | none | enum | 전송하는 데이터를 압축할 방법을 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/topic-level-configs/)의 `compression.type` 속성 참고<br/>none, gzip, snappy, lz4, zstd 중 선택 |
+| 메시지 키 | - | string | 메시지 키로 사용할 필드를 입력합니다. |  |
+| 메타데이터 갱신 주기 | 300000 | number | 파티션, 브로커 서버 상태 등을 갱신할 주기(ms)를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/)의 `metadata.max.age.ms` 속성 참고 |
+| 최대 요청 크기 | 1048576 | number | 전송 요청당 최대 크기(byte)를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/)의 `max.request.size` 속성 참고 |
+| 서버 재연결 주기 | 50 | number | 브로커 서버에 연결이 실패했을 때 재시도할 주기(ms)를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/)의 `reconnect.backoff.ms` 속성 참고 |
+| 배치 크기 | 16384 | number | 배치 요청으로 전송할 크기(byte)를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/)의 `batch.size` 속성 참고 |
+| 버퍼 메모리 | 33554432 | number | Kafka 전송에 사용하는 버퍼의 크기(byte)를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/)의 `buffer.memory` 속성 참고 |
+| 수신 버퍼 크기 | 32768 | number | 데이터를 읽는 데 사용하는 TCP receive 버퍼의 크기(byte)를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/)의 `receive.buffer.bytes` 속성 참고 |
+| 전송 지연 시간 | 0 | number | 메시지 전송을 지연할 시간을 입력합니다. 지연된 메시지는 배치 요청으로 한 번에 전송합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/)의 `linger.ms` 속성 참고 |
+| 서버 요청 타임아웃 | 30000 | number | 전송 요청에 대한 타임아웃(ms)을 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/)의 `request.timeout.ms` 속성 참고 |
+| 전송 버퍼 크기 | 131072 | number | 데이터를 전송하는 데 사용하는 TCP send 버퍼의 크기(byte)를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/)의 `send.buffer.bytes` 속성 참고 |
+| ack 속성 | all | enum | 브로커 서버에서 메시지를 받았는지 확인하는 설정을 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/)의 `acks` 속성 참고<br/>0 - 메시지 수신 여부를 확인하지 않습니다.<br/>1 - 토픽의 leader가 follower가 데이터를 복사하는 것을 기다리지 않고 메시지를 수신했다는 응답을 합니다.<br/>all - 토픽의 leader가 follower가 데이터를 복사하는 것을 기다린 뒤 메시지를 수신했다는 응답을 합니다. |
+| 재시도 요청 주기 | 100 | number | 전송 요청이 실패했을 때 재시도할 주기(ms)를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/)의 `retry.backoff.ms` 속성 참고 |
+| 재시도 횟수 | 2147483647 | number | 전송 요청이 실패했을 때 재시도할 최대 횟수를 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/)의 `retries` 속성 참고<br/>설정값을 초과하여 재시도하는 경우 데이터 유실이 발생할 수 있습니다. |
+| 전달 보장 방식 | EXACTLY_ONCE | enum | 메시지 전달 보장 방식을 선택합니다. | AT_LEAST_ONCE: 메시지가 최소 한 번은 전달되지만, 장애 상황에서 중복이 발생할 수 있습니다. 중복 처리를 애플리케이션에서 직접 관리할 수 있거나, 중복이 허용되는 경우에 적합합니다.<br/><br/>EXACTLY_ONCE: 메시지가 정확히 한 번만 처리됩니다. 중복이 허용되지 않는 결제·정산 등 핵심 트랜잭션에 적합하지만, 내부적으로 트랜잭션을 사용하므로 처리량이 다소 낮아질 수 있습니다. |
+| 추가 설정 | - | hash | Kafka 연결에 사용할 추가 Producer 설정을 입력합니다. | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/) 참고 |
+
+### 코덱별 출력 예제
+지원 코덱
+* [JSON 코덱](./codec-config-guide.md#json) - JSON 형식 데이터 파싱
+* [LINE 코덱](./codec-config-guide.md#line) - 행 단위 메시지 처리
 
 ## Sink > (Apache) Kafka
 
@@ -1285,6 +1489,7 @@ Kafka에 데이터를 전송하는 노드입니다.
 | ack 속성      | all        | enum   | 브로커 서버에서 메시지를 받았는지 확인하는 설정을 입력합니다.                 | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/)의 `acks` 속성 참고<br/>0 - 메시지 수신 여부를 확인하지 않습니다.<br/>1 - 토픽의 leader가 follower가 데이터를 복사하는 것을 기다리지 않고 메시지를 수신했다는 응답을 합니다.<br/>all - 토픽의 leader가 follower가 데이터를 복사하는 것을 기다린 뒤 메시지를 수신했다는 응답을 합니다. |
 | 재시도 요청 주기   | 100        | number | 전송 요청이 실패했을 때 재시도할 주기(ms)를 입력합니다.                  | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/)의 `retry.backoff.ms` 속성 참고                                                                                                                                                                 |
 | 재시도 횟수      | 2147483647 | number | 전송 요청이 실패했을 때 재시도할 최대 횟수를 입력합니다.                   | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/)의 `retries` 속성 참고<br/>설정값을 초과하여 재시도하는 경우 데이터 유실이 발생할 수 있습니다.                                                                                                                               |
+| 전달 보장 방식 | EXACTLY_ONCE | enum | 메시지 전달 보장 방식을 선택합니다. | AT_LEAST_ONCE: 메시지가 최소 한 번은 전달되지만, 장애 상황에서 중복이 발생할 수 있습니다. 중복 처리를 애플리케이션에서 직접 관리할 수 있거나, 중복이 허용되는 경우에 적합합니다.<br/>EXACTLY_ONCE: 메시지가 정확히 한 번만 처리됩니다. 중복이 허용되지 않는 결제·정산 등 핵심 트랜잭션에 적합하지만, 내부적으로 트랜잭션을 사용하므로 처리량이 다소 낮아질 수 있습니다.                                        |
 | 추가 설정       | -            | hash   | Kafka 연결에 사용할 추가 Producer 설정을 입력합니다.               | [Kafka 공식 문서](https://kafka.apache.org/39/configuration/producer-configs/) 참고                                                                                                                                                                                        |
 
 ### 코덱별 출력 예제
@@ -1314,7 +1519,7 @@ Kafka에 데이터를 전송하는 노드입니다.
 
 ### 노드 설명
 
-조건문을 통해 메시지를 필터링하는 노드입니다.
+조건문으로 메시지를 필터링하는 노드입니다.
 
 ### 속성 설명
 
