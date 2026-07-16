@@ -36,4 +36,5 @@
 | EASY_QUEUE_TOPIC_NOT_FOUND | EasyQueueトピックが見つかりません。 |
 | EASY_QUEUE_INVALID_PROPERTY | EasyQueueノードのプロパティが正しくありません。 |
 | FLOW_ALREADY_STOPPED | フローはすでに終了しています。 |
+| FLOW_SCHEMA_FIELD_DUPLICATED | 同一のスキーマフィールド名が存在します。                                                                 |
 | ERROR | サービス内部エラーまたは定義されていないエラーです。カスタマーサポートにお問い合わせください。 |
